@@ -1,6 +1,6 @@
 import { AlertProvider } from '@/context/AlertContext';
 import { DialogProvider } from '@/context/DialogContext';
-import Alert from '@components/alert';
+import Alert from '@components/Alert';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
