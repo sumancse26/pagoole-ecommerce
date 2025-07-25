@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 const Slider = () => {
@@ -48,8 +49,8 @@ const Slider = () => {
         <>
             <div className="relative overflow-hidden">
                 <div className="container mx-auto px-4">
-                    <div className="flex flex-wrap">
-                        <div className="w-full lg:w-9/12 lg:ml-auto">
+                    <div className="flex flex-wrap mx-8">
+                        <div className="w-full lg:ml-auto">
                             <div className="relative rounded-xl overflow-hidden">
                                 <div className="relative w-full overflow-hidden h-96 md:h-[32rem]">
                                     {banners.map((banner, index) => (
@@ -61,7 +62,7 @@ const Slider = () => {
                                             <div className="container mx-auto px-4">
                                                 <div className="flex flex-col md:flex-row items-center">
                                                     <div className="w-full md:w-1/2 lg:w-2/5 px-4 py-12 md:py-0">
-                                                        <div className="text-left">
+                                                        <div className="text-left ps-9">
                                                             <h5
                                                                 className="text-lg md:text-xl text-green-600 mb-3 animate-fadeInUp"
                                                                 style={{ animationDelay: '0.3s' }}>
@@ -72,12 +73,12 @@ const Slider = () => {
                                                                 style={{ animationDelay: '0.6s' }}>
                                                                 {banner.title}
                                                             </h2>
-                                                            <a
+                                                            <Link
                                                                 className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors animate-fadeInUp uppercase"
                                                                 href={banner.link}
                                                                 style={{ animationDelay: '0.9s' }}>
                                                                 {banner.buttonText}
-                                                            </a>
+                                                            </Link>
                                                         </div>
                                                     </div>
                                                     <div className="w-full md:w-1/2 lg:w-3/5 px-4">

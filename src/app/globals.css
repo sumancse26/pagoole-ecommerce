@@ -1,4 +1,12 @@
 @import 'tailwindcss';
+body.sidebar-open .with-sidebar-transition {
+    margin-left: 16rem; /* 64 = 16rem */
+    transition: all 0.3s ease;
+}
+
+body .with-sidebar-transition {
+    transition: all 0.3s ease;
+}
 /* @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
 
 .hind-siliguri-light {

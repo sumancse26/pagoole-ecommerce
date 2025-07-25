@@ -40,7 +40,7 @@ const ForgotPassword = () => {
             <div className="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-md animate-fade-in">
                 <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-4">Forgot Password?</h2>
                 <p className="text-center text-gray-500 text-sm mb-8">
-                    Enter your email and we will send you a code to reset your password.
+                    Enter your email and we will send you Link code to reset your password.
                 </p>
 
                 <form className="space-y-6" onSubmit={handleSubmit}>

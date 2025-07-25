@@ -61,10 +61,10 @@ const Login = () => {
                         Enter your details to access your account and continue where you left off.
                     </p>
                     <p className="text-sm">
-                        Not a member?
-                        <a href="/register" className="underline px-2 text-red-700">
+                        Not Link member?
+                        <Link href="/register" className="underline px-2 text-red-700">
                             Sign up now
-                        </a>
+                        </Link>
                         and join our community.
                     </p>
                 </div>

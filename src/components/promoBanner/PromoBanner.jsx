@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 const PromoBanner = () => {
     return (
         <>
@@ -17,11 +18,11 @@ const PromoBanner = () => {
                                 <div className="text-white max-w-xs">
                                     <h3 className="text-2xl md:text-3xl font-bold mb-2">Summer Sale</h3>
                                     <p className="mb-4">Up to 50% off on selected items</p>
-                                    <a
+                                    <Link
                                         href="/summer-sale"
                                         className="inline-block px-6 py-2 bg-white text-green-600 font-medium rounded-lg hover:bg-gray-100 transition-colors">
                                         Shop Now
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -36,11 +37,11 @@ const PromoBanner = () => {
                                 <div className="text-white max-w-xs">
                                     <h3 className="text-2xl md:text-3xl font-bold mb-2">New Arrivals</h3>
                                     <p className="mb-4">Discover our latest collection</p>
-                                    <a
+                                    <Link
                                         href="/new-arrivals"
                                         className="inline-block px-6 py-2 bg-white text-green-600 font-medium rounded-lg hover:bg-gray-100 transition-colors">
                                         Explore
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

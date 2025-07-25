@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 const ProductDetails = () => {
     return (
         <>
@@ -48,11 +50,11 @@ const ProductDetails = () => {
                                         </svg>
                                     </div>
                                     <span className="text-gray-500 text-sm">(21 reviews)</span>
-                                    <a
+                                    <Link
                                         href="#reviews"
                                         className="ml-3 text-sm font-medium text-emerald-600 hover:text-emerald-500">
                                         View all
-                                    </a>
+                                    </Link>
                                 </div>
 
                                 <div className="flex items-center mb-6">
@@ -64,8 +66,8 @@ const ProductDetails = () => {
                                 </div>
 
                                 <p className="text-gray-600 mb-6 leading-relaxed">
-                                    This elegant blue dress features a flattering silhouette with premium stitching and
-                                    sustainable materials. Perfect for both casual outings and special occasions, it
+                                    This elegant blue dress features Link flattering silhouette with premium stitching
+                                    and sustainable materials. Perfect for both casual outings and special occasions, it
                                     combines comfort with timeless style.
                                 </p>
                             </div>
@@ -74,15 +76,15 @@ const ProductDetails = () => {
                             <div className="mb-8">
                                 <h3 className="text-sm font-semibold text-gray-900 mb-3">Color</h3>
                                 <div className="flex space-x-3">
-                                    {['bg-blue-800', 'bg-gray-800', 'bg-red-600', 'bg-emerald-600'].map(
+                                    {['bg-blue-800', 'bg-gray-800', 'bg-red-600', 'bg-green-600'].map(
                                         (color, index) => (
                                             <button
                                                 key={index}
                                                 className={`w-10 h-10 rounded-full ${color} border-2 ${
                                                     index === 0
-                                                        ? 'border-emerald-500 ring-2 ring-emerald-200'
+                                                        ? 'border-green-500 ring-2 ring-green-200'
                                                         : 'border-gray-200'
-                                                } hover:border-emerald-500 transition-all`}
+                                                } hover:border-green-500 transition-all`}
                                                 aria-label={`Select ${color.split('-')[1]} color`}
                                             />
                                         )
@@ -94,9 +96,11 @@ const ProductDetails = () => {
                             <div className="mb-8">
                                 <div className="flex justify-between items-center mb-3">
                                     <h3 className="text-sm font-semibold text-gray-900">Size</h3>
-                                    <a href="#" className="text-xs font-medium text-emerald-600 hover:text-emerald-500">
+                                    <Link
+                                        href="#"
+                                        className="text-xs font-medium text-emerald-600 hover:text-emerald-500">
                                         Size Guide
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div className="grid grid-cols-5 gap-2">
                                     {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
@@ -104,7 +108,7 @@ const ProductDetails = () => {
                                             key={size}
                                             className={`px-4 py-2 border rounded-lg font-medium transition-all ${
                                                 size === 'M'
-                                                    ? 'bg-emerald-600 text-white border-emerald-600'
+                                                    ? 'bg-green-600 text-white border-green-600'
                                                     : 'border-gray-200 text-gray-700 hover:border-emerald-400 hover:bg-emerald-50'
                                             }`}>
                                             {size}
@@ -147,7 +151,7 @@ const ProductDetails = () => {
                                         </svg>
                                     </button>
                                 </div>
-                                <button className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md w-full sm:w-auto flex items-center justify-center">
+                                <button className="flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md w-full sm:w-auto flex items-center justify-center">
                                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path
                                             strokeLinecap="round"
@@ -195,11 +199,11 @@ const ProductDetails = () => {
                                     </div>
                                     <div>
                                         <span className="text-gray-500 text-sm">Category:</span>
-                                        <a
+                                        <Link
                                             href="#"
                                             className="text-emerald-600 hover:text-emerald-500 block font-medium">
                                             Women's Dresses
-                                        </a>
+                                        </Link>
                                     </div>
                                     <div>
                                         <span className="text-gray-500 text-sm">Material:</span>
@@ -222,7 +226,7 @@ const ProductDetails = () => {
                                         { icon: 'instagram', color: 'text-pink-500 hover:bg-pink-500' },
                                         { icon: 'pinterest', color: 'text-red-600 hover:bg-red-600' }
                                     ].map((social) => (
-                                        <a
+                                        <Link
                                             key={social.icon}
                                             href="#"
                                             className={`w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center ${social.color} hover:text-white transition-colors`}
@@ -230,7 +234,7 @@ const ProductDetails = () => {
                                             <svg className="w-4 h-4 fill-current">
                                                 <use xlinkHref={`/icons.svg#${social.icon}`} />
                                             </svg>
-                                        </a>
+                                        </Link>
                                     ))}
                                 </div>
                             </div>
@@ -260,9 +264,9 @@ const ProductDetails = () => {
                         <div className="prose max-w-none text-gray-600">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Details</h3>
                             <p className="mb-4">
-                                Our Blue Elegant Dress is crafted from premium organic cotton with a focus on
-                                sustainability and comfort. The dress features a flattering A-line silhouette that suits
-                                all body types, with carefully placed seams for maximum comfort and movement.
+                                Our Blue Elegant Dress is crafted from premium organic cotton with Link focus on
+                                sustainability and comfort. The dress features Link flattering A-line silhouette that
+                                suits all body types, with carefully placed seams for maximum comfort and movement.
                             </p>
 
                             <h3 className="text-lg font-semibold text-gray-900 mb-4 mt-6">Features</h3>

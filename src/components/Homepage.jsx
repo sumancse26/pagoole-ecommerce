@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Header from './header/Header.jsx';
-import Slider from './slider/Slider.jsx';
+//import Slider from './slider/SidebarSlider.jsx';
 import Products from './products/Product.jsx';
 import PromoBanner from './promoBanner/PromoBanner.jsx';
 import Brands from './brand/Brand.jsx';
 import Testimonial from './testimonial/Testimonial.jsx';
-import Newsletter from './newsletter/Newsletter.jsx';
-import Footer from './footer/Footer.jsx';
-import ProductDetails from './productDetail/ProductDetails.jsx';
+// import Newsletter from './newsletter/Newsletter.jsx';
+
+// import ProductDetails from './productDetail/ProductDetails.jsx';
 
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
@@ -50,10 +49,8 @@ export default function Home() {
                     </div>
                 </div>
             )}
-
-            <Header />
             {/* Main Banner */}
-            <Slider />
+            {/* <Slider /> */}
 
             {/* Product Tabs Section */}
             <Products />
@@ -68,12 +65,7 @@ export default function Home() {
             <Testimonial />
 
             {/* Newsletter */}
-            <Newsletter />
-
-            {/* Footer */}
-            <Footer />
-
-            <ProductDetails />
+            {/* <Newsletter /> */}
 
             {/* Global styles */}
             <style jsx global>{`
