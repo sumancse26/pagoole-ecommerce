@@ -1,13 +1,11 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-//import Slider from './slider/SidebarSlider.jsx';
 import Products from './products/Product.jsx';
 import PromoBanner from './promoBanner/PromoBanner.jsx';
 import Brands from './brand/Brand.jsx';
 import Testimonial from './testimonial/Testimonial.jsx';
-// import Newsletter from './newsletter/Newsletter.jsx';
-
-// import ProductDetails from './productDetail/ProductDetails.jsx';
 
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
@@ -17,7 +15,6 @@ export default function Home() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
-            // Show popup after 2 seconds
             setTimeout(() => setShowPopup(true), 2000);
         }, 1000);
 
@@ -27,10 +24,10 @@ export default function Home() {
     return (
         <div className="bg-gray-50">
             <Head>
-                <title>Shopwise - Premium eCommerce Template</title>
+                <title>Pagoole Discount Shop</title>
                 <meta
                     name="description"
-                    content="Shopwise offers the latest fashion trends with premium quality products. Free shipping on orders over $250."
+                    content="Pagoole Discount Shop offers the latest fashion trends with premium quality products. Free shipping on orders over $250."
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -49,10 +46,9 @@ export default function Home() {
                     </div>
                 </div>
             )}
-            {/* Main Banner */}
-            {/* <Slider /> */}
 
             {/* Product Tabs Section */}
+            <Products prodType="all" />
             <Products />
 
             {/* Promo Banners */}
@@ -63,9 +59,6 @@ export default function Home() {
 
             {/* Testimonials */}
             <Testimonial />
-
-            {/* Newsletter */}
-            {/* <Newsletter /> */}
 
             {/* Global styles */}
             <style jsx global>{`

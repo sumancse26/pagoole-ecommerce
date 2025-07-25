@@ -11,7 +11,7 @@ const HeaderComp = () => {
                     {/* Logo */}
                     <div className="flex items-center">
                         <Link href="/">
-                            <span className="ml-11 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
+                            <span className="ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
                                 Pagoole Shop
                             </span>
                         </Link>
@@ -50,7 +50,7 @@ const HeaderComp = () => {
                     </div>
 
                     <div className="flex items-center me-2">
-                        <Link href="/">
+                        <Link href="/shop">
                             <button
                                 className="
                                     bg-gradient-to-r
