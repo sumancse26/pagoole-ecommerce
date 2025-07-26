@@ -2,12 +2,12 @@
 CREATE TABLE "Users" (
     "id" SERIAL NOT NULL,
     "user_name" VARCHAR(100) NOT NULL,
-    "email" VARCHAR(100) NOT NULL,
+    "email" VARCHAR(150) NOT NULL,
     "phone" VARCHAR(20),
     "password" TEXT,
     "otp" INTEGER NOT NULL DEFAULT 0,
     "is_admin" INTEGER NOT NULL DEFAULT 1,
-    "is_active" INTEGER NOT NULL DEFAULT 1,
+    "is_active" INTEGER NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "image" TEXT NOT NULL DEFAULT '',
@@ -21,9 +21,9 @@ CREATE TABLE "Geo_Locations" (
     "name" VARCHAR(128) NOT NULL,
     "full_address" VARCHAR(255),
     "parent_id" INTEGER,
-    "is_active" INTEGER NOT NULL DEFAULT 1,
-    "entry_dDate" TIMESTAMP(3) NOT NULL,
-    "created_by" INTEGER NOT NULL,
+    "is_active" INTEGER NOT NULL,
+    "entry_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_by" INTEGER NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -55,7 +55,7 @@ CREATE TABLE "Categories" (
     "category_name" VARCHAR(100) NOT NULL,
     "parent_id" INTEGER,
     "order_by" INTEGER,
-    "is_active" INTEGER NOT NULL DEFAULT 0,
+    "is_active" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -87,6 +87,16 @@ CREATE TABLE "Weights" (
 );
 
 -- CreateTable
+CREATE TABLE "File_Server" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(64) NOT NULL,
+    "base_url" VARCHAR(128) NOT NULL,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "File_Server_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Products" (
     "id" SERIAL NOT NULL,
     "prod_name" VARCHAR(150) NOT NULL,
@@ -96,6 +106,7 @@ CREATE TABLE "Products" (
     "trade_price" DOUBLE PRECISION NOT NULL,
     "mrp" DOUBLE PRECISION NOT NULL,
     "vat" DOUBLE PRECISION NOT NULL,
+    "server_id" INTEGER NOT NULL,
     "brand_id" INTEGER,
     "category_id" INTEGER,
     "weight_id" INTEGER,
@@ -105,6 +116,18 @@ CREATE TABLE "Products" (
     "image" TEXT NOT NULL DEFAULT '',
 
     CONSTRAINT "Products_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Product_Images" (
+    "id" SERIAL NOT NULL,
+    "product_id" INTEGER NOT NULL,
+    "server_id" INTEGER NOT NULL,
+    "file_name" VARCHAR(64) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Product_Images_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -120,28 +143,6 @@ CREATE TABLE "Vendor_Products" (
     "image_url" TEXT NOT NULL DEFAULT '',
 
     CONSTRAINT "Vendor_Products_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "File_Server" (
-    "id" SERIAL NOT NULL,
-    "base_url" VARCHAR(128) NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "File_Server_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Product_Images" (
-    "id" SERIAL NOT NULL,
-    "product_id" INTEGER NOT NULL,
-    "server_id" INTEGER NOT NULL,
-    "file_name" VARCHAR(64) NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Product_Images_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -223,7 +224,7 @@ CREATE TABLE "Shipping_Addresses" (
 );
 
 -- CreateTable
-CREATE TABLE "Reviews" (
+CREATE TABLE "Product_Reviews" (
     "id" SERIAL NOT NULL,
     "product_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
@@ -232,7 +233,31 @@ CREATE TABLE "Reviews" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Reviews_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Product_Reviews_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Vendor_Reviews" (
+    "id" SERIAL NOT NULL,
+    "vendor_id" INTEGER NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "rating" INTEGER NOT NULL,
+    "remarks" VARCHAR(1000),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Vendor_Reviews_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Wishlists" (
+    "id" SERIAL NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "product_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Wishlists_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -243,6 +268,9 @@ CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Brands_name_key" ON "Brands"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "File_Server_name_key" ON "File_Server"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "File_Server_base_url_key" ON "File_Server"("base_url");
@@ -257,6 +285,9 @@ ALTER TABLE "Vendors" ADD CONSTRAINT "Vendors_user_id_fkey" FOREIGN KEY ("user_i
 ALTER TABLE "Vendors" ADD CONSTRAINT "Vendors_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "Geo_Locations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Products" ADD CONSTRAINT "Products_server_id_fkey" FOREIGN KEY ("server_id") REFERENCES "File_Server"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Products" ADD CONSTRAINT "Products_brand_id_fkey" FOREIGN KEY ("brand_id") REFERENCES "Brands"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -266,16 +297,16 @@ ALTER TABLE "Products" ADD CONSTRAINT "Products_category_id_fkey" FOREIGN KEY ("
 ALTER TABLE "Products" ADD CONSTRAINT "Products_weight_id_fkey" FOREIGN KEY ("weight_id") REFERENCES "Weights"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Vendor_Products" ADD CONSTRAINT "Vendor_Products_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Vendor_Products" ADD CONSTRAINT "Vendor_Products_vendor_id_fkey" FOREIGN KEY ("vendor_id") REFERENCES "Vendors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Product_Images" ADD CONSTRAINT "Product_Images_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product_Images" ADD CONSTRAINT "Product_Images_server_id_fkey" FOREIGN KEY ("server_id") REFERENCES "File_Server"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Vendor_Products" ADD CONSTRAINT "Vendor_Products_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Vendor_Products" ADD CONSTRAINT "Vendor_Products_vendor_id_fkey" FOREIGN KEY ("vendor_id") REFERENCES "Vendors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Carts" ADD CONSTRAINT "Carts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -302,7 +333,19 @@ ALTER TABLE "Payments" ADD CONSTRAINT "Payments_order_id_fkey" FOREIGN KEY ("ord
 ALTER TABLE "Shipping_Addresses" ADD CONSTRAINT "Shipping_Addresses_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Product_Reviews" ADD CONSTRAINT "Product_Reviews_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Product_Reviews" ADD CONSTRAINT "Product_Reviews_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Vendor_Reviews" ADD CONSTRAINT "Vendor_Reviews_vendor_id_fkey" FOREIGN KEY ("vendor_id") REFERENCES "Vendors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Vendor_Reviews" ADD CONSTRAINT "Vendor_Reviews_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Wishlists" ADD CONSTRAINT "Wishlists_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Wishlists" ADD CONSTRAINT "Wishlists_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

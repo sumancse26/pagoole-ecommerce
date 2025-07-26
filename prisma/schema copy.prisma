@@ -1,60 +1,57 @@
-// schema.prisma
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url = env("DATABASE_URL")
 }
 
 model Users {
-  id                    Int               @id @default(autoincrement())
-  user_name             String            @unique @db.VarChar(100)
-  email                 String            @unique @db.VarChar(150)
-  phone                 String?           @db.VarChar(20)
+  id                    Int           @id @default(autoincrement())
+  user_name             String        @unique @db.VarChar(100)
+  email                 String        @unique @db.VarChar(100)
+  phone                 String?       @db.VarChar(20)
   password              String?       
-  otp                   Int               @default(0) 
-  is_admin              Int               @default(1)
-  is_active             Int               @default(0)
-  created_at            DateTime          @default(now())
-  updated_at            DateTime          @updatedAt
-  image                 String            @default("") @db.Text
-  
+  otp                   Int           @default(0) 
+  is_admin              Int           @default(1)
+  is_active             Int           @default(1)
+  created_at            DateTime      @default(now())
+  updated_at            DateTime      @updatedAt
+  image                 String        @default("") @db.Text
+
   Geo_Locations         Geo_Locations[]
   Vendors               Vendors[]
   Carts                 Carts[]
   Orders                Orders[]
-  Wishlists             Wishlists[]
+  Reviews               Reviews[]
   Shipping_Addresses    Shipping_Addresses[]
-  Product_Reviews       Product_Reviews[]
-  Vendor_Reviews        Vendor_Reviews[]
 }
 
 model Geo_Locations {
   id                      Int                 @id @default(autoincrement())
   name                    String              @db.VarChar(128)
   full_address            String?             @db.VarChar(255)
-  parent_id               Int?
-  is_active               Int
-  entry_date              DateTime            @default(now())
-  created_by              Int                 @default(0)
+  parent_id               Int?          
+  is_active               Int                 @default(1)
+  entry_dDate             DateTime
+  created_by              Int
   created_at              DateTime            @default(now())
   updated_at              DateTime            @updatedAt
   
-  //Geo_Locations           Geo_Locations?      @relation(fields: [parent_id], references: [id])
-  // children     GeoLocation[] @relation("GeoLocationParent")
+  //GeoLocations      GeoLocations?   @relation(fields: [parent_id], references: [id])
+  //children    GeoLocations[]  @relation("ParentChild")
+  Users                   Users       @relation(fields: [created_by], references: [id])
   Vendors                 Vendors[]
-  Users                   Users               @relation(fields: [created_by], references: [id])
 }
 
 model Vendors {
   id                     Int                  @id @default(autoincrement())
-  user_id                Int
+  user_id                Int    
   store_name             String               @db.VarChar(150)
   store_description      String?              @db.VarChar(500)
   address                String?              @db.VarChar(300)
-  location_id            Int
+  location_id            Int    
   password               String?       
   otp                    Int                  @default(0)
   is_admin               Int                  @default(0)
@@ -62,24 +59,24 @@ model Vendors {
   created_at             DateTime             @default(now())
   updated_at             DateTime             @updatedAt
   store_logo             String               @default("") @db.Text
-  
+
+
   Users                  Users                @relation(fields: [user_id], references: [id])
   Geo_Locations          Geo_Locations        @relation(fields: [location_id], references: [id])
   Vendor_Products        Vendor_Products[]
-  Vendor_Reviews         Vendor_Reviews[]
 }
 
 model Categories {
-  id                    Int             @id @default(autoincrement())
-  category_name         String          @db.VarChar(100)
-  parent_id             Int?
-  order_by              Int?
-  is_active             Int             @default(1)
-  created_at            DateTime        @default(now())
-  updated_at            DateTime        @updatedAt
+  id                  Int             @id @default(autoincrement())
+  category_name       String          @db.VarChar(100)
+  parent_id           Int?
+  order_by            Int?
+  is_active           Int             @default(0)
+  created_at          DateTime        @default(now())
+  updated_at          DateTime        @updatedAt
   
-  // parent       Category?  @relation("CategoryParent", fields: [parent_id], references: [id])
-  // children     Category[] @relation("CategoryParent")
+  // parent              Categories?     @relation("CategoryParent", fields: [parentId], references: [id])
+  // children            Categories[]    @relation("CategoryParent")
   Products            Products[]
 }
 
@@ -105,55 +102,30 @@ model Weights {
   Products              Products[]
 }
 
-model File_Server {
-  id                    Int      @id @default(autoincrement())
-  name                  String   @unique @db.VarChar(64)
-  base_url              String   @unique @db.VarChar(128)
-  created_at            DateTime? @default(now())
-  
-  Products              Products[]
-  Product_Images        Product_Images[]
-}
-
 model Products {
-  id                    Int                   @id @default(autoincrement())
-  prod_name             String                @db.VarChar(150)
-  slug                  String                @db.VarChar(150)
-  description           String?               @db.VarChar(512)
+  id                    Int             @id @default(autoincrement())
+  prod_name             String          @db.VarChar(150)
+  slug                  String          @db.VarChar(150)
+  description           String?         @db.VarChar(512)
   unit_price            Float           
   trade_price           Float           
   mrp                   Float           
-  vat                   Float
-  server_id             Int
+  vat                   Float           
   brand_id              Int?
   category_id           Int?
   weight_id             Int?
-  created_at            DateTime              @default(now())
-  updated_at            DateTime              @updatedAt
-  image_id              Int?
-  image                 String                @default("") @db.Text
-
-  File_Server           File_Server           @relation(fields: [server_id], references: [id])
-  Brands                Brands?               @relation(fields: [brand_id], references: [id])
-  Categories            Categories?           @relation(fields: [category_id], references: [id])
-  Weights               Weights?              @relation(fields: [weight_id], references: [id])
-  //Product_Images        Product_Images?      @relation(fields: [image_id], references: [id])
-  Vendor_Products       Vendor_Products[]
-  Product_Reviews       Product_Reviews[]
-  Product_Images        Product_Images[]
-  Wishlists             Wishlists[]
-}
-
-model Product_Images {
-  id                    Int             @id @default(autoincrement())
-  product_id            Int
-  server_id             Int
-  file_name             String          @db.VarChar(64)
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
-
-  Products              Products        @relation(fields: [product_id], references: [id])
-  File_Server           File_Server     @relation(fields: [server_id], references: [id])
+  image_id              Int?
+  image                 String          @default("") @db.Text
+  
+  Brands                Brands?         @relation(fields: [brand_id], references: [id])
+  Categories            Categories?     @relation(fields: [category_id], references: [id])
+  Weights               Weights?        @relation(fields: [weight_id], references: [id])
+  // Product_Images        Product_Images?  @relation(fields: [image_id], references: [id])
+  Vendor_Products       Vendor_Products[]
+  Reviews               Reviews[]
+  Product_Images        Product_Images[]
 }
 
 model Vendor_Products {
@@ -166,11 +138,33 @@ model Vendor_Products {
   created_at             DateTime        @default(now())
   updated_at             DateTime        @updatedAt
   image_url              String          @default("") @db.Text
+  product                Products        @relation(fields: [product_id], references: [id])
+  vendor                 Vendors         @relation(fields: [vendor_id], references: [id])
 
-  Products               Products        @relation(fields: [product_id], references: [id])
-  Vendors                Vendors         @relation(fields: [vendor_id], references: [id])
+
   Cart_Items             Cart_Items[]
   Order_Items            Order_Items[]
+}
+
+model File_Server {
+  id                     Int             @id @default(autoincrement())
+  base_url               String          @unique @db.VarChar(128)
+  created_at             DateTime        @default(now())
+  updated_at             DateTime        @updatedAt
+  
+  Product_Images         Product_Images[]
+}
+
+model Product_Images {
+  id                    Int             @id @default(autoincrement())
+  product_id            Int
+  server_id             Int
+  file_name             String          @db.VarChar(64)
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
+
+  Products              Products        @relation(fields: [product_id], references: [id])
+  File_Server           File_Server     @relation(fields: [server_id], references: [id])
 }
 
 model Carts {
@@ -250,7 +244,7 @@ model Shipping_Addresses {
   Users                 Users           @relation(fields: [user_id], references: [id])
 }
 
-model Product_Reviews {
+model Reviews {
   id                    Int             @id @default(autoincrement())
   product_id            Int
   user_id               Int
@@ -261,27 +255,4 @@ model Product_Reviews {
   
   Products              Products        @relation(fields: [product_id], references: [id])
   Users                 Users           @relation(fields: [user_id], references: [id])
-}
-
-model Vendor_Reviews {
-  id                    Int             @id @default(autoincrement())
-  vendor_id             Int
-  user_id               Int
-  rating                Int       
-  remarks               String?         @db.VarChar(1000)
-  created_at            DateTime        @default(now())
-  updated_at            DateTime        @updatedAt
-  
-  Vendors               Vendors         @relation(fields: [vendor_id], references: [id])
-  Users                 Users           @relation(fields: [user_id], references: [id])
-}
-model Wishlists {
-  id                    Int             @id @default(autoincrement())
-  user_id               Int
-  product_id            Int
-  created_at            DateTime        @default(now())
-  updated_at            DateTime        @updatedAt
-  
-  Users                 Users           @relation(fields: [user_id], references: [id])
-  Products              Products        @relation(fields: [product_id], references: [id])
 }

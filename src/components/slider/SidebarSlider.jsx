@@ -49,10 +49,10 @@ const SidebarSlider = () => {
 
             {/* Sidebar — this element is part of layout flow */}
             <div
-                className={`transition-all duration-300 h-full overflow-y-auto bg-white shadow-lg  ${
+                className={`sticky top-[100px] transition-all duration-300 h-full overflow-y-auto bg-white shadow-lg  ${
                     isOpen ? 'w-80' : 'w-0'
                 }`}>
-                <div className={`transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} px-4`}>
+                <div className={` transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} px-4`}>
                     <div className="pt-8 px-4 pb-2 font-normal text-lg border-b border-gray-200 ">All Categories</div>
 
                     <div className="p-2 ">
