@@ -10,7 +10,7 @@ datasource db {
 
 model Users {
   id                    Int               @id @default(autoincrement())
-  user_name             String            @unique @db.VarChar(100)
+  user_name             String            @db.VarChar(100)
   email                 String            @unique @db.VarChar(150)
   phone                 String?           @db.VarChar(20)
   password              String?       
@@ -36,14 +36,14 @@ model Geo_Locations {
   name                    String              @db.VarChar(128)
   full_address            String?             @db.VarChar(255)
   parent_id               Int?
-  is_active               Int
+  is_active               Int                 @default(1)
   entry_date              DateTime            @default(now())
   created_by              Int                 @default(0)
   created_at              DateTime            @default(now())
   updated_at              DateTime            @updatedAt
   
-  //Geo_Locations           Geo_Locations?      @relation(fields: [parent_id], references: [id])
-  // children     GeoLocation[] @relation("GeoLocationParent")
+  parent                  Geo_Locations?      @relation("GeoLocationHierarchy", fields: [parent_id], references: [id])
+  children                Geo_Locations[]     @relation("GeoLocationHierarchy")
   Vendors                 Vendors[]
   Users                   Users               @relation(fields: [created_by], references: [id])
 }
