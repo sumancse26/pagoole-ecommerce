@@ -78,9 +78,9 @@ model Categories {
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   
-  // parent       Category?  @relation("CategoryParent", fields: [parent_id], references: [id])
-  // children     Category[] @relation("CategoryParent")
-  Products            Products[]
+  parent                Categories?  @relation("CategoryParent", fields: [parent_id], references: [id])
+  children              Categories[] @relation("CategoryParent")
+  Products              Products[]
 }
 
 model Brands {

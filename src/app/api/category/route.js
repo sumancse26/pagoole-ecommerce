@@ -3,22 +3,21 @@ import prisma from '@/config/prisma';
 
 export const GET = async (req) => {
     try {
-        const vendor_list = await prisma.vendors.findMany({
+        const categories = await prisma.categories.findMany({
             omit: {
                 is_active: true,
-                is_admin: true,
-                otp: true,
-                password: true,
+                order_by: true,
                 created_at: true,
                 updated_at: true
             }
         });
+
         return NextResponse.json(
-            { message: 'Vendor fetched successfully', success: true, vendor_list },
+            { message: 'Category fetched successfully', success: true, categories },
             { status: 200 }
         );
-    } catch (err) {
-        console.error('Error parsing request body:', err);
+    } catch (error) {
+        console.error('Error parsing request body:', error);
         return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
     }
 };
