@@ -15,7 +15,7 @@ export const POST = async (req) => {
             address,
             location_id,
             image,
-            store_logo
+            store_logo = ''
         } = body;
 
         if (!user_name || !email || !password || !store_name || !location_id) {
