@@ -5,7 +5,12 @@ export const GET = async (req) => {
         const location_list = await prisma.geo_Locations.findMany({});
 
         return NextResponse.json(
-            { message: 'Location fetched successfully', success: true, location_list },
+            {
+                message: 'Location fetched successfully',
+                success: true,
+                total: location_list.length || 0,
+                location_list
+            },
             { status: 200 }
         );
     } catch (error) {

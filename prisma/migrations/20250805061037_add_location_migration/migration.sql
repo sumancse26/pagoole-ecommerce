@@ -21,9 +21,9 @@ CREATE TABLE "Geo_Locations" (
     "name" VARCHAR(128) NOT NULL,
     "full_address" VARCHAR(255),
     "parent_id" INTEGER,
-    "is_active" INTEGER NOT NULL,
+    "is_active" INTEGER NOT NULL DEFAULT 1,
     "entry_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "created_by" INTEGER NOT NULL DEFAULT 0,
+    "created_by" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -106,9 +106,9 @@ CREATE TABLE "Products" (
     "trade_price" DOUBLE PRECISION NOT NULL,
     "mrp" DOUBLE PRECISION NOT NULL,
     "vat" DOUBLE PRECISION NOT NULL,
-    "server_id" INTEGER NOT NULL,
     "brand_id" INTEGER,
     "category_id" INTEGER,
+    "server_id" INTEGER NOT NULL,
     "weight_id" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -122,6 +122,8 @@ CREATE TABLE "Products" (
 CREATE TABLE "Product_Images" (
     "id" SERIAL NOT NULL,
     "product_id" INTEGER NOT NULL,
+    "vendor_product_id" INTEGER NOT NULL,
+    "vendor_id" INTEGER NOT NULL,
     "server_id" INTEGER NOT NULL,
     "file_name" VARCHAR(64) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -135,6 +137,7 @@ CREATE TABLE "Vendor_Products" (
     "id" SERIAL NOT NULL,
     "product_id" INTEGER NOT NULL,
     "vendor_id" INTEGER NOT NULL,
+    "category_id" INTEGER,
     "price" DOUBLE PRECISION NOT NULL,
     "stock_qty" INTEGER NOT NULL DEFAULT 0,
     "is_active" INTEGER NOT NULL DEFAULT 1,
@@ -261,9 +264,6 @@ CREATE TABLE "Wishlists" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Users_user_name_key" ON "Users"("user_name");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 
 -- CreateIndex
@@ -276,7 +276,10 @@ CREATE UNIQUE INDEX "File_Server_name_key" ON "File_Server"("name");
 CREATE UNIQUE INDEX "File_Server_base_url_key" ON "File_Server"("base_url");
 
 -- AddForeignKey
-ALTER TABLE "Geo_Locations" ADD CONSTRAINT "Geo_Locations_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Geo_Locations" ADD CONSTRAINT "Geo_Locations_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "Geo_Locations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Geo_Locations" ADD CONSTRAINT "Geo_Locations_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "Users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Vendors" ADD CONSTRAINT "Vendors_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -285,7 +288,7 @@ ALTER TABLE "Vendors" ADD CONSTRAINT "Vendors_user_id_fkey" FOREIGN KEY ("user_i
 ALTER TABLE "Vendors" ADD CONSTRAINT "Vendors_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "Geo_Locations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Products" ADD CONSTRAINT "Products_server_id_fkey" FOREIGN KEY ("server_id") REFERENCES "File_Server"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Categories" ADD CONSTRAINT "Categories_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "Categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Products" ADD CONSTRAINT "Products_brand_id_fkey" FOREIGN KEY ("brand_id") REFERENCES "Brands"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -297,7 +300,13 @@ ALTER TABLE "Products" ADD CONSTRAINT "Products_category_id_fkey" FOREIGN KEY ("
 ALTER TABLE "Products" ADD CONSTRAINT "Products_weight_id_fkey" FOREIGN KEY ("weight_id") REFERENCES "Weights"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Products" ADD CONSTRAINT "Products_server_id_fkey" FOREIGN KEY ("server_id") REFERENCES "File_Server"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Product_Images" ADD CONSTRAINT "Product_Images_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Product_Images" ADD CONSTRAINT "Product_Images_vendor_product_id_fkey" FOREIGN KEY ("vendor_product_id") REFERENCES "Vendor_Products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product_Images" ADD CONSTRAINT "Product_Images_server_id_fkey" FOREIGN KEY ("server_id") REFERENCES "File_Server"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -307,6 +316,9 @@ ALTER TABLE "Vendor_Products" ADD CONSTRAINT "Vendor_Products_product_id_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "Vendor_Products" ADD CONSTRAINT "Vendor_Products_vendor_id_fkey" FOREIGN KEY ("vendor_id") REFERENCES "Vendors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Vendor_Products" ADD CONSTRAINT "Vendor_Products_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "Categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Carts" ADD CONSTRAINT "Carts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

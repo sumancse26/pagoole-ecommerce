@@ -5,16 +5,17 @@ export const GET = async (req, { params }) => {
     try {
         const { id } = params;
 
-        const vendorProducts = await prisma.vendor_Products.findMany({
+        const vendorProducts = await prisma.products.findMany({
             where: {
-                vendor_id: Number(id)
+                category_id: Number(id)
             },
             select: {
                 id: true,
-                price: true,
-                stock_qty: true,
-                is_active: true,
-                products: {
+                slug: true,
+                description: true,
+                mrp: true,
+                vat: true,
+                vendor_Products: {
                     select: {
                         id: true,
                         slug: true,
@@ -30,7 +31,6 @@ export const GET = async (req, { params }) => {
             {
                 message: 'Products fetched successfully',
                 success: true,
-                total: vendorProducts.length || 0,
                 product_list: vendorProducts
             },
             { status: 200 }

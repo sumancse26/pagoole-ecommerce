@@ -21,14 +21,14 @@ model Users {
   updated_at            DateTime          @updatedAt
   image                 String            @default("") @db.Text
   
-  Geo_Locations         Geo_Locations[]
-  Vendors               Vendors[]
-  Carts                 Carts[]
-  Orders                Orders[]
-  Wishlists             Wishlists[]
-  Shipping_Addresses    Shipping_Addresses[]
-  Product_Reviews       Product_Reviews[]
-  Vendor_Reviews        Vendor_Reviews[]
+  geo_locations         Geo_Locations[]
+  vendors               Vendors[]
+  carts                 Carts[]
+  orders                Orders[]
+  wish_lists             Wishlists[]
+  shipping_addresses    Shipping_Addresses[]
+  product_reviews       Product_Reviews[]
+  vendor_reviews        Vendor_Reviews[]
 }
 
 model Geo_Locations {
@@ -38,14 +38,14 @@ model Geo_Locations {
   parent_id               Int?
   is_active               Int                 @default(1)
   entry_date              DateTime            @default(now())
-  created_by              Int                 @default(0)
+  created_by              Int?                
   created_at              DateTime            @default(now())
   updated_at              DateTime            @updatedAt
   
   parent                  Geo_Locations?      @relation("GeoLocationHierarchy", fields: [parent_id], references: [id])
   children                Geo_Locations[]     @relation("GeoLocationHierarchy")
-  Vendors                 Vendors[]
-  Users                   Users               @relation(fields: [created_by], references: [id])
+  vendors                 Vendors[]
+  users                   Users?               @relation(fields: [created_by], references: [id])
 }
 
 model Vendors {
@@ -63,10 +63,10 @@ model Vendors {
   updated_at             DateTime             @updatedAt
   store_logo             String               @default("") @db.Text
   
-  Users                  Users                @relation(fields: [user_id], references: [id])
-  Geo_Locations          Geo_Locations        @relation(fields: [location_id], references: [id])
-  Vendor_Products        Vendor_Products[]
-  Vendor_Reviews         Vendor_Reviews[]
+  users                  Users                @relation(fields: [user_id], references: [id])
+  geo_locations          Geo_Locations        @relation(fields: [location_id], references: [id])
+  vendor_products        Vendor_Products[]
+  vendor_reviews         Vendor_Reviews[]
 }
 
 model Categories {
@@ -80,7 +80,8 @@ model Categories {
   
   parent                Categories?  @relation("CategoryParent", fields: [parent_id], references: [id])
   children              Categories[] @relation("CategoryParent")
-  Products              Products[]
+  products              Products[]
+  vendor_products       Vendor_Products[]
 }
 
 model Brands {
@@ -91,7 +92,7 @@ model Brands {
   updated_at            DateTime      @updatedAt
   brand_logo            String        @default("") @db.Text
 
-  Products              Products[]
+  products              Products[]
 }
 
 model Weights {
@@ -102,17 +103,17 @@ model Weights {
   created_at            DateTime      @default(now())
   updated_at            DateTime      @updatedAt
 
-  Products              Products[]
+  products              Products[]
 }
 
 model File_Server {
   id                    Int      @id @default(autoincrement())
   name                  String   @unique @db.VarChar(64)
-  base_url              String   @unique @db.VarChar(128)
+  base_url              String   @default("") @db.Text
   created_at            DateTime? @default(now())
   
-  Products              Products[]
-  Product_Images        Product_Images[]
+  products              Products[]
+  product_images        Product_Images[]
 }
 
 model Products {
@@ -124,42 +125,47 @@ model Products {
   trade_price           Float           
   mrp                   Float           
   vat                   Float
-  server_id             Int
   brand_id              Int?
   category_id           Int?
+  server_id             Int?
   weight_id             Int?
   created_at            DateTime              @default(now())
   updated_at            DateTime              @updatedAt
   image_id              Int?
   image                 String                @default("") @db.Text
 
-  File_Server           File_Server           @relation(fields: [server_id], references: [id])
-  Brands                Brands?               @relation(fields: [brand_id], references: [id])
-  Categories            Categories?           @relation(fields: [category_id], references: [id])
-  Weights               Weights?              @relation(fields: [weight_id], references: [id])
+  brands                Brands?               @relation(fields: [brand_id], references: [id])
+  categories            Categories?           @relation(fields: [category_id], references: [id])
+  weights               Weights?              @relation(fields: [weight_id], references: [id])
+  file_server           File_Server?          @relation(fields: [server_id], references: [id])
   //Product_Images        Product_Images?      @relation(fields: [image_id], references: [id])
-  Vendor_Products       Vendor_Products[]
-  Product_Reviews       Product_Reviews[]
-  Product_Images        Product_Images[]
-  Wishlists             Wishlists[]
+  vendor_products       Vendor_Products[]
+  vendor_reviews       Product_Reviews[]
+  product_images        Product_Images[]
+  wish_lists             Wishlists[]
 }
 
 model Product_Images {
   id                    Int             @id @default(autoincrement())
   product_id            Int
-  server_id             Int
+  vendor_product_id     Int?
+  vendor_id             Int
+  server_id             Int?
   file_name             String          @db.VarChar(64)
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
 
-  Products              Products        @relation(fields: [product_id], references: [id])
-  File_Server           File_Server     @relation(fields: [server_id], references: [id])
+  products              Products        @relation(fields: [product_id], references: [id])
+  vendor_products       Vendor_Products? @relation(fields: [vendor_product_id], references: [id])
+  file_server           File_Server?    @relation(fields: [server_id], references: [id])
 }
 
 model Vendor_Products {
   id                     Int             @id @default(autoincrement())
   product_id             Int
   vendor_id              Int
+  category_id            Int?           
+
   price                  Float           
   stock_qty              Int             @default(0)
   is_active              Int             @default(1)
@@ -167,10 +173,12 @@ model Vendor_Products {
   updated_at             DateTime        @updatedAt
   image_url              String          @default("") @db.Text
 
-  Products               Products        @relation(fields: [product_id], references: [id])
-  Vendors                Vendors         @relation(fields: [vendor_id], references: [id])
-  Cart_Items             Cart_Items[]
-  Order_Items            Order_Items[]
+  products               Products        @relation(fields: [product_id], references: [id]) 
+  vendors                Vendors         @relation(fields: [vendor_id], references: [id])
+  categories             Categories?     @relation(fields: [category_id], references: [id])
+  cart_items             Cart_Items[]
+  order_items            Order_Items[]
+  product_images         Product_Images[]
 }
 
 model Carts {
@@ -179,8 +187,8 @@ model Carts {
   created_at             DateTime        @default(now())
   updated_at             DateTime        @updatedAt
   
-  Users                  Users           @relation(fields: [user_id], references: [id])
-  Cart_Items             Cart_Items[]
+  users                  Users           @relation(fields: [user_id], references: [id])
+  cart_items             Cart_Items[]
 }
 
 model Cart_Items {
@@ -191,8 +199,8 @@ model Cart_Items {
   created_at             DateTime        @default(now())
   updated_at             DateTime        @updatedAt
 
-  Carts                  Carts           @relation(fields: [cart_id], references: [id], onDelete: Cascade)
-  Vendor_Products        Vendor_Products @relation(fields: [vendor_prod_id], references: [id])
+  carts                  Carts           @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  vendor_products        Vendor_Products @relation(fields: [vendor_prod_id], references: [id])
 }
 
 model Orders {
@@ -204,8 +212,8 @@ model Orders {
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   
-  Users                 Users           @relation(fields: [user_id], references: [id])
-  Order_Items           Order_Items[]
+  users                 Users           @relation(fields: [user_id], references: [id])
+  order_items           Order_Items[]
   Payments              Payments[]
 }
 
@@ -218,8 +226,8 @@ model Order_Items {
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
 
-  Orders                Orders          @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  Vendor_Products       Vendor_Products @relation(fields: [vendor_product_id], references: [id])
+  orders                Orders          @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  vendor_products       Vendor_Products @relation(fields: [vendor_product_id], references: [id])
 }
 
 model Payments {
@@ -232,7 +240,7 @@ model Payments {
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
 
-  Orders                Orders          @relation(fields: [order_id], references: [id])
+  orders                Orders          @relation(fields: [order_id], references: [id])
 }
 
 model Shipping_Addresses {
@@ -247,7 +255,7 @@ model Shipping_Addresses {
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   
-  Users                 Users           @relation(fields: [user_id], references: [id])
+  users                 Users           @relation(fields: [user_id], references: [id])
 }
 
 model Product_Reviews {
@@ -259,8 +267,8 @@ model Product_Reviews {
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   
-  Products              Products        @relation(fields: [product_id], references: [id])
-  Users                 Users           @relation(fields: [user_id], references: [id])
+  products              Products        @relation(fields: [product_id], references: [id])
+  users                 Users           @relation(fields: [user_id], references: [id])
 }
 
 model Vendor_Reviews {
@@ -272,8 +280,8 @@ model Vendor_Reviews {
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   
-  Vendors               Vendors         @relation(fields: [vendor_id], references: [id])
-  Users                 Users           @relation(fields: [user_id], references: [id])
+  vendors               Vendors         @relation(fields: [vendor_id], references: [id])
+  users                 Users           @relation(fields: [user_id], references: [id])
 }
 model Wishlists {
   id                    Int             @id @default(autoincrement())
@@ -282,6 +290,6 @@ model Wishlists {
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   
-  Users                 Users           @relation(fields: [user_id], references: [id])
-  Products              Products        @relation(fields: [product_id], references: [id])
+  users                 Users           @relation(fields: [user_id], references: [id])
+  products              Products        @relation(fields: [product_id], references: [id])
 }

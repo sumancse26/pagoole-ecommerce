@@ -14,6 +14,7 @@ export const GET = async (req) => {
             {
                 message: 'Brand fetched successfully',
                 success: true,
+                total: brands.length || 0,
                 brands
             },
             { status: 200 }

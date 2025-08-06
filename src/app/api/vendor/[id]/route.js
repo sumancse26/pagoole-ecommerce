@@ -18,7 +18,7 @@ export const GET = async (req, { params }) => {
             }
         });
         return NextResponse.json(
-            { message: 'Vendor fetched successfully', success: true, vendor_list },
+            { message: 'Vendor fetched successfully', success: true, total: vendor_list.length || 0, vendor_list },
             { status: 200 }
         );
     } catch (err) {

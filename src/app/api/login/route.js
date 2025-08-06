@@ -27,7 +27,7 @@ export const POST = async (req) => {
         }
 
         const payload = {
-            name: selectedUser.first_name,
+            name: selectedUser.user_name,
             email: selectedUser.email,
             user_id: selectedUser.id,
             role: ''
@@ -49,7 +49,7 @@ export const POST = async (req) => {
             success: true,
             data: {
                 id: selectedUser.id,
-                name: `${selectedUser.first_name} ${selectedUser.last_name}`,
+                name: selectedUser.user_name,
                 email: selectedUser.email
             },
             token

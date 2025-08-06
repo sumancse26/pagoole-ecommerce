@@ -9,13 +9,15 @@ export const GET = async (req) => {
                 price: true,
                 stock_qty: true,
                 is_active: true,
-                Products: {
+                products: {
                     select: {
                         id: true,
                         slug: true,
                         description: true,
                         mrp: true,
-                        vat: true
+                        vat: true,
+                        brands: true,
+                        file_server: true
                     }
                 }
             }
@@ -25,6 +27,7 @@ export const GET = async (req) => {
             {
                 message: 'Products fetched successfully',
                 success: true,
+                total: vendorProducts.length || 0,
                 product_list: vendorProducts
             },
             { status: 200 }

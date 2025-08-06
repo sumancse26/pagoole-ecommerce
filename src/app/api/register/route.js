@@ -15,7 +15,7 @@ export const POST = async (req) => {
             address,
             location_id,
             image,
-            store_logo = ''
+            store_logo
         } = body;
 
         if (!user_name || !email || !password || !store_name || !location_id) {
@@ -35,7 +35,7 @@ export const POST = async (req) => {
                 }
             });
 
-            await tx.vendors.create({
+            const savedVendor = await tx.vendors.create({
                 data: {
                     user_id: savedUser.id,
                     store_name,
@@ -43,9 +43,11 @@ export const POST = async (req) => {
                     address: address || '',
                     location_id,
                     otp: 0,
-                    store_logo
+                    store_logo: store_logo || ''
                 }
             });
+
+            return savedVendor;
         });
 
         return NextResponse.json({ message: 'User registered successfully', success: true }, { status: 200 });

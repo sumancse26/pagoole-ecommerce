@@ -8,14 +8,7 @@ export const POST = async (req) => {
 
         const userInfo = await prisma.vendors.findFirst({
             where: {
-                OR: [
-                    {
-                        id: Number(userId)
-                    },
-                    {
-                        user_id: Number(userId)
-                    }
-                ]
+                user_id: Number(userId)
             }
         });
 
@@ -42,7 +35,13 @@ export const POST = async (req) => {
 
         const product = await prisma.products.findFirst({
             where: {
-                prod_name
+                prod_name: {
+                    equals: prod_name,
+                    mode: 'insensitive'
+                },
+                brand_id: brand_id,
+                category_id: category_id,
+                weight_id: weight_id
             }
         });
 
@@ -67,7 +66,7 @@ export const POST = async (req) => {
                 const vendorProduct = await tx.vendor_Products.create({
                     data: {
                         product_id: savedProduct.id,
-                        vendor_id: Number(userId),
+                        vendor_id: Number(userInfo.id),
                         price: mrp,
                         stock_qty,
                         is_active: 0
@@ -85,7 +84,8 @@ export const POST = async (req) => {
             const vendorProduct = await prisma.vendor_Products.create({
                 data: {
                     product_id: product.id,
-                    vendor_id: Number(userId),
+                    vendor_id: Number(userInfo.id),
+                    category_id: Number(category_id),
                     price: mrp,
                     stock_qty,
                     is_active: 0
