@@ -23,7 +23,7 @@ const SearchableDropdown = ({
     const handleSelect = (item) => {
         if (item) {
             onSelect(item);
-            setQuery(`${item[labelKey]} - ${item[valueKey]}`);
+            setQuery(`${item[labelKey]}${item[valueKey] ? '-' + item[valueKey] : ''}`);
             setSelected(item);
             setIsOpen(false);
         }
@@ -52,7 +52,7 @@ const SearchableDropdown = ({
                                 key={index}
                                 onClick={() => handleSelect(item)}
                                 className="px-4 py-2 cursor-pointer hover:bg-green-200 text-sm text-gray-700">
-                                {item[labelKey]} - {item[valueKey]}
+                                {item[labelKey]} {item[valueKey] ? ' - ' : ''} {item[valueKey]}
                             </li>
                         ))
                     ) : (

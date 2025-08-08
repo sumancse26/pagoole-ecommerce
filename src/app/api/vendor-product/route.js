@@ -16,8 +16,24 @@ export const GET = async (req) => {
                         description: true,
                         mrp: true,
                         vat: true,
-                        brands: true,
-                        file_server: true
+                        brands: {
+                            select: {
+                                id: true,
+                                name: true
+                            }
+                        },
+                        file_server: {
+                            select: {
+                                id: true,
+                                base_url: true
+                            }
+                        },
+                        categories: {
+                            select: {
+                                id: true,
+                                category_name: true
+                            }
+                        }
                     }
                 }
             }

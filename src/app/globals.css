@@ -7,6 +7,21 @@ body.sidebar-open .with-sidebar-transition {
 body .with-sidebar-transition {
     transition: all 0.3s ease;
 }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fadeInUp {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
 /* @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
 
 .hind-siliguri-light {
