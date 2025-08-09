@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/config/prisma';
 
-export const GET = async (req) => {
+export const GET = async (req, { params }) => {
     try {
-        const vendorProducts = await prisma.vendor_Products.findMany({
-            where: {
-                is_active: 1
-            },
+        const { id } = await params;
 
+        const vendorProducts = await prisma.vendor_Products.findFirst({
+            where: {
+                id: Number(id)
+            },
             select: {
                 id: true,
                 price: true,
@@ -53,10 +54,9 @@ export const GET = async (req) => {
 
         return NextResponse.json(
             {
-                message: 'Products fetched successfully',
+                message: 'Product fetched successfully',
                 success: true,
-                total: vendorProducts.length || 0,
-                product_list: vendorProducts
+                product_details: vendorProducts || {}
             },
             { status: 200 }
         );

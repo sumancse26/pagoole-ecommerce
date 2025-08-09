@@ -4,6 +4,10 @@ import prisma from '@/config/prisma';
 export const GET = async (req) => {
     try {
         const vendor_list = await prisma.vendors.findMany({
+            where: {
+                is_active: 1
+            },
+
             omit: {
                 is_active: true,
                 is_admin: true,

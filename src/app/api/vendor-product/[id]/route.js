@@ -3,11 +3,12 @@ import prisma from '@/config/prisma';
 
 export const GET = async (req, { params }) => {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const vendorProducts = await prisma.vendor_Products.findMany({
             where: {
-                vendor_id: Number(id)
+                vendor_id: Number(id),
+                is_active: 1
             },
             select: {
                 id: true,

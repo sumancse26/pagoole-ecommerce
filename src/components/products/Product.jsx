@@ -1,14 +1,7 @@
 import Link from 'next/link';
 
-// The component is now an async function to potentially fetch data, and it accepts `searchParams` as a prop.
 const Product = async ({ prodType, productList, searchParams }) => {
-    // The active tab is now read directly from the URL query parameters.
-    // We default to 'arrival' if no tab is specified in the URL.
     const activeTab = searchParams?.tab || 'arrival';
-
-    // The product filtering logic that was implicitly handled by state
-    // would now be handled here or in the parent component before passing `productList`.
-    // For demonstration, this logic is assumed to be handled before this component renders.
 
     return (
         <>
@@ -30,8 +23,7 @@ const Product = async ({ prodType, productList, searchParams }) => {
                                                 ? 'bg-white shadow-sm text-green-600'
                                                 : 'text-gray-700 hover:text-gray-900'
                                         }`}
-                                        scroll={false} // Optional: prevents scrolling to the top on tab change
-                                    >
+                                        scroll={false}>
                                         New Arrival
                                     </Link>
                                     <Link
@@ -125,7 +117,11 @@ const Product = async ({ prodType, productList, searchParams }) => {
                                     <div className="flex justify-between items-start mb-2">
                                         <div>
                                             <h3 className="font-medium text-gray-900 mb-1 hover:text-green-600 transition-colors">
-                                                <Link href={`/products/${product.id}`}>
+                                                <Link
+                                                    href={{
+                                                        pathname: '/products',
+                                                        query: { product_id: product.products?.id }
+                                                    }}>
                                                     {product.products?.slug || ''}
                                                 </Link>
                                             </h3>

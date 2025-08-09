@@ -1,56 +1,72 @@
 import Link from 'next/link';
+import { relatedProductAction } from '@app/actions/productAction';
 
-// A simple card component for the related products section
 const RelatedProductCard = ({ product }) => (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 group border border-gray-100">
-        <div className="relative h-48 w-full overflow-hidden">
-            <Link href="#">
-                <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-            </Link>
+    <div
+        key={product.id}
+        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-sm transition-shadow group">
+        <div className="relative h-64 w-full overflow-hidden rounded-lg">
+            <img
+                src={product.products?.file_server?.base_url}
+                alt={product.products?.file_server?.name}
+                className="h-full w-full object-contain transition-all duration-300 ease-in-out group-hover:scale-105"
+            />
+            {product?.discount && (
+                <span className="absolute top-4 left-4 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded shadow">
+                    -{product?.discount || 0}%
+                </span>
+            )}
         </div>
         <div className="p-4">
-            <h3 className="font-medium text-gray-800 mb-1 text-sm">
-                <Link href="#" className="hover:text-emerald-600 transition-colors">
-                    {product.name}
-                </Link>
-            </h3>
-            <p className="font-bold text-gray-900">{product.price}</p>
+            <div className="flex justify-between items-start mb-2">
+                <div>
+                    <h3 className="font-medium text-gray-900 mb-1 hover:text-green-600 transition-colors">
+                        <Link
+                            href={{
+                                pathname: '/products',
+                                query: { product_id: product.products?.id }
+                            }}>
+                            {product.products?.slug || ''}
+                        </Link>
+                    </h3>
+                    <span className="text-xs text-gray-500">
+                        {product.products?.categories?.category_name || ''} ({product.products?.brands?.name || ''})
+                    </span>
+                    <p className="text-xs text-gray-500">{product.vendors?.store_name || ''}</p>
+                </div>
+                {/* NOTE: This button will also need to be a Client Component if it requires an onClick handler */}
+                <button className="text-gray-400 hover:text-green-600">
+                    <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                    </svg>
+                </button>
+            </div>
+            <div className="flex items-center justify-between">
+                <div>
+                    <span className="font-bold text-gray-900">{product.price?.toFixed(2)}</span>
+                    {product.products?.mrp && (
+                        <del className="text-sm text-gray-500 ml-1">{product.products?.mrp?.toFixed(2)}</del>
+                    )}
+                </div>
+            </div>
         </div>
     </div>
 );
 
-const ProductDetails = () => {
-    // Mock data for the new "Related Products" section
-    const relatedProducts = [
-        {
-            id: 1,
-            name: 'Summer Floral Dress',
-            price: '$59.99',
-            imageUrl: 'https://via.placeholder.com/300x300?text=Related+1'
-        },
-        {
-            id: 2,
-            name: 'Classic Black Gown',
-            price: '$75.00',
-            imageUrl: 'https://via.placeholder.com/300x300?text=Related+2'
-        },
-        {
-            id: 3,
-            name: 'Casual Denim Jumpsuit',
-            price: '$65.50',
-            imageUrl: 'https://via.placeholder.com/300x300?text=Related+3'
-        },
-        {
-            id: 4,
-            name: 'Office Wear Blazer',
-            price: '$89.00',
-            imageUrl: 'https://via.placeholder.com/300x300?text=Related+4'
-        }
-    ];
+const ProductDetails = async ({ prodInfo }) => {
+    const result = await relatedProductAction(prodInfo.products?.id);
+
+    const relatedProducts = result.related_products;
 
     return (
         <>
@@ -60,7 +76,7 @@ const ProductDetails = () => {
                     <div className="lg:w-1/3">
                         <div className="bg-white rounded-xl shadow-sm p-4 mb-4 border border-gray-100">
                             <img
-                                src="https://via.placeholder.com/800x800?text=Product+Image"
+                                src={prodInfo.products?.file_server?.base_url}
                                 alt="Blue Dress For Woman"
                                 className="w-full h-auto rounded-lg object-cover aspect-square"
                             />
@@ -75,7 +91,9 @@ const ProductDetails = () => {
                                 <span className="text-xs font-semibold tracking-wider text-emerald-600 uppercase">
                                     Premium Collection
                                 </span>
-                                <h1 className="text-3xl font-bold text-gray-900 mt-1 mb-2">Blue Elegant Dress</h1>
+                                <h1 className="text-3xl font-bold text-gray-900 mt-1 mb-2">
+                                    {prodInfo.products?.slug || ''}
+                                </h1>
 
                                 <div className="flex items-center mb-4">
                                     <div className="flex text-amber-400 mr-2">
@@ -89,17 +107,17 @@ const ProductDetails = () => {
                                 </div>
 
                                 <div className="flex items-center mb-6">
-                                    <span className="text-3xl font-bold text-gray-900">$45.00</span>
-                                    <span className="text-lg text-gray-400 line-through ml-3">$55.25</span>
+                                    <span className="text-3xl font-bold text-gray-900">TK. {prodInfo.price || 0}</span>
+                                    <span className="text-lg text-gray-400 line-through ml-3">
+                                        TK. {prodInfo.products?.mrp || 0}
+                                    </span>
                                     <span className="bg-emerald-100 text-emerald-800 text-sm font-semibold px-2.5 py-0.5 rounded-full ml-3">
-                                        35% OFF
+                                        0% OFF
                                     </span>
                                 </div>
 
                                 <p className="text-gray-600 mb-6 leading-relaxed">
-                                    This elegant blue dress features a flattering silhouette with premium stitching and
-                                    sustainable materials. Perfect for both casual outings and special occasions, it
-                                    combines comfort with timeless style.
+                                    {prodInfo.products?.description || ''}
                                 </p>
                             </div>
 
@@ -151,14 +169,16 @@ const ProductDetails = () => {
                             </div>
 
                             {/* --- NEW: Related Products Section --- */}
-                            <div className="mt-10 pt-8 border-t border-gray-200">
-                                <h2 className="text-xl font-bold text-gray-900 mb-5">You Might Also Like</h2>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    {relatedProducts.map((product) => (
-                                        <RelatedProductCard key={product.id} product={product} />
-                                    ))}
+                            {relatedProducts?.length > 0 && (
+                                <div className="mt-10 pt-8 border-t border-gray-200">
+                                    <h2 className="text-xl font-bold text-gray-900 mb-5">You Might Also Like</h2>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        {relatedProducts?.map((product) => (
+                                            <RelatedProductCard key={product.id} product={product} />
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>
