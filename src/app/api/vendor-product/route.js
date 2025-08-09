@@ -9,6 +9,14 @@ export const GET = async (req) => {
                 price: true,
                 stock_qty: true,
                 is_active: true,
+                vendors: {
+                    select: {
+                        id: true,
+                        store_name: true,
+                        store_description: true,
+                        address: true
+                    }
+                },
                 products: {
                     select: {
                         id: true,

@@ -5,8 +5,19 @@ export const getProductList = cache(async () => {
     const res = await fetchApi('/api/vendor-product', {
         method: 'GET',
         next: {
-            revalidate: 3600,
+            revalidate: 300,
             tags: ['products']
+        }
+    });
+    return res;
+});
+
+export const getProductByVendorList = cache(async (id) => {
+    const res = await fetchApi(`/api/vendor-product/${id}`, {
+        method: 'GET',
+        next: {
+            revalidate: 300,
+            tags: ['productsByVendor']
         }
     });
     return res;

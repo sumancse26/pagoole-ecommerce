@@ -1,9 +1,14 @@
-'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
-const Product = ({ prodType, productList }) => {
-    const [activeTab, setActiveTab] = useState('arrival');
+
+// The component is now an async function to potentially fetch data, and it accepts `searchParams` as a prop.
+const Product = async ({ prodType, productList, searchParams }) => {
+    // The active tab is now read directly from the URL query parameters.
+    // We default to 'arrival' if no tab is specified in the URL.
+    const activeTab = searchParams?.tab || 'arrival';
+
+    // The product filtering logic that was implicitly handled by state
+    // would now be handled here or in the parent component before passing `productList`.
+    // For demonstration, this logic is assumed to be handled before this component renders.
 
     return (
         <>
@@ -17,71 +22,71 @@ const Product = ({ prodType, productList }) => {
                             </div>
                             <div className="flex overflow-x-auto pb-2 md:pb-0">
                                 <div className="flex space-x-1 bg-gray-200 rounded-lg p-1">
-                                    <button
+                                    {/* Each button is now a Link that changes the URL query parameter */}
+                                    <Link
+                                        href="?tab=arrival"
                                         className={`px-4 py-2 text-sm rounded-md whitespace-nowrap ${
                                             activeTab === 'arrival'
                                                 ? 'bg-white shadow-sm text-green-600'
                                                 : 'text-gray-700 hover:text-gray-900'
                                         }`}
-                                        onClick={() => setActiveTab('arrival')}>
+                                        scroll={false} // Optional: prevents scrolling to the top on tab change
+                                    >
                                         New Arrival
-                                    </button>
-                                    <button
+                                    </Link>
+                                    <Link
+                                        href="?tab=sellers"
                                         className={`px-4 py-2 text-sm rounded-md whitespace-nowrap ${
                                             activeTab === 'sellers'
                                                 ? 'bg-white shadow-sm text-green-600'
                                                 : 'text-gray-700 hover:text-gray-900'
                                         }`}
-                                        onClick={() => setActiveTab('sellers')}>
+                                        scroll={false}>
                                         Best Sellers
-                                    </button>
-                                    <button
+                                    </Link>
+                                    <Link
+                                        href="?tab=featured"
                                         className={`px-4 py-2 text-sm rounded-md whitespace-nowrap ${
                                             activeTab === 'featured'
                                                 ? 'bg-white shadow-sm text-green-600'
                                                 : 'text-gray-700 hover:text-gray-900'
                                         }`}
-                                        onClick={() => setActiveTab('featured')}>
+                                        scroll={false}>
                                         Featured
-                                    </button>
-                                    <button
+                                    </Link>
+                                    <Link
+                                        href="?tab=special"
                                         className={`px-4 py-2 text-sm rounded-md whitespace-nowrap ${
                                             activeTab === 'special'
                                                 ? 'bg-white shadow-sm text-green-600'
                                                 : 'text-gray-700 hover:text-gray-900'
                                         }`}
-                                        onClick={() => setActiveTab('special')}>
+                                        scroll={false}>
                                         Special Offer
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
                     )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {productList.map((product) => (
+                        {productList?.map((product) => (
                             <div
                                 key={product.id}
                                 className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-sm transition-shadow group">
                                 <div className="relative h-64 w-full overflow-hidden rounded-lg">
-                                    {/* Image */}
-
                                     <img
                                         src={product.products?.file_server?.base_url}
                                         alt={product.products?.file_server?.name}
                                         className="h-full w-full object-contain transition-all duration-300 ease-in-out group-hover:scale-105"
                                     />
-
-                                    {/* Discount Badge */}
                                     {product?.discount && (
                                         <span className="absolute top-4 left-4 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded shadow">
                                             -{product?.discount || 0}%
                                         </span>
                                     )}
-
-                                    {/* Hover Overlay */}
                                     <div className="absolute inset-0 bg-white/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out flex items-center justify-center space-x-2 pointer-events-none group-hover:pointer-events-auto">
-                                        {/* Wishlist Button */}
+                                        {/* NOTE: These buttons will need to be their own Client Components if they have onClick handlers */}
                                         <button
                                             className="bg-white w-10 h-10 rounded-full shadow flex items-center justify-center text-gray-700 hover:bg-green-600 hover:text-white transition-all duration-300 transform translate-y-4 group-hover:translate-y-0"
                                             title="Add to Wishlist">
@@ -98,8 +103,6 @@ const Product = ({ prodType, productList }) => {
                                                 />
                                             </svg>
                                         </button>
-
-                                        {/* Cart Button */}
                                         <button
                                             className="bg-white w-10 h-10 rounded-full shadow flex items-center justify-center text-gray-700 hover:bg-green-600 hover:text-white transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 delay-200"
                                             title="Add to Cart">
@@ -118,7 +121,6 @@ const Product = ({ prodType, productList }) => {
                                         </button>
                                     </div>
                                 </div>
-
                                 <div className="p-4">
                                     <div className="flex justify-between items-start mb-2">
                                         <div>
@@ -131,7 +133,9 @@ const Product = ({ prodType, productList }) => {
                                                 {product.products?.categories?.category_name || ''} (
                                                 {product.products?.brands?.name || ''})
                                             </span>
+                                            <p className="text-xs text-gray-500">{product.vendors?.store_name || ''}</p>
                                         </div>
+                                        {/* NOTE: This button will also need to be a Client Component if it requires an onClick handler */}
                                         <button className="text-gray-400 hover:text-green-600">
                                             <svg
                                                 className="w-5 h-5"
@@ -148,25 +152,6 @@ const Product = ({ prodType, productList }) => {
                                             </svg>
                                         </button>
                                     </div>
-                                    {/* <div className="mb-3">
-                                        <div className="flex items-center">
-                                            {[1, 2, 3, 4, 5].map((star) => (
-                                                <svg
-                                                    key={star}
-                                                    className={`w-4 h-4 ${
-                                                        star <= Math.floor(product.rating / 20)
-                                                            ? 'text-yellow-400'
-                                                            : 'text-gray-300'
-                                                    }`}
-                                                    fill="currentColor"
-                                                    viewBox="0 0 20 20"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                </svg>
-                                            ))}
-                                            <span className="text-xs text-gray-500 ml-1">({product.reviews})</span>
-                                        </div>
-                                    </div> */}
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <span className="font-bold text-gray-900">{product.price?.toFixed(2)}</span>
@@ -176,27 +161,15 @@ const Product = ({ prodType, productList }) => {
                                                 </del>
                                             )}
                                         </div>
-                                        {/* <div className="flex space-x-1">
-                                            {product.colors.map((color, i) => (
-                                                <span
-                                                    key={i}
-                                                    className={`w-4 h-4 rounded-full border border-gray-200 ${
-                                                        i === 0 ? 'ring-2 ring-offset-1 ring-green-500' : ''
-                                                    }`}
-                                                    style={{ backgroundColor: color }}></span>
-                                            ))}
-                                        </div> */}
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                     <div className="text-center mt-10">
-                        <Link
-                            href="/shop"
-                            className="inline-block px-6 py-3 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-green-600 hover:text-white transition-colors">
+                        <button className="inline-block px-6 py-3 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-green-600 hover:text-white transition-colors">
                             View All Products
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </section>

@@ -14,13 +14,39 @@ export const GET = async (req, { params }) => {
                 price: true,
                 stock_qty: true,
                 is_active: true,
+                vendors: {
+                    select: {
+                        id: true,
+                        store_name: true,
+                        store_description: true,
+                        address: true
+                    }
+                },
                 products: {
                     select: {
                         id: true,
                         slug: true,
                         description: true,
                         mrp: true,
-                        vat: true
+                        vat: true,
+                        brands: {
+                            select: {
+                                id: true,
+                                name: true
+                            }
+                        },
+                        file_server: {
+                            select: {
+                                id: true,
+                                base_url: true
+                            }
+                        },
+                        categories: {
+                            select: {
+                                id: true,
+                                category_name: true
+                            }
+                        }
                     }
                 }
             }

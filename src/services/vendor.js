@@ -5,8 +5,8 @@ export const getVendorList = cache(async () => {
     const res = await fetchApi('/api/vendor', {
         method: 'GET',
         next: {
-            revalidate: 3600,
-            tags: ['products']
+            revalidate: 300,
+            tags: ['vendors']
         }
     });
     return res;
@@ -16,7 +16,7 @@ export const getLocationList = cache(async () => {
     const res = await fetchApi('/api/location', {
         method: 'GET',
         next: {
-            revalidate: 3600,
+            revalidate: 300,
             tags: ['locations']
         }
     });
