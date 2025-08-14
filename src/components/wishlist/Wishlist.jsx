@@ -1,52 +1,157 @@
 'use client';
 
-export default function WishlistPage() {
-    return (
-        <div className="py-12 px-4 md:px-10 bg-gray-50 text-gray-900">
-            <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold mb-8 text-green-600">Wishlist</h1>
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
-                <div className="overflow-x-auto">
-                    <table className="w-full border text-sm text-left">
-                        <thead className="bg-green-100 text-green-700 uppercase text-xs">
-                            <tr>
-                                <th className="p-3 w-16"></th>
-                                <th className="p-3">Product</th>
-                                <th className="p-3">Price</th>
-                                <th className="p-3">Stock</th>
-                                <th className="p-3">Add to Cart</th>
-                                <th className="p-3">Remove</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white">
-                            {[1, 2, 3].map((i) => (
-                                <tr key={i} className="border-b">
-                                    <td className="p-3">
-                                        <img
-                                            src={`/images/product${i}.jpg`}
-                                            alt={`Product ${i}`}
-                                            className="w-16 h-16 object-cover rounded"
-                                        />
-                                    </td>
-                                    <td className="p-3 font-medium text-green-700">Product {i} Name</td>
-                                    <td className="p-3 text-gray-800">$45.00</td>
-                                    <td className="p-3">
-                                        <span className="inline-block bg-green-200 text-green-800 text-xs px-2 py-1 rounded-full">
-                                            In Stock
-                                        </span>
-                                    </td>
-                                    <td className="p-3">
-                                        <button className="bg-green-600 text-white text-xs px-4 py-2 rounded hover:bg-green-700 transition">
-                                            Add to Cart
-                                        </button>
-                                    </td>
-                                    <td className="p-3">
-                                        <button className="text-red-500 hover:text-red-700 text-lg">×</button>
-                                    </td>
+// --- ICONS ---
+const TrashIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="h-5 w-5">
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+        />
+    </svg>
+);
+const CartIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={2}
+        stroke="currentColor"
+        className="h-4 w-4">
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.821-6.831M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+        />
+    </svg>
+);
+
+// --- Initial Data ---
+const initialWishlistItems = [
+    { id: 1, name: 'Artisan Ceramic Mug', price: 25.0, imageUrl: '/images/product1.jpg', inStock: true },
+    { id: 2, name: 'Linen Throw Pillow', price: 45.0, imageUrl: '/images/product2.jpg', inStock: true },
+    { id: 3, name: 'Hand-poured Soy Candle', price: 32.5, imageUrl: '/images/product3.jpg', inStock: false }
+];
+
+export default function WishlistPage() {
+    const [wishlistItems, setWishlistItems] = useState(
+        initialWishlistItems.map((item) => ({ ...item, isRemoving: false }))
+    );
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setIsInitialLoad(false), 500);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const handleRemoveItem = (id) => {
+        setWishlistItems((items) => items.map((item) => (item.id === id ? { ...item, isRemoving: true } : item)));
+        setTimeout(() => {
+            setWishlistItems((currentItems) => currentItems.filter((item) => item.id !== id));
+        }, 500); // Must match transition duration
+    };
+
+    return (
+        <div className="py-16 px-4 md:px-10 bg-gray-50 text-gray-800 min-h-screen">
+            <div className="max-w-7xl mx-auto">
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900 mb-10">Your Wishlist</h1>
+
+                <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                            <thead className="text-xs text-gray-500 uppercase bg-gray-50/70">
+                                <tr>
+                                    <th scope="col" className="px-6 py-4 font-semibold text-left">
+                                        Product
+                                    </th>
+                                    <th scope="col" className="px-6 py-4 font-semibold text-right">
+                                        Price
+                                    </th>
+                                    <th scope="col" className="px-6 py-4 font-semibold text-center">
+                                        Status
+                                    </th>
+                                    <th scope="col" className="px-6 py-4 font-semibold text-center">
+                                        Action
+                                    </th>
+                                    <th scope="col" className="px-4 py-4">
+                                        <span className="sr-only">Remove</span>
+                                    </th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                {wishlistItems.map((item, index) => (
+                                    <tr
+                                        key={item.id}
+                                        className={`
+                                            transition-all duration-500 ease-in-out
+                                            ${isInitialLoad ? 'animate-fade-in-up' : ''}
+                                            ${
+                                                item.isRemoving
+                                                    ? 'opacity-0 -translate-x-8'
+                                                    : 'opacity-100 translate-x-0'
+                                            }
+                                        `}
+                                        style={{ animationDelay: isInitialLoad ? `${index * 100}ms` : '0ms' }}>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center space-x-4">
+                                                <img
+                                                    src={item.imageUrl}
+                                                    alt={item.name}
+                                                    className="h-16 w-16 rounded-lg object-cover"
+                                                />
+                                                <div>
+                                                    <div className="font-semibold text-gray-900">{item.name}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-medium">${item.price.toFixed(2)}</td>
+                                        <td className="px-6 py-4 text-center">
+                                            {item.inStock ? (
+                                                <span className="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                                    In Stock
+                                                </span>
+                                            ) : (
+                                                <span className="inline-block bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                                    Out of Stock
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 text-center">
+                                            <button
+                                                disabled={!item.inStock}
+                                                className="flex items-center justify-center gap-2 bg-green-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                                <CartIcon />
+                                                Add to Cart
+                                            </button>
+                                        </td>
+                                        <td className="px-4 py-4 text-center">
+                                            <button
+                                                onClick={() => handleRemoveItem(item.id)}
+                                                className="p-2 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                                aria-label={`Remove ${item.name}`}>
+                                                <TrashIcon />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {wishlistItems.length === 0 && (
+                            <div className="text-center py-20">
+                                <h2 className="text-xl font-semibold text-gray-600">Your Wishlist is Empty</h2>
+                                <p className="text-gray-400 mt-2">Items you save for later will appear here.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

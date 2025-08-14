@@ -64,9 +64,12 @@ const RelatedProductCard = ({ product }) => (
 );
 
 const ProductDetails = async ({ prodInfo }) => {
-    const result = await relatedProductAction(prodInfo.products?.id);
+    let relatedProducts = [];
+    if (prodInfo?.products) {
+        const result = await relatedProductAction(prodInfo.products?.id);
 
-    const relatedProducts = result.related_products;
+        relatedProducts = result.related_products;
+    }
 
     return (
         <>
@@ -76,7 +79,7 @@ const ProductDetails = async ({ prodInfo }) => {
                     <div className="lg:w-1/3">
                         <div className="bg-white rounded-xl shadow-sm p-4 mb-4 border border-gray-100">
                             <img
-                                src={prodInfo.products?.file_server?.base_url}
+                                src={prodInfo?.products?.file_server?.base_url}
                                 alt="Blue Dress For Woman"
                                 className="w-full h-auto rounded-lg object-cover aspect-square"
                             />
@@ -92,7 +95,7 @@ const ProductDetails = async ({ prodInfo }) => {
                                     Premium Collection
                                 </span>
                                 <h1 className="text-3xl font-bold text-gray-900 mt-1 mb-2">
-                                    {prodInfo.products?.slug || ''}
+                                    {prodInfo?.products?.slug || ''}
                                 </h1>
 
                                 <div className="flex items-center mb-4">
@@ -107,9 +110,9 @@ const ProductDetails = async ({ prodInfo }) => {
                                 </div>
 
                                 <div className="flex items-center mb-6">
-                                    <span className="text-3xl font-bold text-gray-900">TK. {prodInfo.price || 0}</span>
+                                    <span className="text-3xl font-bold text-gray-900">TK. {prodInfo?.price || 0}</span>
                                     <span className="text-lg text-gray-400 line-through ml-3">
-                                        TK. {prodInfo.products?.mrp || 0}
+                                        TK. {prodInfo?.products?.mrp || 0}
                                     </span>
                                     <span className="bg-emerald-100 text-emerald-800 text-sm font-semibold px-2.5 py-0.5 rounded-full ml-3">
                                         0% OFF
@@ -117,7 +120,7 @@ const ProductDetails = async ({ prodInfo }) => {
                                 </div>
 
                                 <p className="text-gray-600 mb-6 leading-relaxed">
-                                    {prodInfo.products?.description || ''}
+                                    {prodInfo?.products?.description || ''}
                                 </p>
                             </div>
 
