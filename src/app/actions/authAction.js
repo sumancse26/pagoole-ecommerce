@@ -1,17 +1,14 @@
 'use server';
+import { signIn } from '@/auth';
 import { mailOptions, transporter } from '@/config/nodemailer';
-import { doLogout, getProfile, login, register, submitOtp, verifyOtp } from '@/services/inventory';
-export const loginAction = async (prevState, formData) => {
-    if (!formData) return prevState;
-
+import { register } from '@/services/users';
+export const loginAction = async (formData) => {
     const result = await login(formData);
     return result;
 };
 
-export const registerAction = async (prevState, formData) => {
-    if (!formData) return prevState;
-
-    const result = await register(formData);
+export const registerAction = async (formData, isCustomer = false) => {
+    const result = await register({ ...formData, isCustomer });
 
     return result;
 };
@@ -64,4 +61,10 @@ export const doLogoutAction = async () => {
 export const getProfileAction = async () => {
     const result = await getProfile();
     return result;
+};
+
+//social login (login with google, facebook, github, linkedin)
+export const doSocialLogin = async (action, path) => {
+    const res = await signIn(action, { redirectTo: path });
+    return res;
 };

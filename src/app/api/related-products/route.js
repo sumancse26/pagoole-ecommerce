@@ -4,26 +4,45 @@ import prisma from '@/config/prisma';
 export const GET = async (request) => {
     try {
         const { searchParams } = new URL(request.url);
-
         const prod_id = searchParams.get('prod_id');
-        const vendor_id = searchParams.get('vendor_id');
 
-        if (!prod_id || !vendor_id) {
+        if (!prod_id) {
             return NextResponse.json(
                 {
-                    error: "Missing required parameters: 'prod_id' and 'vendor_id' are required.",
+                    error: 'Missing required product ID.',
                     success: false
                 },
                 { status: 400 }
             );
         }
 
-        const relatedProducts = await prisma.vendor_Products.findMany({
-            take: 4, // This will limit the result to a maximum of 4 records.
+        const currentProduct = await prisma.products.findUnique({
             where: {
-                product_id: Number(prod_id),
-                vendor_id: {
-                    not: Number(vendor_id)
+                id: Number(prod_id)
+            },
+            select: {
+                category_id: true
+            }
+        });
+
+        if (!currentProduct) {
+            return NextResponse.json(
+                {
+                    error: 'Product not found.',
+                    success: false
+                },
+                { status: 404 }
+            );
+        }
+
+        const relatedProducts = await prisma.vendor_Products.findMany({
+            take: 4,
+            where: {
+                products: {
+                    category_id: currentProduct.category_id
+                },
+                product_id: {
+                    not: Number(prod_id)
                 },
                 is_active: 1,
                 stock_qty: {

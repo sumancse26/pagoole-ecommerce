@@ -4,12 +4,10 @@ import { NextResponse } from 'next/server';
 
 export async function middleware(req) {
     const { pathname } = req.nextUrl;
-
+    //  ||
+    //         pathname.startsWith('/api/auth');
     const isProtected =
-        pathname.startsWith('/dashboard') ||
-        pathname.startsWith('/auth') ||
-        pathname.startsWith('/api/private') ||
-        pathname.startsWith('/api/auth');
+        pathname.startsWith('/dashboard') || pathname.startsWith('/auth') || pathname.startsWith('/api/private');
 
     if (!isProtected) {
         return NextResponse.next();

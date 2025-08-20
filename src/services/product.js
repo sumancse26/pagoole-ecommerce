@@ -23,7 +23,7 @@ export const getProductByVendorList = cache(async (id) => {
     return res;
 });
 
-export const getProductById = cache(async (id) => {
+export const getProductById = async (id) => {
     const res = await fetchApi(`/api/product-details/${id}`, {
         method: 'GET',
         next: {
@@ -32,10 +32,10 @@ export const getProductById = cache(async (id) => {
         }
     });
     return res;
-});
+};
 
-export const getRelatedProducts = cache(async (id) => {
-    const res = await fetchApi(`/api/related-products/${id}`, {
+export const getRelatedProducts = async (data) => {
+    const res = await fetchApi(`/api/related-products?prod_id=${data.id}`, {
         method: 'GET',
         next: {
             revalidate: 300,
@@ -43,4 +43,4 @@ export const getRelatedProducts = cache(async (id) => {
         }
     });
     return res;
-});
+};

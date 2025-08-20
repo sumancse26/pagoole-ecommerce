@@ -22,3 +22,14 @@ export const getLocationList = cache(async () => {
     });
     return res;
 });
+
+export const getVendorListByLocation = async (id) => {
+    const res = await fetchApi(`/api/vendor/${id}`, {
+        method: 'GET',
+        next: {
+            revalidate: 5000,
+            tags: ['vendorByLocationId']
+        }
+    });
+    return res;
+};

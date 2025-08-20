@@ -7,10 +7,11 @@ export const GET = async (req, { params }) => {
 
         const vendorProducts = await prisma.vendor_Products.findFirst({
             where: {
-                id: Number(id)
+                product_id: Number(id)
             },
             select: {
                 id: true,
+                product_id: true,
                 price: true,
                 stock_qty: true,
                 is_active: true,

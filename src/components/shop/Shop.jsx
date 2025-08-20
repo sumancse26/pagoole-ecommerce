@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Dropdown from '@components/SearchableDropdown';
 import Link from 'next/link';
+import { vendorListByLocationAction } from '@app/actions/vendorAction.js';
 
 const ProductListing = ({ vendorList, locationList }) => {
     const [viewMode, setViewMode] = useState('grid');
@@ -36,9 +37,23 @@ const ProductListing = ({ vendorList, locationList }) => {
         searchVendorHandler('');
     }, []);
 
-    const getSelectedLocation = (val) => {
-        const vendorByLocation = vendorList?.filter((item) => item?.location_id == val?.id);
-        setFilteredVendors(vendorByLocation);
+    const getSelectedLocation = async (val) => {
+        // const isparent = vendorList?.find((ven) => ven.parent_location_id == val.id);
+        // if (isparent) {
+        //     const vendorByLocation = vendorList?.filter((item) => item?.parent_location_id == val.id);
+        //     setFilteredVendors(vendorByLocation);
+        // } else {
+        //     const vendorByLocation = vendorList?.filter((item) => item?.location_id == val.id);
+        //     setFilteredVendors(vendorByLocation);
+        // }
+
+        try {
+            console.log('vale', val);
+            const res = await vendorListByLocationAction(val.id);
+            setFilteredVendors(res.vendor_list || []);
+        } catch (err) {
+            throw new Error(err);
+        }
     };
 
     return (
@@ -167,13 +182,15 @@ const ProductCard = ({ vendor, viewMode }) => {
                 className={`relative h-32 w-full m-1 overflow-hidden rounded-lg  ${
                     viewMode === 'list' ? 'md:w-1/3 border-r border-gray-200' : 'border-b border-gray-200'
                 }`}>
-                <Link href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }}>
-                    <img
-                        src={vendor.store_logo}
-                        alt={vendor.store_name}
-                        className={`w-full h-full object-contain ${viewMode === 'list' ? 'md:h-32' : 'h-32'}`}
-                    />
-                </Link>
+                {vendor.store_logo && (
+                    <Link href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }}>
+                        <img
+                            src={vendor.store_logo}
+                            alt={vendor.store_name}
+                            className={`w-full h-full object-contain ${viewMode === 'list' ? 'md:h-32' : 'h-32'}`}
+                        />
+                    </Link>
+                )}
             </div>
 
             <div className={`p-4 flex-col flex-1  ${viewMode === 'list' ? 'md:w-2/3' : ''}`}>

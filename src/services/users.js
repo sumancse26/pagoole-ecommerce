@@ -7,9 +7,8 @@ export const getUserList = async () => {
     return res;
 };
 
-//body should not be json for form data
-export const addUser = async (data) => {
-    const res = await fetchApi('/api/dashboard/users', {
+export const register = async (data) => {
+    const res = await fetchApi('/api/register', {
         method: 'POST',
         body: JSON.stringify(data)
     });

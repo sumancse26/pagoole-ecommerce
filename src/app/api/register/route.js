@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/config/prisma';
-import { encryptPassword } from '@/utils';
+import { encryptPassword, jwtEncode } from '@/utils';
+import { cookies } from 'next/headers';
 
 export const POST = async (req) => {
     try {
+        //setting cookie in server side
+        const cookieStore = await cookies();
         const body = await req.json();
         const {
             user_name,
@@ -15,42 +18,86 @@ export const POST = async (req) => {
             address,
             location_id,
             image,
-            store_logo
+            store_logo,
+            isCustomer,
+            name = ''
         } = body;
 
-        if (!user_name || !email || !password || !store_name || !location_id) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-        }
-        const hashedPassword = (await encryptPassword(password?.toString())) || '';
-        await prisma.$transaction(async (tx) => {
-            const savedUser = await tx.users.create({
+        if (!isCustomer) {
+            if (!user_name || !email || !password || !store_name || !location_id) {
+                return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+            }
+            const hashedPassword = (await encryptPassword(password?.toString())) || '';
+            await prisma.$transaction(async (tx) => {
+                const savedUser = await tx.users.create({
+                    data: {
+                        user_name,
+                        email,
+                        phone: phone || '',
+                        password: hashedPassword,
+                        otp: 0,
+                        is_admin: 0,
+                        image: image || ''
+                    }
+                });
+
+                const savedVendor = await tx.vendors.create({
+                    data: {
+                        user_id: savedUser.id,
+                        store_name,
+                        store_description: store_description || '',
+                        address: address || '',
+                        location_id,
+                        otp: 0,
+                        store_logo: store_logo || ''
+                    }
+                });
+
+                return savedVendor;
+            });
+
+            return NextResponse.json({ message: 'User registered successfully', success: true }, { status: 200 });
+        } else {
+            const savedUser = await prisma.users.create({
                 data: {
-                    user_name,
+                    user_name: name,
                     email,
-                    phone: phone || '',
-                    password: hashedPassword,
                     otp: 0,
-                    is_admin: 0,
+                    is_admin: 2,
+                    is_active: 1,
                     image: image || ''
                 }
             });
 
-            const savedVendor = await tx.vendors.create({
-                data: {
-                    user_id: savedUser.id,
-                    store_name,
-                    store_description: store_description || '',
-                    address: address || '',
-                    location_id,
-                    otp: 0,
-                    store_logo: store_logo || ''
-                }
+            const payload = {
+                name: savedUser.user_name,
+                email: savedUser.email,
+                user_id: savedUser.id,
+                role: 'customer'
+            };
+            const token = await jwtEncode(payload);
+
+            const res = NextResponse.json(
+                {
+                    message: 'User registered successfully',
+                    success: true,
+                    user: savedUser
+                },
+                { status: 200 }
+            );
+
+            res.cookies.set({
+                name: 'token',
+                value: token,
+                maxAge: 60 * 60 * 24 * 7,
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                path: '/'
             });
 
-            return savedVendor;
-        });
-
-        return NextResponse.json({ message: 'User registered successfully', success: true }, { status: 200 });
+            return res;
+        }
     } catch (error) {
         console.error('Error parsing request body:', error);
         return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
