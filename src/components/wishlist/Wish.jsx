@@ -20,13 +20,13 @@ const TrashIcon = () => (
     </svg>
 );
 
-const CartListTable = ({ cartList }) => {
+const CartListTable = ({ wishList }) => {
     const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
-        setCartItems(cartList);
+        setCartItems(wishList);
         return () => {};
-    }, [cartList]);
+    }, [wishList]);
 
     const handleRemoveItem = (id) => {
         setCartItems(
@@ -56,14 +56,9 @@ const CartListTable = ({ cartList }) => {
                         <th scope="col" className="px-6 py-4 font-semibold">
                             Product
                         </th>
-                        <th scope="col" className="px-6 py-4 font-semibold text-center">
-                            Qty
-                        </th>
+
                         <th scope="col" className="px-6 py-4 font-semibold text-right">
-                            Unit Price
-                        </th>
-                        <th scope="col" className="px-6 py-4 font-semibold text-right">
-                            Total
+                            Price
                         </th>
                         <th scope="col" className="px-1 py-4">
                             <span className="sr-only">Remove</span>
@@ -82,18 +77,12 @@ const CartListTable = ({ cartList }) => {
                                     ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
                                 `}>
                                 <td className="px-6 py-4">
-                                    <div className="font-semibold text-gray-900">
-                                        {item.vendor_products?.products?.prod_name || ''}
-                                    </div>
+                                    <div className="font-semibold text-gray-900">{item.products?.prod_name || ''}</div>
                                 </td>
 
                                 {/* --- Quantity & Price Cells --- */}
-                                <td className="px-6 py-4 text-center font-medium text-gray-700">{item.qty || 0}</td>
-                                <td className="px-6 py-4 text-right text-gray-600">
-                                    {item?.vendor_products?.price?.toFixed(2)}
-                                </td>
-                                <td className="px-6 py-4 text-right font-semibold text-gray-900">
-                                    {(Number(item?.vendor_products?.price || 0) * Number(item.qty || 0))?.toFixed(2)}
+                                <td className="px-6 py-4 text-center font-medium text-gray-700">
+                                    {item.products?.mrp || 0}
                                 </td>
 
                                 <td className="px-1 py-4 text-center">

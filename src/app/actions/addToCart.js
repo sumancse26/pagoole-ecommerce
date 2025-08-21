@@ -1,9 +1,8 @@
 'use server';
-import { createAddToCart } from '@/services/addToCart';
-export const addToCartAction = async (data) => {
-    console.log('add to cart before', data);
-    const result = await createAddToCart(data);
-    console.log('add to cart result', result);
+import { createAddToCart, getAddToCartList } from '@/services/addToCart';
+// import { getAddToCartList } from '@/services/addToCart';
+export const getAddToCartAction = async (data) => {
+    const result = await getAddToCartList(data);
 
     return result;
 };

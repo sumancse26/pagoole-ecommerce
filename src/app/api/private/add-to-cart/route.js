@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import prisma from '@/config/prisma';
+import { revalidateTag } from 'next/cache';
 
 export const POST = async (req) => {
     try {
@@ -9,10 +10,7 @@ export const POST = async (req) => {
         const userIdString = headersList.get('user_id');
 
         if (!userIdString) {
-            return NextResponse.json(
-                { message: 'Unauthorized: User authentication header is missing.', success: false },
-                { status: 401 }
-            );
+            return NextResponse.json({ message: 'Unauthorized User', success: false }, { status: 401 });
         }
 
         const userId = parseInt(userIdString, 10);
@@ -63,6 +61,7 @@ export const POST = async (req) => {
                 });
             }
         });
+        revalidateTag('cartListItem');
 
         return NextResponse.json(
             { message: 'Item added to cart successfully.', success: true, cart_item: result },
@@ -76,5 +75,81 @@ export const POST = async (req) => {
             );
         }
         return NextResponse.json({ message: 'An internal server error occurred.', success: false }, { status: 500 });
+    }
+};
+
+export const GET = async (req) => {
+    try {
+        const headerList = headers();
+        const userIdString = headerList.get('user_id');
+
+        if (!userIdString) {
+            return NextResponse.json({ message: 'Unauthorized User', success: false }, { status: 401 });
+        }
+
+        const userId = parseInt(userIdString, 10);
+        if (isNaN(userId)) {
+            return NextResponse.json({ message: 'Invalid user ID format in header.', success: false }, { status: 400 });
+        }
+
+        const selectedCart = await prisma.carts.findFirst({
+            where: {
+                user_id: userId
+            }
+        });
+
+        if (!selectedCart) {
+            return NextResponse.json({
+                message: 'Cart is empty.',
+                success: true,
+                cart_items: []
+            });
+        }
+
+        const cartItems = await prisma.cart_Items.findMany({
+            where: {
+                cart_id: selectedCart.id
+            },
+            select: {
+                id: true,
+                cart_id: true,
+                vendor_prod_id: true,
+                qty: true,
+
+                vendor_products: {
+                    select: {
+                        id: true,
+                        price: true,
+                        stock_qty: true,
+                        is_active: true,
+                        products: {
+                            select: {
+                                id: true,
+                                prod_name: true,
+                                slug: true,
+                                mrp: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        return NextResponse.json({
+            message: 'Fetch Cart Items Successfully.',
+            success: true,
+            cart_items: cartItems
+        });
+    } catch (err) {
+        console.error('Error fetching cart items:', err);
+        return NextResponse.json(
+            {
+                message: 'Something went wrong.',
+                success: false
+            },
+            {
+                status: 500
+            }
+        );
     }
 };

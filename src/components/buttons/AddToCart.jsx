@@ -3,15 +3,16 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { doSocialLogin } from '@/app/actions/authAction';
-// import { addToCartAction } from '@/app/actions/addToCart';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { createAddToCart } from '@/services/addToCart';
 
 const AddToCart = ({ vendorProdId }) => {
     const [qty, setQty] = useState(1);
+
     const { data: session, status } = useSession();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const router = useRouter();
 
     const addToCartHandler = async () => {
         const data = {
@@ -20,8 +21,8 @@ const AddToCart = ({ vendorProdId }) => {
         };
         if (status === 'authenticated') {
             const res = await createAddToCart(data);
+            router.refresh();
             alert('Added to cart');
-            console.log('api call res', res);
         }
         if (status === 'unauthenticated') {
             const fullPath = searchParams.toString() ? `${pathname}?${searchParams.toString()}` : pathname;

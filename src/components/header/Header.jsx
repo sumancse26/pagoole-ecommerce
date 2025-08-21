@@ -1,9 +1,17 @@
-'use client';
-
 import Link from 'next/link';
 import Cart from '@components/addToCart/CartList';
+import { getAddToCartList } from '@/services/addToCart';
+import { getWishList } from '@/services/wishList';
+import Wish from '../wishlist/Wish';
 
-const HeaderComp = () => {
+const HeaderComp = async () => {
+    const res = await getAddToCartList();
+    const cartListData = res?.cart_items || 0;
+    const cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+
+    const wish = await getWishList();
+    const wishList = wish.wish_lists || [];
+
     return (
         <header className="bg-white shadow sticky top-0 z-40">
             {/* Green Top Bar */}
@@ -103,12 +111,12 @@ const HeaderComp = () => {
                                     />
                                 </svg>
                                 <span className="absolute -top-1.5 -right-1.5 text-xs bg-white text-green-700 font-bold rounded-full px-1.5">
-                                    3
+                                    {wishList?.length || 0}
                                 </span>
                             </Link>
                             {/* Dropdown */}
                             <div className="absolute hidden group-hover:block top-10 right-0 bg-white shadow-md text-black rounded-md z-50 p-3">
-                                <Cart />
+                                <Wish wishList={wishList} />
                                 <Link
                                     href="/wish-list"
                                     className="!w-[100%] flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-3">
@@ -142,12 +150,12 @@ const HeaderComp = () => {
                                     />
                                 </svg>
                                 <span className="absolute -top-1.5 -right-1.5 text-xs bg-white text-green-700 font-bold rounded-full px-1.5">
-                                    5
+                                    {cartList?.length || 0}
                                 </span>
                             </Link>
                             {/* Dropdown */}
                             <div className="absolute hidden group-hover:block top-10 right-0 bg-white shadow-md text-black rounded-md z-50 p-3">
-                                <Cart />
+                                <Cart cartList={cartList} />
                                 <Link
                                     href="/add-to-cart"
                                     className="!w-[100%] flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-3">
