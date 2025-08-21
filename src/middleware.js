@@ -1,46 +1,35 @@
-import { jwtVerify } from 'jose';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { auth } from './auth';
 
-export async function middleware(req) {
+export default auth((req) => {
+    const session = req.auth;
     const { pathname } = req.nextUrl;
-    //  ||
-    //         pathname.startsWith('/api/auth');
-    const isProtected =
-        pathname.startsWith('/dashboard') || pathname.startsWith('/auth') || pathname.startsWith('/api/private');
 
-    if (!isProtected) {
-        return NextResponse.next();
-    }
-    const cookieStore = await cookies();
+    const protectedRoutes = ['/dashboard', '/api/private'];
+    const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
-    const authHeader = req.headers.get('Authorization');
-    const apiToken = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
-
-    const token = cookieStore.get('token')?.value || apiToken;
-
-    if (!token) {
+    if (isProtectedRoute && !session) {
         return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        const { payload } = await jwtVerify(token, secret);
-
-        const user_id = payload.user_id;
-        const email = payload.email;
-
+    if (session && session?.user?.id) {
         const requestHeaders = new Headers(req.headers);
-        requestHeaders.set('user_id', user_id);
-        requestHeaders.set('email', email);
+        requestHeaders.set('user_id', String(session?.user?.id));
+        requestHeaders.set('user_role', String(session?.user?.role));
+        if (session.email) {
+            requestHeaders.set('user_email', session?.user.email);
+        }
 
         return NextResponse.next({
             request: {
                 headers: requestHeaders
             }
         });
-    } catch (error) {
-        console.error('JWT verification failed:', error);
-        return NextResponse.redirect(new URL('/login', req.url));
     }
-}
+
+    return NextResponse.next();
+});
+
+export const config = {
+    matcher: ['/((?!api/auth|_next/static|_next/image|favicon.ico).*)']
+};

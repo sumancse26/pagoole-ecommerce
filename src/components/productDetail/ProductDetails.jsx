@@ -1,11 +1,7 @@
 import Link from 'next/link';
 import { relatedProductAction } from '@app/actions/productAction';
 import AddToCart from '@components/buttons/AddToCart';
-
-// import { auth } from '@/auth';
-
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// import IncDcrQty from '@components/buttons/IncDcreQty';
 
 const RelatedProductCard = ({ product }) => (
     <div
@@ -70,14 +66,16 @@ const RelatedProductCard = ({ product }) => (
 );
 
 const ProductDetails = async ({ prodInfo }) => {
-    // const session = await auth();
-
     let relatedProducts = [];
     if (prodInfo?.products) {
         const result = await relatedProductAction(prodInfo);
 
         relatedProducts = result.related_products;
     }
+
+    // const updateQtyHandler = (val) => {
+    //     console.log('qty: ', qty);
+    // };
 
     return (
         <>
@@ -133,41 +131,9 @@ const ProductDetails = async ({ prodInfo }) => {
                             </div>
 
                             {/* Quantity and Add to Cart */}
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
-                                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
-                                    <button
-                                        className="px-4 py-3 text-gray-500 hover:text-emerald-600 hover:bg-gray-50 transition-colors"
-                                        aria-label="Decrease quantity">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M20 12H4"
-                                            />
-                                        </svg>
-                                    </button>
-                                    <input
-                                        type="text"
-                                        value="1"
-                                        className="w-12 text-center border-x border-gray-200 py-2 outline-none text-gray-900 font-medium"
-                                        readOnly
-                                    />
-                                    <button
-                                        className="px-4 py-3 text-gray-500 hover:text-emerald-600 hover:bg-gray-50 transition-colors"
-                                        aria-label="Increase quantity">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M12 4v16m8-8H4"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <AddToCart />
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-2">
+                                {/* <IncDcrQty updateQty={updateQtyHandler} /> */}
+                                <AddToCart vendorProdId={prodInfo?.id} />
                             </div>
 
                             {/* --- NEW: Related Products Section --- */}
@@ -186,7 +152,7 @@ const ProductDetails = async ({ prodInfo }) => {
                 </div>
 
                 {/* Product Description Tabs (Full-width below main columns) */}
-                <div className="mt-12 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                <div className="mt-6 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
                     <div className="border-b border-gray-100">
                         <nav className="flex -mb-px">
                             {['Description', 'Additional Info', 'Reviews (21)', 'Shipping'].map((tab, index) => (

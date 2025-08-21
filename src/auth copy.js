@@ -1,8 +1,6 @@
-// src/auth.js
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { cookies } from 'next/headers';
-import { jwtVerify } from 'jose';
+import { getUserByEmail, registerUser } from '@/lib/actions/userActions';
 
 export const {
     handlers: { GET, POST },
@@ -24,37 +22,68 @@ export const {
         })
     ],
     session: {
-        strategy: 'jwt'
+        strategy: 'jwt',
+        // maxAge: 1,
+        maxAge: 1 * 24 * 60 * 60, // 1 days
+        updateAge: 7 * 24 * 60 * 60 // 7 days
+    },
+    pages: {
+        signIn: '',
+        error: '/error'
+    },
+    cookies: {
+        sessionToken: {
+            name: 'token',
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+                secure: process.env.NODE_ENV === 'production'
+            }
+        }
     },
     callbacks: {
-        // 🔹 Runs whenever NextAuth creates/updates the JWT
-        async jwt({ token }) {
-            const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-            const cookieToken = await cookies()?.get('token')?.value;
-
-            if (cookieToken) {
+        async signIn({ user, account, profile }) {
+            if (account.provider === 'google' && profile?.email) {
                 try {
-                    const { payload } = await jwtVerify(cookieToken, secret);
-                    // const payload = jwtDecode(cookieToken);
+                    let dbUser = await getUserByEmail(profile.email);
 
-                    console.log('cookie payload', payload);
-                    return { ...token, ...payload };
-                } catch (err) {
-                    console.error('Failed to decode token cookie:', err);
+                    if (!dbUser) {
+                        dbUser = await registerUser({
+                            email: profile.email,
+                            name: profile.name,
+                            image: profile.picture
+                        });
+                    }
+
+                    if (!dbUser) {
+                        throw new Error('User could not be found or created.');
+                    }
+
+                    user.id = dbUser.id;
+                    user.role = 2;
+
+                    return true;
+                } catch (error) {
+                    console.error('Error in signIn callback:', error);
+                    return false;
                 }
             }
+            return true;
+        },
 
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.role = user.role;
+            }
             return token;
         },
 
-        // 🔹 Runs whenever NextAuth returns a session
         async session({ session, token }) {
-            if (token?.user_id) {
-                session.user = {
-                    ...session.user,
-                    id: token.user_id,
-                    role: token.role
-                };
+            if (token) {
+                session.user.id = token.id;
+                session.user.role = token.role;
             }
             return session;
         }

@@ -37,7 +37,8 @@ export async function getUserByEmail(email) {
         const user = await prisma.users.findUnique({
             where: { email: email }
         });
-        return user ? JSON.parse(JSON.stringify(user)) : null;
+        return user;
+        // return user ? JSON.parse(JSON.stringify(user)) : null;
     } catch (error) {
         throw new Error('Database query failed.', error);
     }
