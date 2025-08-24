@@ -48,7 +48,6 @@ const ProductListing = ({ vendorList, locationList }) => {
         // }
 
         try {
-            console.log('vale', val);
             const res = await vendorListByLocationAction(val.id);
             setFilteredVendors(res.vendor_list || []);
         } catch (err) {
@@ -194,11 +193,11 @@ const ProductCard = ({ vendor, viewMode }) => {
             </div>
 
             <div className={`p-4 flex-col flex-1  ${viewMode === 'list' ? 'md:w-2/3' : ''}`}>
-                <div className="flex-grow">
+                <Link href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }} className="flex-grow">
                     <h3 className="font-semibold text-lg mb-1 hover:text-green-600 transition-colors">
-                        <Link href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }}>
-                            {vendor.store_name || ''}
-                        </Link>
+                        {/* <Link href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }}> */}
+                        {vendor.store_name || ''}
+                        {/* </Link> */}
                     </h3>
 
                     <p className="text-gray-600 text-sm mb-4">{vendor.store_description}</p>
@@ -221,7 +220,7 @@ const ProductCard = ({ vendor, viewMode }) => {
                             <span className="text-xs text-gray-500 ml-1">({vendor.reviewCount || 0})</span>
                         </div>
                     </div>
-                </div>
+                </Link>
 
                 <div className="flex flex-wrap gap-2 mt-2">
                     <Link

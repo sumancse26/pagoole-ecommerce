@@ -3,14 +3,22 @@ import Cart from '@components/addToCart/CartList';
 import { getAddToCartList } from '@/services/addToCart';
 import { getWishList } from '@/services/wishList';
 import Wish from '../wishlist/Wish';
+import { auth } from '@/auth';
 
 const HeaderComp = async () => {
-    const res = await getAddToCartList();
-    const cartListData = res?.cart_items || 0;
-    const cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+    const session = await auth();
 
-    const wish = await getWishList();
-    const wishList = wish.wish_lists || [];
+    let cartList = [];
+    let wishList = [];
+
+    if (session?.user) {
+        const res = await getAddToCartList();
+        const cartListData = res?.cart_items || 0;
+        cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+
+        const wish = await getWishList();
+        wishList = wish.wish_lists || [];
+    }
 
     return (
         <header className="bg-white shadow sticky top-0 z-40">

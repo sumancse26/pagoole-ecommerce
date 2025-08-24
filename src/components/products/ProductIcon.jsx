@@ -23,10 +23,10 @@ const ProductIcon = ({ productInfo }) => {
 
     const addWishListHandler = async () => {
         try {
-            const prodId = product.products?.id;
+            const prodId = product.id;
 
             if (status === 'authenticated') {
-                const res = await addToWishList({ prod_id: prodId });
+                const res = await addToWishList({ vendor_prod_id: prodId });
                 router.refresh();
                 alert('Added to cart');
             }

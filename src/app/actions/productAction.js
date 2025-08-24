@@ -21,7 +21,6 @@ export const productByIdAction = async (id) => {
 export const relatedProductAction = async (prodInfo) => {
     const params = {
         id: prodInfo?.product_id
-        // vendor_id: prodInfo?.vendors?.id
     };
     const result = await getRelatedProducts(params);
 

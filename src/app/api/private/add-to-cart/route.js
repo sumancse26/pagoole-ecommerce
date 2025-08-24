@@ -127,7 +127,13 @@ export const GET = async (req) => {
                                 id: true,
                                 prod_name: true,
                                 slug: true,
-                                mrp: true
+                                image: true,
+                                file_server: {
+                                    select: {
+                                        id: true,
+                                        base_url: true
+                                    }
+                                }
                             }
                         }
                     }

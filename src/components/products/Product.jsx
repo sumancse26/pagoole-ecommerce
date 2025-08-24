@@ -2,7 +2,7 @@ import Link from 'next/link';
 import ProductIcon from './ProductIcon';
 const Product = async ({ prodType, productList, searchParams }) => {
     const activeTab = searchParams?.tab || 'arrival';
-    console.log(productList);
+
     return (
         <>
             <section className="py-12 bg-gray-50">

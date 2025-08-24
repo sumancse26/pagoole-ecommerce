@@ -5,7 +5,7 @@ import { revalidateTag } from 'next/cache';
 
 export const POST = async (req) => {
     try {
-        const headersList = headers();
+        const headersList = await headers();
 
         const userIdString = headersList.get('user_id');
 
@@ -19,16 +19,16 @@ export const POST = async (req) => {
         }
 
         const body = await req.json();
-        const { prod_id } = body;
+        const { vendor_prod_id } = body;
 
-        if (!prod_id) {
+        if (!vendor_prod_id) {
             return NextResponse.json({ message: 'A valid product ID is required.', success: false }, { status: 400 });
         }
-
+        console.log('vendor_prod_id', vendor_prod_id);
         const result = await prisma.wishlists.create({
             data: {
                 user_id: userId,
-                product_id: Number(prod_id)
+                vendor_prod_id: Number(vendor_prod_id)
             }
         });
         revalidateTag('wishListItem');
@@ -69,12 +69,25 @@ export const GET = async (req) => {
             select: {
                 id: true,
                 user_id: true,
-                products: {
+                vendor_products: {
                     select: {
                         id: true,
-                        prod_name: true,
-                        slug: true,
-                        mrp: true
+                        price: true,
+                        stock_qty: true,
+                        products: {
+                            select: {
+                                id: true,
+                                prod_name: true,
+                                slug: true,
+                                image: true,
+                                file_server: {
+                                    select: {
+                                        id: true,
+                                        base_url: true
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -83,7 +96,7 @@ export const GET = async (req) => {
         return NextResponse.json({
             message: 'Fetch Wish List Successfully.',
             success: true,
-            wish_lists: wishLish
+            wish_lists: wishLish || []
         });
     } catch (err) {
         console.error('Error fetching cart items:', err);

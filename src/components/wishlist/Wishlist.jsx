@@ -1,7 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { doSocialLogin } from '@/app/actions/authAction';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { createAddToCart } from '@/services/addToCart';
 
 // --- ICONS ---
 const TrashIcon = () => (
@@ -35,23 +39,59 @@ const CartIcon = () => (
     </svg>
 );
 
-// --- Initial Data ---
-const initialWishlistItems = [
-    { id: 1, name: 'Artisan Ceramic Mug', price: 25.0, imageUrl: '/images/product1.jpg', inStock: true },
-    { id: 2, name: 'Linen Throw Pillow', price: 45.0, imageUrl: '/images/product2.jpg', inStock: true },
-    { id: 3, name: 'Hand-poured Soy Candle', price: 32.5, imageUrl: '/images/product3.jpg', inStock: false }
-];
+export default function WishlistPage({ wishList }) {
+    const [wishlistItems, setWishlistItems] = useState([]);
 
-export default function WishlistPage() {
-    const [wishlistItems, setWishlistItems] = useState(
-        initialWishlistItems.map((item) => ({ ...item, isRemoving: false }))
-    );
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const { data: session, status } = useSession();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const router = useRouter();
 
     useEffect(() => {
-        const timer = setTimeout(() => setIsInitialLoad(false), 500);
-        return () => clearTimeout(timer);
-    }, []);
+        setWishlistItems(wishList?.map((item) => ({ ...item, qty: 1, isRemoving: false })));
+
+        return () => {};
+    }, [wishList]);
+
+    const qtyHandler = (val, item) => {
+        if (val === 'decrement' && item.qty > 1) {
+            console.log(item, wishlistItems);
+            const currentList = wishlistItems.map((fl) => {
+                if (fl.id == item.id) {
+                    fl.qty = fl.qty - 1;
+                }
+
+                return fl;
+            });
+            setWishlistItems(currentList);
+        } else if (val === 'increment') {
+            const currentList = wishlistItems.map((fl) => {
+                if (fl.id == item.id) {
+                    fl.qty = fl.qty + 1;
+                }
+
+                return fl;
+            });
+            setWishlistItems(currentList);
+        }
+    };
+
+    const addToCartHandler = async (item) => {
+        const data = {
+            vendorProdId: item.vendor_products?.id,
+            quantity: item.qty
+        };
+        if (status === 'authenticated') {
+            const res = await createAddToCart(data);
+            router.refresh();
+            alert('Added to cart');
+        }
+        if (status === 'unauthenticated') {
+            const fullPath = searchParams.toString() ? `${pathname}?${searchParams.toString()}` : pathname;
+
+            const result = await doSocialLogin('google', fullPath);
+        }
+    };
 
     const handleRemoveItem = (id) => {
         setWishlistItems((items) => items.map((item) => (item.id === id ? { ...item, isRemoving: true } : item)));
@@ -73,8 +113,12 @@ export default function WishlistPage() {
                                     <th scope="col" className="px-6 py-4 font-semibold text-left">
                                         Product
                                     </th>
+
                                     <th scope="col" className="px-6 py-4 font-semibold text-right">
                                         Price
+                                    </th>
+                                    <th scope="col" className="px-6 py-4 font-semibold text-center">
+                                        Quantity
                                     </th>
                                     <th scope="col" className="px-6 py-4 font-semibold text-center">
                                         Status
@@ -93,29 +137,51 @@ export default function WishlistPage() {
                                         key={item.id}
                                         className={`
                                             transition-all duration-500 ease-in-out
-                                            ${isInitialLoad ? 'animate-fade-in-up' : ''}
                                             ${
                                                 item.isRemoving
                                                     ? 'opacity-0 -translate-x-8'
                                                     : 'opacity-100 translate-x-0'
                                             }
-                                        `}
-                                        style={{ animationDelay: isInitialLoad ? `${index * 100}ms` : '0ms' }}>
+                                        `}>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center space-x-4">
                                                 <img
-                                                    src={item.imageUrl}
-                                                    alt={item.name}
+                                                    src={item.vendor_products?.products?.file_server?.base_url}
+                                                    alt={item.vendor_products?.products?.prod_name}
                                                     className="h-16 w-16 rounded-lg object-cover"
                                                 />
                                                 <div>
-                                                    <div className="font-semibold text-gray-900">{item.name}</div>
+                                                    <div className="font-semibold text-gray-900">
+                                                        {item.vendor_products?.products?.prod_name}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-right font-medium">${item.price.toFixed(2)}</td>
+                                        <td className="px-6 py-4 text-right font-medium">
+                                            {item.vendor_products?.price?.toFixed(2)}
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-medium flex justify-center">
+                                            <div className="flex items-center justify-center border border-green-300 rounded-md overflow-hidden w-28 bg-white">
+                                                <button
+                                                    onClick={() => qtyHandler('decrement', item)}
+                                                    className="w-8 h-8 text-lg text-green-600 hover:bg-green-100">
+                                                    −
+                                                </button>
+                                                <input
+                                                    type="text"
+                                                    value={item.qty}
+                                                    readOnly
+                                                    className="w-12 text-center border-x border-green-300 outline-none focus:ring-0 focus:border-green-500"
+                                                />
+                                                <button
+                                                    onClick={() => qtyHandler('increment', item)}
+                                                    className="w-8 h-8 text-lg text-green-600 hover:bg-green-100">
+                                                    +
+                                                </button>
+                                            </div>
+                                        </td>
                                         <td className="px-6 py-4 text-center">
-                                            {item.inStock ? (
+                                            {item.vendor_products?.stock_qty ? (
                                                 <span className="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full">
                                                     In Stock
                                                 </span>
@@ -127,7 +193,8 @@ export default function WishlistPage() {
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             <button
-                                                disabled={!item.inStock}
+                                                onClick={() => addToCartHandler(item)}
+                                                disabled={!item.vendor_products?.stock_qty}
                                                 className="flex items-center justify-center gap-2 bg-green-700 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                                 <CartIcon />
                                                 Add to Cart

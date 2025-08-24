@@ -139,11 +139,10 @@ model Products {
   categories            Categories?           @relation(fields: [category_id], references: [id])
   weights               Weights?              @relation(fields: [weight_id], references: [id])
   file_server           File_Server?          @relation(fields: [server_id], references: [id])
-  //Product_Images        Product_Images?      @relation(fields: [image_id], references: [id])
+  //Product_Images      Product_Images?      @relation(fields: [image_id], references: [id])
   vendor_products       Vendor_Products[]
-  vendor_reviews       Product_Reviews[]
-  product_images        Product_Images[]
-  wish_lists             Wishlists[]
+  vendor_reviews        Product_Reviews[]
+  product_images        Product_Images[] 
 }
 
 model Product_Images {
@@ -180,6 +179,7 @@ model Vendor_Products {
   cart_items             Cart_Items[]
   order_items            Order_Items[]
   product_images         Product_Images[]
+  wish_lists             Wishlists[]
 }
 
 model Carts {
@@ -287,10 +287,10 @@ model Vendor_Reviews {
 model Wishlists {
   id                    Int             @id @default(autoincrement())
   user_id               Int
-  product_id            Int
+  vendor_prod_id        Int             
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   
   users                 Users           @relation(fields: [user_id], references: [id])
-  products              Products        @relation(fields: [product_id], references: [id])
+  vendor_products       Vendor_Products @relation(fields: [vendor_prod_id], references: [id])
 }

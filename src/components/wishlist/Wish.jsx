@@ -77,12 +77,14 @@ const CartListTable = ({ wishList }) => {
                                     ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
                                 `}>
                                 <td className="px-6 py-4">
-                                    <div className="font-semibold text-gray-900">{item.products?.prod_name || ''}</div>
+                                    <div className="font-semibold text-gray-900">
+                                        {item.vendor_products?.products?.prod_name || ''}
+                                    </div>
                                 </td>
 
                                 {/* --- Quantity & Price Cells --- */}
                                 <td className="px-6 py-4 text-center font-medium text-gray-700">
-                                    {item.products?.mrp || 0}
+                                    {item.vendor_products?.price || 0}
                                 </td>
 
                                 <td className="px-1 py-4 text-center">
