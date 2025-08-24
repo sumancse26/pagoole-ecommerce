@@ -55,7 +55,6 @@ export default function WishlistPage({ wishList }) {
 
     const qtyHandler = (val, item) => {
         if (val === 'decrement' && item.qty > 1) {
-            console.log(item, wishlistItems);
             const currentList = wishlistItems.map((fl) => {
                 if (fl.id == item.id) {
                     fl.qty = fl.qty - 1;

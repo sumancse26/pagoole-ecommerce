@@ -7,7 +7,7 @@ const shopWiseProduct = async ({ searchParams }) => {
     const result = await productByVendorAction(vendor_id);
     const vendorProducts = result.product_list;
 
-    return <Product prodType="all" productList={vendorProducts} />;
+    return <Product prodType="all" fromWhere="vendor" productList={vendorProducts} />;
 };
 
 export default shopWiseProduct;

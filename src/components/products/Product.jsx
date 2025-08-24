@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import ProductIcon from './ProductIcon';
-const Product = async ({ prodType, productList, searchParams }) => {
+import AddToCart from '../buttons/AddToCart';
+const Product = async ({ prodType, fromWhere, productList, searchParams }) => {
     const activeTab = searchParams?.tab || 'arrival';
 
     return (
@@ -111,6 +112,11 @@ const Product = async ({ prodType, productList, searchParams }) => {
                                             )}
                                         </div>
                                     </div>
+                                    {fromWhere == 'vendor' && (
+                                        <div className="mt-4">
+                                            <AddToCart vendorProdId={product?.id} hideQty={true} className="w-[100%]" />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}

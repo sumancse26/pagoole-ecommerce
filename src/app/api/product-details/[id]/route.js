@@ -5,7 +5,7 @@ export const GET = async (req, { params }) => {
     try {
         const { id } = await params;
 
-        const vendorProducts = await prisma.vendor_Products.findFirst({
+        const vendorProducts = await prisma.vendor_Products.findMany({
             where: {
                 product_id: Number(id)
             },
@@ -57,7 +57,7 @@ export const GET = async (req, { params }) => {
             {
                 message: 'Product fetched successfully',
                 success: true,
-                product_details: vendorProducts || {}
+                product_details: vendorProducts || []
             },
             { status: 200 }
         );

@@ -24,7 +24,7 @@ export default async function Home() {
             {/* Loader */}
             <Loader />
             {/* Product Tabs Section */}
-            <Products prodType="all" productList={productList} />
+            <Products prodType="all" from="" productList={productList} />
             {/* <Products /> */}
 
             {/* Promo Banners */}
