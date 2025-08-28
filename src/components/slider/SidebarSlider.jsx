@@ -41,7 +41,7 @@ const SidebarSlider = () => {
             {/* Toggle Button */}
             <button
                 onClick={() => setIsOpen((prev) => !prev)}
-                className="fixed top-8 left-4 z-50 p-2 bg-green-500 text-white rounded-lg cursor-pointer">
+                className="fixed top-[7px] left-4 z-50 p-2 bg-green-500 text-white rounded-lg cursor-pointer">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
@@ -49,11 +49,11 @@ const SidebarSlider = () => {
 
             {/* Sidebar — this element is part of layout flow */}
             <div
-                className={`sticky top-[100px] transition-all duration-300 h-full overflow-y-auto bg-white shadow-lg  ${
+                className={`sticky top-[70px] transition-all duration-300 h-full overflow-y-auto bg-white shadow-lg  ${
                     isOpen ? 'w-80' : 'w-0'
                 }`}>
-                <div className={` transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} px-4`}>
-                    <div className="pt-8 px-4 pb-2 font-normal text-lg border-b border-gray-200 ">All Categories</div>
+                <div className={`pt-5 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} px-4`}>
+                    <div className="px-4 pb-2 font-normal text-lg border-b border-gray-200 ">All Categories</div>
 
                     <div className="p-2 ">
                         <input

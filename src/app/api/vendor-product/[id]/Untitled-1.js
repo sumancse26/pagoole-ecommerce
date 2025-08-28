@@ -3,27 +3,32 @@ import prisma from '@/config/prisma';
 
 export const GET = async (req, { params }) => {
     try {
-        const { id } = params;
+        const { id } = params; // params already contains the id directly
 
+        // Extract search string from URL query parameters
         const url = new URL(req.url);
-        const searchString = url.searchParams.get('search');
-
+        const searchString = url.searchParams.get('search'); // Get the 'search' query parameter
+        console.log('searchString', searchString);
+        // Define the base `where` clause
         const whereClause = {
             vendor_id: Number(id),
             is_active: 1
         };
 
+        // If a search string is provided, add the product name filter
         if (searchString) {
+            // We need to filter by product name, which is nested under `products`
+            // Prisma allows filtering on related models like this:
             whereClause.products = {
-                prod_name: {
+                name: {
                     contains: searchString,
-                    mode: 'insensitive'
+                    mode: 'insensitive' // Case-insensitive search
                 }
             };
         }
 
         const vendorProducts = await prisma.vendor_Products.findMany({
-            where: whereClause,
+            where: whereClause, // Use the dynamically constructed where clause
             select: {
                 id: true,
                 price: true,
@@ -34,8 +39,7 @@ export const GET = async (req, { params }) => {
                         id: true,
                         store_name: true,
                         store_description: true,
-                        address: true,
-                        store_logo: true
+                        address: true
                     }
                 },
                 products: {
@@ -45,7 +49,6 @@ export const GET = async (req, { params }) => {
                         description: true,
                         mrp: true,
                         vat: true,
-                        prod_name: true,
                         brands: {
                             select: {
                                 id: true,

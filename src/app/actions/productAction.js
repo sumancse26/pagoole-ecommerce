@@ -6,8 +6,8 @@ export const doProductList = async () => {
     return result;
 };
 
-export const productByVendorAction = async (id) => {
-    const result = await getProductByVendorList(id);
+export const productByVendorAction = async (id, search_string) => {
+    const result = await getProductByVendorList(id, search_string);
 
     return result;
 };

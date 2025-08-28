@@ -24,9 +24,9 @@ const HeaderComp = async () => {
         <header className="bg-white shadow sticky top-0 z-40">
             {/* Green Top Bar */}
             <div className="bg-green-600">
-                <div className="container mx-auto px-4 py-3 flex flex-wrap md:flex-nowrap items-center justify-between">
+                <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between">
                     {/* Logo */}
-                    <div className="flex items-center">
+                    <div className="flex">
                         <Link href="/">
                             <span className="ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
                                 Pagoole Shop
@@ -36,7 +36,7 @@ const HeaderComp = async () => {
 
                     {/* Search Bar */}
                     <div className="hidden md:flex flex-1 justify-center">
-                        <form className="w-full max-w-3xl relative">
+                        <form className="w-full max-w-7xl relative">
                             <input
                                 type="search"
                                 placeholder="Search for products..."
@@ -69,30 +69,7 @@ const HeaderComp = async () => {
                     <div className="flex items-center me-2">
                         <Link href="/shop">
                             <button
-                                className="
-                                    bg-gradient-to-r
-                                    from-green-300
-                                    via-lime-400
-                                    to-green-500 
-                                    text-white
-                                    drop-shadow-lg
-                                    py-2
-                                    px-4
-                                    rounded-lg
-                                    transition
-                                    duration-300
-                                    hover:from-green-300
-                                    hover:via-green-400
-                                    hover:to-green-500
-                                    hover:drop-shadow-xl
-                                    focus:outline-none
-                                    focus:ring-4
-                                    focus:ring-green-400
-                                    focus:ring-opacity-50
-                                    cursor-pointer
-                                    border border-green-500 
-                                    font-semibold
-                                "
+                                className="bg-[#ff686e] text-white px-2.5 py-1.5 rounded-lg font-medium tracking-[2px]"
                                 aria-label="Go to Shop Order homepage">
                                 Shop Order
                             </button>
@@ -103,10 +80,10 @@ const HeaderComp = async () => {
                     <div className="flex items-center gap-5 text-white">
                         {/* Wishlist */}
                         <div className="relative group">
-                            <Link href="#" className="p-2 hover:text-lime-200" aria-label="Wishlist">
+                            <Link href="#" className="p-0 hover:text-lime-200" aria-label="Wishlist">
                                 {/* Heart SVG */}
                                 <svg
-                                    className="w-6 h-6"
+                                    className="w-5 h-5"
                                     fill="none"
                                     stroke="currentColor"
                                     strokeWidth={2}
@@ -118,12 +95,12 @@ const HeaderComp = async () => {
                                         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                                     />
                                 </svg>
-                                <span className="absolute -top-1.5 -right-1.5 text-xs bg-white text-green-700 font-bold rounded-full px-1.5">
+                                <span className="absolute -top-1.5 -right-3.5 text-xs bg-white text-green-700 font-bold rounded-full px-1.5">
                                     {wishList?.length || 0}
                                 </span>
                             </Link>
                             {/* Dropdown */}
-                            <div className="absolute hidden group-hover:block top-10 right-0 bg-white shadow-md text-black rounded-md z-50 p-3">
+                            <div className="absolute hidden group-hover:block top-6 -right-2 bg-white shadow-md text-black rounded-md z-50 p-3">
                                 <Wish wishList={wishList} />
                                 <Link
                                     href="/wish-list"
@@ -143,7 +120,7 @@ const HeaderComp = async () => {
 
                         {/* Cart */}
                         <div className="relative group">
-                            <Link href="#" className="p-2 hover:text-lime-200" aria-label="Cart">
+                            <Link href="#" className="p-0 hover:text-lime-200" aria-label="Cart">
                                 {/* Shopping Cart SVG */}
                                 <svg
                                     className="w-5 h-5"
@@ -157,12 +134,12 @@ const HeaderComp = async () => {
                                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8m0 0a2 2 0 104 0m-4 0H17m0 0a2 2 0 104 0m-4 0h-1.4"
                                     />
                                 </svg>
-                                <span className="absolute -top-1.5 -right-1.5 text-xs bg-white text-green-700 font-bold rounded-full px-1.5">
+                                <span className="absolute -top-1.5 -right-3.5 text-xs bg-white text-green-700 font-bold rounded-full px-1.5">
                                     {cartList?.length || 0}
                                 </span>
                             </Link>
                             {/* Dropdown */}
-                            <div className="absolute hidden group-hover:block top-10 right-0 bg-white shadow-md text-black rounded-md z-50 p-3">
+                            <div className="absolute hidden group-hover:block top-6 -right-2 bg-white shadow-md text-black rounded-md z-50 p-3">
                                 <Cart cartList={cartList} />
                                 <Link
                                     href="/add-to-cart"

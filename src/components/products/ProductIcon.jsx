@@ -43,7 +43,7 @@ const ProductIcon = ({ productInfo, pathFrom }) => {
         <>
             <button
                 onClick={addWishListHandler}
-                className="text-gray-400 rounded-full shadow hover:bg-green-600 hover:text-white transition-all duration-300 p-2"
+                className="text-red-400 rounded-full shadow hover:bg-red-600 hover:text-white transition-all duration-300 p-2"
                 title="Add to Wish List">
                 <svg
                     className="w-5 h-5"

@@ -56,7 +56,7 @@ const ProductListing = ({ vendorList, locationList }) => {
     };
 
     return (
-        <section className="py-12">
+        <section className="py-8">
             <div className="container mx-auto px-4">
                 {/* Header with sorting options */}
                 <div className="flex flex-col md:flex-row justify-end items-center mb-8 gap-5 ">
