@@ -20,8 +20,10 @@ const ProductIcon = ({ productInfo, pathFrom }) => {
         return () => {};
     }, [productInfo]);
 
-    const addWishListHandler = async () => {
+    const addWishListHandler = async (e) => {
         try {
+            e.preventDefault();
+            e.stopPropagation();
             const prodId = product.id;
 
             if (status === 'authenticated') {
@@ -42,9 +44,12 @@ const ProductIcon = ({ productInfo, pathFrom }) => {
     return (
         <>
             <button
-                onClick={addWishListHandler}
-                className="text-red-400 rounded-full shadow hover:bg-red-600 hover:text-white transition-all duration-300 p-2"
-                title="Add to Wish List">
+                disabled={productInfo.disable_wish}
+                onClick={(e) => addWishListHandler(e)}
+                className={`text-red-400 rounded-full shadow ${
+                    productInfo.disable_wish ? '' : 'hover:bg-red-600 hover:text-white transition-all duration-300'
+                } p-2`}
+                title={`${productInfo.disable_wish ? 'Already added' : 'Add to Wish List'}`}>
                 <svg
                     className="w-5 h-5"
                     fill="none"

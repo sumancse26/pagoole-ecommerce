@@ -52,7 +52,10 @@ const SidebarSlider = () => {
                 className={`sticky top-[70px] transition-all duration-300 h-full overflow-y-auto bg-white shadow-lg  ${
                     isOpen ? 'w-80' : 'w-0'
                 }`}>
-                <div className={`pt-5 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} px-4`}>
+                <div
+                    className={`pt-5 transition-opacity duration-300 ${
+                        isOpen ? 'opacity-100 z-index-[999999]' : 'opacity-0'
+                    } px-4`}>
                     <div className="px-4 pb-2 font-normal text-lg border-b border-gray-200 ">All Categories</div>
 
                     <div className="p-2 ">

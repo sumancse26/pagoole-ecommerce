@@ -24,7 +24,23 @@ export const POST = async (req) => {
         if (!vendor_prod_id) {
             return NextResponse.json({ message: 'A valid product ID is required.', success: false }, { status: 400 });
         }
-        console.log('vendor_prod_id', vendor_prod_id);
+
+        const vendorProd = await prisma.wishlists.findFirst({
+            where: {
+                user_id: userId,
+                vendor_prod_id: Number(vendor_prod_id)
+            }
+        });
+
+        if (vendorProd) {
+            return NextResponse.json(
+                {
+                    message: 'Already added in list',
+                    success: false
+                },
+                { status: 200 }
+            );
+        }
         const result = await prisma.wishlists.create({
             data: {
                 user_id: userId,
@@ -50,7 +66,7 @@ export const POST = async (req) => {
 
 export const GET = async (req) => {
     try {
-        const headerList = headers();
+        const headerList = await headers();
         const userIdString = headerList.get('user_id');
 
         if (!userIdString) {
@@ -69,6 +85,8 @@ export const GET = async (req) => {
             select: {
                 id: true,
                 user_id: true,
+                user_id: true,
+                vendor_prod_id: true,
                 vendor_products: {
                     select: {
                         id: true,

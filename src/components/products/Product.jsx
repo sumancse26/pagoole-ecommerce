@@ -10,7 +10,7 @@ const Product = async ({ prodType, fromWhere, productList, searchParams }) => {
                 <section className={`bg-gray-50 ${fromWhere == 'vendor' ? 'pt-40' : 'pt-10'}`}>
                     <div className="container mx-auto px-4">
                         {fromWhere == 'vendor' && (
-                            <section className="fixed left-90 top-14 right-0 z-50 flex items-center gap-3 bg-white py-3 px-4 sm:px-6 md:px-8 lg:px-10 w-full">
+                            <div className="fixed top-14 right-0  flex items-center justify-center gap-3 bg-white py-3 px-4 sm:px-6 md:px-8 lg:px-10 w-full">
                                 <img
                                     src={productList[0]?.vendors?.store_logo}
                                     alt="store image"
@@ -19,7 +19,7 @@ const Product = async ({ prodType, fromWhere, productList, searchParams }) => {
                                 <span className="text-lg sm:text-xl font-bold text-green-700 text-center">
                                     {productList[0]?.vendors?.store_name || ''}
                                 </span>
-                            </section>
+                            </div>
                         )}
                         {prodType !== 'all' && (
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">

@@ -11,8 +11,6 @@ const WishListPage = async () => {
         wishList = wish.wish_lists || [];
     }
 
-    console.log(wishList);
-
     return (
         <>
             <Wishlist wishList={wishList} />
