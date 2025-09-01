@@ -7,7 +7,7 @@ import { doSocialLogin } from '@/app/actions/authAction';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 const ProductIcon = ({ productInfo, pathFrom }) => {
-    const [product, setProduct] = useState();
+    const [product, setProduct] = useState(productInfo);
 
     const { data: session, status } = useSession();
     const pathname = usePathname();
@@ -29,6 +29,7 @@ const ProductIcon = ({ productInfo, pathFrom }) => {
             if (status === 'authenticated') {
                 const res = await addToWishList({ vendor_prod_id: prodId });
                 router.refresh();
+                setProduct((val) => ({ ...val, disable_wish: true }));
                 alert('Added to wish list');
             }
             if (status === 'unauthenticated') {
@@ -44,12 +45,12 @@ const ProductIcon = ({ productInfo, pathFrom }) => {
     return (
         <>
             <button
-                disabled={productInfo.disable_wish}
+                disabled={product.disable_wish}
                 onClick={(e) => addWishListHandler(e)}
                 className={`text-red-400 rounded-full shadow ${
-                    productInfo.disable_wish ? '' : 'hover:bg-red-600 hover:text-white transition-all duration-300'
+                    product.disable_wish ? '' : 'hover:bg-red-600 hover:text-white transition-all duration-300'
                 } p-2`}
-                title={`${productInfo.disable_wish ? 'Already added' : 'Add to Wish List'}`}>
+                title={`${product.disable_wish ? 'Already added' : 'Add to Wish List'}`}>
                 <svg
                     className="w-5 h-5"
                     fill="none"

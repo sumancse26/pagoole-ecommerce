@@ -10,7 +10,22 @@ const AddToCartPage = async () => {
 
     if (session?.user) {
         const res = await getAddToCartList();
-        cartList = res?.cart_items || [];
+        const cartRes = res?.cart_items || [];
+
+        const groupedByVendor = cartRes.reduce((acc, item) => {
+            const vendorId = item.vendor_products?.vendors?.id;
+            if (vendorId) {
+                if (!acc[vendorId]) {
+                    acc[vendorId] = {
+                        vendor_info: item.vendor_products.vendors,
+                        items: []
+                    };
+                }
+                acc[vendorId].items.push(item);
+            }
+            return acc;
+        }, {});
+        cartList = Object.values(groupedByVendor);
 
         const wish = await getWishList();
         wishList = wish.wish_lists || [];

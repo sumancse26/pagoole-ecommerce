@@ -100,7 +100,7 @@ const HeaderComp = async () => {
                                 </span>
                             </Link>
                             {/* Dropdown */}
-                            <div className="absolute hidden group-hover:block top-6 -right-2 bg-white shadow-md text-black rounded-md z-50 p-3">
+                            <div className="absolute hidden group-hover:block top-2 -right-2 bg-white shadow-md text-black rounded-md z-50 p-3">
                                 <Wish wishList={wishList} />
                                 <Link
                                     href="/wish-list"
@@ -139,8 +139,8 @@ const HeaderComp = async () => {
                                 </span>
                             </Link>
                             {/* Dropdown */}
-                            <div className="absolute hidden group-hover:block top-6 -right-2 bg-white shadow-md text-black rounded-md z-50 p-3">
-                                <Cart cartList={cartList} />
+                            <div className="absolute hidden group-hover:block top-2 -right-2 bg-white shadow-md text-black rounded-md z-50 p-3">
+                                <Cart cartList={cartList} closeCart="" showCrossIcon={false} />
                                 <Link
                                     href="/add-to-cart"
                                     className="!w-[100%] flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-3">

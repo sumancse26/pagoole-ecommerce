@@ -65,7 +65,8 @@ export const GET = async (req, { params }) => {
                             }
                         }
                     }
-                }
+                },
+                wish_lists: true
             }
         });
 

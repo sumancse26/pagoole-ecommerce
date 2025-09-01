@@ -257,26 +257,10 @@ export const GET = async (req) => {
             };
         });
 
-        const groupedByVendor = modifiedItem.reduce((acc, item) => {
-            const vendorId = item.vendor_products?.vendors?.id;
-            if (vendorId) {
-                if (!acc[vendorId]) {
-                    acc[vendorId] = {
-                        vendor_info: item.vendor_products.vendors,
-                        items: []
-                    };
-                }
-                acc[vendorId].items.push(item);
-            }
-            return acc;
-        }, {});
-
-        const vendorGroupsArray = Object.values(groupedByVendor);
-
         return NextResponse.json({
             message: 'Fetch Cart Items Successfully.',
             success: true,
-            cart_items: vendorGroupsArray
+            cart_items: modifiedItem
         });
     } catch (err) {
         console.error('Error fetching cart items:', err);

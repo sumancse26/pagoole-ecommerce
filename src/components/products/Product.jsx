@@ -1,9 +1,34 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import ProductIcon from './ProductIcon';
-import AddToCart from '../buttons/AddToCart';
-const Product = async ({ prodType, fromWhere, productList, searchParams }) => {
+import AddToCart from '../buttons/AddToCart.jsx';
+import { useSession } from 'next-auth/react';
+import { getAddToCartList } from '@/services/addToCart';
+import CartList from '@components/addToCart/CartList';
+
+const Product = ({ prodType, fromWhere, productList, searchParams }) => {
+    const [sidebar, setSidebar] = useState(false);
+    const [cartList, setCartList] = useState([]);
+
+    const { data: session, status } = useSession();
     const activeTab = searchParams?.tab || 'arrival';
 
+    const sidebarHandler = async (val) => {
+        if (session?.user) {
+            const res = await getAddToCartList();
+            const cartListData = res?.cart_items || 0;
+            const list = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+
+            setCartList(list);
+        }
+        setSidebar(val);
+    };
+
+    const handleRemoveItem = async () => {
+        setSidebar(false);
+    };
     return (
         <>
             <div>
@@ -129,6 +154,7 @@ const Product = async ({ prodType, fromWhere, productList, searchParams }) => {
                                                     <AddToCart
                                                         vendorProdId={product?.id}
                                                         hideQty={true}
+                                                        cartListHandler={sidebarHandler}
                                                         className="w-[100%]"
                                                     />
                                                 </div>
@@ -168,6 +194,10 @@ const Product = async ({ prodType, fromWhere, productList, searchParams }) => {
                         </div>
                     </div>
                 </section>
+
+                <div className="fixed top-0 right-0 z-50 h-full transform transition-transform duration-300 ease-in-out">
+                    {sidebar && <CartList cartList={cartList} closeCart={handleRemoveItem} showCrossIcon={true} />}
+                </div>
             </div>
         </>
     );

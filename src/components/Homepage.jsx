@@ -1,9 +1,7 @@
 import { doProductList } from '@app/actions/productAction.js';
 import { brandListAction } from '@app/actions/brandAction.js';
 import Products from './products/Product.jsx';
-// import PromoBanner from './promoBanner/PromoBanner.jsx';
 import Brands from './brand/Brand.jsx';
-// import Testimonial from './testimonial/Testimonial.jsx';
 import Loader from './FirstLoader.jsx';
 
 export const metadata = {
@@ -14,7 +12,15 @@ export const metadata = {
 
 export default async function Home() {
     const result = await doProductList();
-    const productList = result.product_list;
+    const productList = result.product_list?.map((item) => {
+        if (item.wish_lists?.length > 0) {
+            item.disable_wish = true;
+        } else {
+            item.disable_wish = false;
+        }
+
+        return item;
+    });
 
     const brandResult = await brandListAction();
     const brands = brandResult.brands;

@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
-//import Image from 'next/image';
+import Link from 'next/link';
 
 const TrashIcon = () => (
     <svg
@@ -20,7 +19,7 @@ const TrashIcon = () => (
     </svg>
 );
 
-const CartListTable = ({ cartList }) => {
+const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
     const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
@@ -38,6 +37,10 @@ const CartListTable = ({ cartList }) => {
         }, 500);
     };
 
+    const closeCartModal = () => {
+        closeCart();
+    };
+
     if (cartItems?.length === 0) {
         return (
             <div className="text-center py-20 bg-white rounded-lg shadow-md">
@@ -48,67 +51,97 @@ const CartListTable = ({ cartList }) => {
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-lg">
-            <table className="w-full text-sm text-left">
-                {/* --- Table Header --- */}
-                <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-200">
-                    <tr>
-                        <th scope="col" className="px-6 py-4 font-semibold">
-                            Product
-                        </th>
-                        <th scope="col" className="px-6 py-4 font-semibold text-center">
-                            Qty
-                        </th>
-                        <th scope="col" className="px-6 py-4 font-semibold text-right">
-                            Unit Price
-                        </th>
-                        <th scope="col" className="px-6 py-4 font-semibold text-right">
-                            Total
-                        </th>
-                        <th scope="col" className="px-1 py-4">
-                            <span className="sr-only">Remove</span>
-                        </th>
-                    </tr>
-                </thead>
+        <div className="relative">
+            <div className="bg-white rounded-xl shadow-lg flex flex-col h-[880px]">
+                <div className="overflow-x-auto">
+                    {showCrossIcon && (
+                        <div className="flex items-center justify-between p-4 border-b border-gray-300">
+                            <h6 className="font-bold text-gray-500">Added to List</h6>
 
-                {/* --- Table Body --- */}
-                <tbody className="h-[200px] divide-y divide-gray-200 overflow-y-scroll">
-                    {cartItems?.length &&
-                        cartItems?.map((item, indx) => (
-                            <tr
-                                key={indx}
-                                className={`
-                                    transition-opacity duration-500 ease-out
-                                    ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
-                                `}>
-                                <td className="px-6 py-4">
-                                    <div className="font-semibold text-gray-900">
-                                        {item.vendor_products?.products?.prod_name || ''}
-                                    </div>
-                                </td>
+                            <div className="relative h-6 w-6" onClick={closeCartModal}>
+                                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 rotate-45"></div>
+                                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 -rotate-45"></div>
+                            </div>
+                        </div>
+                    )}
 
-                                {/* --- Quantity & Price Cells --- */}
-                                <td className="px-6 py-4 text-center font-medium text-gray-700">{item.qty || 0}</td>
-                                <td className="px-6 py-4 text-right text-gray-600">
-                                    {item?.vendor_products?.price?.toFixed(2)}
-                                </td>
-                                <td className="px-6 py-4 text-right font-semibold text-gray-900">
-                                    {(Number(item?.vendor_products?.price || 0) * Number(item.qty || 0))?.toFixed(2)}
-                                </td>
-
-                                <td className="px-1 py-4 text-center">
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRemoveItem(item.id)}
-                                        className="p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition-colors duration-200"
-                                        aria-label={`Remove ${item.name}`}>
-                                        <TrashIcon />
-                                    </button>
-                                </td>
+                    <table className="w-full text-sm text-left">
+                        {/* --- Table Header --- */}
+                        <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-200">
+                            <tr>
+                                <th scope="col" className="px-6 py-4 font-semibold">
+                                    Product
+                                </th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-center">
+                                    Qty
+                                </th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-right">
+                                    Unit Price
+                                </th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-right">
+                                    Total
+                                </th>
+                                <th scope="col" className="px-1 py-4"></th>
                             </tr>
-                        ))}
-                </tbody>
-            </table>
+                        </thead>
+
+                        {/* --- Table Body --- */}
+                        <tbody className="divide-y divide-gray-200">
+                            {cartItems?.length &&
+                                cartItems?.map((item, indx) => (
+                                    <tr
+                                        key={indx}
+                                        className={`
+                                        transition-opacity duration-500 ease-out
+                                        ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
+                                    `}>
+                                        <td className="px-6 py-4">
+                                            <div className="font-semibold text-gray-900">
+                                                {item.vendor_products?.products?.prod_name || ''}
+                                            </div>
+                                        </td>
+
+                                        {/* --- Quantity & Price Cells --- */}
+                                        <td className="px-6 py-4 text-center font-medium text-gray-700">
+                                            {item.qty || 0}
+                                        </td>
+                                        <td className="px-6 py-4 text-right text-gray-600">
+                                            {item?.vendor_products?.price?.toFixed(2)}
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-semibold text-gray-900">
+                                            {(
+                                                Number(item?.vendor_products?.price || 0) * Number(item.qty || 0)
+                                            )?.toFixed(2)}
+                                        </td>
+
+                                        <td className="px-1 py-4 text-center">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveItem(item.id)}
+                                                className="p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition-colors duration-200"
+                                                aria-label={`Remove ${item.name}`}>
+                                                <TrashIcon />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <Link
+                href="/add-to-cart"
+                className="absolute bottom-5 !w-[100%] flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-3">
+                <svg className="h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                </svg>
+                Go to Cart Details
+            </Link>
         </div>
     );
 };
