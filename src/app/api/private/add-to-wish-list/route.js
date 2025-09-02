@@ -103,7 +103,17 @@ export const GET = async (req) => {
                                         id: true,
                                         base_url: true
                                     }
-                                }
+                                },
+                                brands: true
+                            }
+                        },
+                        vendors: {
+                            select: {
+                                id: true,
+                                address: true,
+                                store_description: true,
+                                store_logo: true,
+                                store_name: true
                             }
                         }
                     }

@@ -51,87 +51,76 @@ const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
     }
 
     return (
-        <div className="relative">
-            <div className="bg-white rounded-xl shadow-lg flex flex-col h-[880px]">
-                <div className="overflow-x-auto">
-                    {showCrossIcon && (
-                        <div className="flex items-center justify-between p-4 border-b border-gray-300">
-                            <h6 className="font-bold text-gray-500">Added to List</h6>
+        <div>
+            <div className="relative w-[360px]">
+                <div className="bg-white rounded-xl shadow-lg flex flex-col ">
+                    <div>
+                        {showCrossIcon && (
+                            <div className="flex items-center justify-between p-4 border-b border-gray-300">
+                                <h6 className="font-bold text-gray-500">Added to List</h6>
 
-                            <div className="relative h-6 w-6" onClick={closeCartModal}>
-                                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 rotate-45"></div>
-                                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 -rotate-45"></div>
+                                <div className="relative h-6 w-6" onClick={closeCartModal}>
+                                    <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 rotate-45"></div>
+                                    <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 -rotate-45"></div>
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    <table className="w-full text-sm text-left">
-                        {/* --- Table Header --- */}
-                        <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-200">
-                            <tr>
-                                <th scope="col" className="px-6 py-4 font-semibold">
-                                    Product
-                                </th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-center">
-                                    Qty
-                                </th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right">
-                                    Unit Price
-                                </th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right">
-                                    Total
-                                </th>
-                                <th scope="col" className="px-1 py-4"></th>
-                            </tr>
-                        </thead>
+                        <table className="w-full text-sm text-left block">
+                            {/* --- Table Header --- */}
+                            <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-200 w-full block">
+                                <tr className="w-full block">
+                                    <th className="w-5/12 px-6 py-1 font-semibold">Product</th>
+                                    <th className="w-3/12 px-6 py-1 font-semibold text-right">Price</th>
+                                    <th className="w-3/12 px-6 py-1 font-semibold text-right">Total</th>
+                                    <th className="w-1/12 px-1 py-1 text-right"></th>
+                                </tr>
+                            </thead>
 
-                        {/* --- Table Body --- */}
-                        <tbody className="divide-y divide-gray-200">
-                            {cartItems?.length &&
-                                cartItems?.map((item, indx) => (
-                                    <tr
-                                        key={indx}
-                                        className={`
+                            {/* --- Table Body --- */}
+                            <tbody className="divide-y divide-gray-200 h-[800px] overflow-y-auto block">
+                                {cartItems?.length &&
+                                    cartItems?.map((item, indx) => (
+                                        <tr
+                                            key={indx}
+                                            className={`
                                         transition-opacity duration-500 ease-out
                                         ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
                                     `}>
-                                        <td className="px-6 py-4">
-                                            <div className="font-semibold text-gray-900">
-                                                {item.vendor_products?.products?.prod_name || ''}
-                                            </div>
-                                        </td>
+                                            <td className="px-6 py-1 w-5/12 ">
+                                                <div className="font-semibold text-gray-900">
+                                                    {item.vendor_products?.products?.prod_name || ''}
+                                                </div>
+                                            </td>
 
-                                        {/* --- Quantity & Price Cells --- */}
-                                        <td className="px-6 py-4 text-center font-medium text-gray-700">
-                                            {item.qty || 0}
-                                        </td>
-                                        <td className="px-6 py-4 text-right text-gray-600">
-                                            {item?.vendor_products?.price?.toFixed(2)}
-                                        </td>
-                                        <td className="px-6 py-4 text-right font-semibold text-gray-900">
-                                            {(
-                                                Number(item?.vendor_products?.price || 0) * Number(item.qty || 0)
-                                            )?.toFixed(2)}
-                                        </td>
+                                            <td className="w-3/12 px-6 py-1 text-right text-gray-600">
+                                                {item?.vendor_products?.price?.toFixed(2) || 0}
+                                            </td>
+                                            <td className="w-3/12 px-6 py-1 text-right font-semibold text-gray-900">
+                                                {(
+                                                    Number(item?.vendor_products?.price || 0) * Number(item.qty || 0)
+                                                )?.toFixed(2)}
+                                            </td>
 
-                                        <td className="px-1 py-4 text-center">
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemoveItem(item.id)}
-                                                className="p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition-colors duration-200"
-                                                aria-label={`Remove ${item.name}`}>
-                                                <TrashIcon />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </table>
+                                            <td className="w-1/12 px-1 py-1 text-right">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveItem(item.id)}
+                                                    className="p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition-colors duration-200"
+                                                    aria-label={`Remove ${item.name}`}>
+                                                    <TrashIcon />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <Link
                 href="/add-to-cart"
-                className="absolute bottom-5 !w-[100%] flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-3">
+                className="absolute bottom-0  !w-[100%] left-0 right-0 flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-5">
                 <svg className="h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                         strokeLinecap="round"

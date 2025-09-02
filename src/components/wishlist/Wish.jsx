@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
-//import Image from 'next/image';
+import Link from 'next/link';
 
 const TrashIcon = () => (
     <svg
@@ -48,58 +47,79 @@ const CartListTable = ({ wishList }) => {
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-lg">
-            <table className="w-full text-sm text-left">
-                {/* --- Table Header --- */}
-                <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-200">
-                    <tr>
-                        <th scope="col" className="px-6 py-4 font-semibold">
-                            Product
-                        </th>
+        <div>
+            <div className="relative w-[360px]">
+                <div className="bg-white rounded-xl shadow-lg flex flex-col ">
+                    <div>
+                        <table className="w-full text-sm text-left block">
+                            {/* --- Table Header --- */}
+                            <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-200">
+                                <tr>
+                                    <th className="w-6/12 px-6 py-1 font-semibold">Product</th>
+                                    <th className="w-2/12 px-6 py-1 font-semibold text-right">Price</th>
+                                    <th className="w-2/12 px-6 py-1 font-semibold text-right">Total</th>
+                                    <th className="w-2/12 px-1 py-1 text-right"></th>
+                                </tr>
+                            </thead>
 
-                        <th scope="col" className="px-6 py-4 font-semibold text-right">
-                            Price
-                        </th>
-                        <th scope="col" className="px-1 py-4">
-                            <span className="sr-only">Remove</span>
-                        </th>
-                    </tr>
-                </thead>
+                            {/* --- Table Body --- */}
+                            <tbody className="divide-y divide-gray-200 h-[600px] overflow-y-auto block">
+                                {cartItems?.length &&
+                                    cartItems?.map((item, indx) => (
+                                        <tr
+                                            key={indx}
+                                            className={`
+                                               transition-opacity duration-500 ease-out
+                                               ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
+                                           `}>
+                                            <td className="px-6 py-1 w-6/12">
+                                                <div className="font-semibold text-gray-900">
+                                                    {item.vendor_products?.products?.prod_name || ''}
+                                                </div>
+                                            </td>
+                                            <td className="w-2/12 px-6 py-1 text-right text-gray-600 text-right">
+                                                {item?.vendor_products?.price?.toFixed(2) || 0}
+                                            </td>
+                                            <td className="w-2/12 px-6 py-1 text-right font-semibold text-gray-900 text-right">
+                                                {(
+                                                    Number(item?.vendor_products?.price || 0) * Number(item.qty || 0)
+                                                )?.toFixed(2)}
+                                            </td>
 
-                {/* --- Table Body --- */}
-                <tbody className="h-[200px] divide-y divide-gray-200 overflow-y-scroll">
-                    {cartItems?.length &&
-                        cartItems?.map((item, indx) => (
-                            <tr
-                                key={indx}
-                                className={`
-                                    transition-opacity duration-500 ease-out
-                                    ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
-                                `}>
-                                <td className="px-6 py-4">
-                                    <div className="font-semibold text-gray-900">
-                                        {item.vendor_products?.products?.prod_name || ''}
-                                    </div>
-                                </td>
-
-                                {/* --- Quantity & Price Cells --- */}
-                                <td className="px-6 py-4 text-center font-medium text-gray-700">
-                                    {item.vendor_products?.price || 0}
-                                </td>
-
-                                <td className="px-1 py-4 text-center">
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRemoveItem(item.id)}
-                                        className="p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition-colors duration-200"
-                                        aria-label={`Remove ${item.name}`}>
-                                        <TrashIcon />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                </tbody>
-            </table>
+                                            <td className="w-2/12 px-1 py-1 text-right">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveItem(item.id)}
+                                                    className="p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition-colors duration-200"
+                                                    aria-label={`Remove ${item.name}`}>
+                                                    <TrashIcon />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <Link
+                href="/wish-list"
+                className="absolute bottom-0  !w-[100%] left-0 right-0 flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-5">
+                <svg
+                    className="w-5 h-5 mr-1 mt-1"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                </svg>
+                Go to Wish List
+            </Link>
         </div>
     );
 };
