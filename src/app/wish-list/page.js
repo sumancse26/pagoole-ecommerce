@@ -9,8 +9,6 @@ const WishListPage = async () => {
     if (session?.user) {
         const wish = await getWishList();
 
-        //wishList = wish.wish_lists || [];
-
         const groupedByVendor =
             wish.wish_lists.reduce((acc, item) => {
                 const vendorId = item.vendor_products?.vendors?.id;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import ProductIcon from '../products/ProductIcon';
+import Link from 'next/link';
 
 const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
     return (
@@ -287,9 +288,11 @@ export default function CartPage({ cartList, wishList }) {
                             <span>Total</span>
                             <span>৳ {cartTotal()}</span>
                         </div>
-                        <button className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition">
+                        <Link
+                            href="/checkout"
+                            className="w-full bg-green-600 text-white p-3 rounded-lg font-medium hover:bg-green-700 transition">
                             PROCEED TO CHECKOUT (0)
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

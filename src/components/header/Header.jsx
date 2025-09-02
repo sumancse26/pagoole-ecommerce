@@ -95,12 +95,12 @@ const HeaderComp = async () => {
                                         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                                     />
                                 </svg>
-                                <span className="absolute -top-1.5 -right-3.5 text-xs bg-white text-green-700 font-bold rounded-full px-1.5">
+                                <span className="absolute -top-3 -right-2.5 text-xs bg-white text-red-700 font-bold rounded-full px-1.5">
                                     {wishList?.length || 0}
                                 </span>
                             </Link>
                             {/* Dropdown */}
-                            <div className="absolute hidden group-hover:block top-2 -right-2 bg-white shadow-md text-black rounded-md z-50 p-3">
+                            <div className="absolute hidden group-hover:block top-2 -right-6 bg-white shadow-md text-black rounded-md z-50 p-3">
                                 <Wish wishList={wishList} />
                             </div>
                         </div>
@@ -121,7 +121,7 @@ const HeaderComp = async () => {
                                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8m0 0a2 2 0 104 0m-4 0H17m0 0a2 2 0 104 0m-4 0h-1.4"
                                     />
                                 </svg>
-                                <span className="absolute -top-1.5 -right-3.5 text-xs bg-white text-green-700 font-bold rounded-full px-1.5">
+                                <span className="absolute -top-3 -right-5 text-xs bg-white text-red-700 font-bold rounded-full px-1.5">
                                     {cartList?.length || 0}
                                 </span>
                             </Link>

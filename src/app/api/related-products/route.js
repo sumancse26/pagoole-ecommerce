@@ -88,7 +88,8 @@ export const GET = async (request) => {
                             }
                         }
                     }
-                }
+                },
+                wish_lists: true
             }
         });
 

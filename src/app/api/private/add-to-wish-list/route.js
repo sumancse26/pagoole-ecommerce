@@ -98,6 +98,7 @@ export const GET = async (req) => {
                                 prod_name: true,
                                 slug: true,
                                 image: true,
+                                mrp: true,
                                 file_server: {
                                     select: {
                                         id: true,

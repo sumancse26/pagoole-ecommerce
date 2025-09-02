@@ -1,11 +1,11 @@
-import Checkout from "@components/checkout/Checkout.jsx";
+import Checkout from '@components/checkout/Checkout';
 
 const CheckoutPage = () => {
     return (
         <>
-        <Checkout />
+            <Checkout />
         </>
-    )
-}
+    );
+};
 
 export default CheckoutPage;
