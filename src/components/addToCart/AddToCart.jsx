@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import ProductIcon from '../products/ProductIcon';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
     return (
@@ -88,7 +88,9 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
 
 export default function CartPage({ cartList, wishList }) {
     const [items, setItems] = useState(cartList);
-    const [shippingFee, setShippingFee] = useState(0);
+    const [shippingFee, setShippingFee] = useState(60);
+
+    const router = useRouter();
 
     useEffect(() => {
         disableWishHandler();
@@ -150,27 +152,20 @@ export default function CartPage({ cartList, wishList }) {
         }
     };
 
-    const cartSUbTotal = () => {
-        return items.reduce((totalSum, vendorGroup) => {
-            if (vendorGroup.items && Array.isArray(vendorGroup.items)) {
-                return (
-                    totalSum +
-                    vendorGroup.items.reduce((vendorGroupTotal, item) => {
-                        if (item.checked) {
-                            const itemPrice = Number(item.vendor_products?.price) || 0;
-                            const itemQty = Number(item.qty) || 0;
-                            return vendorGroupTotal + itemPrice * itemQty;
-                        }
-                        return vendorGroupTotal;
-                    }, 0)
-                );
-            }
-            return totalSum;
-        }, 0);
-    };
+    const cartSubTotal = () =>
+        items.reduce(
+            (totalSum, { items: vendorItems = [] }) =>
+                totalSum +
+                vendorItems.reduce(
+                    (groupSum, item) =>
+                        item.checked ? groupSum + (+item.vendor_products?.price || 0) * (+item.qty || 0) : groupSum,
+                    0
+                ),
+            0
+        );
 
     const cartTotal = () => {
-        return cartSUbTotal() + Number(shippingFee || 0);
+        return cartSubTotal() + Number(shippingFee || 0);
     };
 
     const handleToggleSelect = (item) => {
@@ -180,7 +175,6 @@ export default function CartPage({ cartList, wishList }) {
                     if (it.vendor_products && it.id == item.id) {
                         it.checked = item.checked;
                     }
-                    console.log(it);
                     return it;
                 });
             }
@@ -197,6 +191,7 @@ export default function CartPage({ cartList, wishList }) {
                     return it;
                 });
             }
+
             return fl;
         });
         setItems(currentList);
@@ -210,6 +205,27 @@ export default function CartPage({ cartList, wishList }) {
             return fl;
         });
         setItems(currentList);
+    };
+
+    const productToProcedHandler = () => {
+        const currentList = items.map((fl) => ({
+            ...fl,
+            items: fl.items.filter((it) => it.checked)
+        }));
+
+        return currentList;
+    };
+
+    const proceedBtnHandler = async () => {
+        const data = await productToProcedHandler();
+
+        const now = Date.now();
+        const item = {
+            checkout_info: data,
+            expiry: now + 10 * 60 * 1000 // 10 minutes
+        };
+        localStorage.setItem('checkout_data', JSON.stringify(item));
+        router.push('/checkout');
     };
 
     return (
@@ -263,24 +279,24 @@ export default function CartPage({ cartList, wishList }) {
                     )}
                 </div>
 
-                <div className="w-full lg:w-[30%]">
-                    <div className="bg-white p-6 rounded-lg shadow h-fit sticky top-6">
-                        <h2 className="font-semibold text-lg text-gray-800 mb-4">Order Summary</h2>
-                        <div className="flex justify-between text-gray-700 mb-2">
+                <div className="w-full max-w-full lg:w-[30%]">
+                    <div className="bg-white p-4 lg:p-6 rounded-lg shadow h-fit lg:sticky lg:top-6">
+                        <h2 className="font-bold text-gray-600 py-6 text-2xl">Order Summary</h2>
+                        <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
                             <span>Subtotal</span>
-                            <span>৳ {cartSUbTotal()}</span>
+                            <span>৳ {cartSubTotal()}</span>
                         </div>
-                        <div className="flex justify-between text-gray-700 mb-2">
+                        <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
                             <span>Shipping Fee</span>
-                            <span>৳ 0</span>
+                            <span>৳ {shippingFee || 0}</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-2 mb-4">
+                        <div className="flex flex-col sm:flex-row gap-2 mb-4 w-full">
                             <input
                                 type="text"
                                 placeholder="Enter Voucher Code"
                                 className="flex-1 border border-green-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
                             />
-                            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm sm:text-base">
                                 APPLY
                             </button>
                         </div>
@@ -288,11 +304,11 @@ export default function CartPage({ cartList, wishList }) {
                             <span>Total</span>
                             <span>৳ {cartTotal()}</span>
                         </div>
-                        <Link
-                            href="/checkout"
-                            className="w-full bg-green-600 text-white p-3 rounded-lg font-medium hover:bg-green-700 transition">
-                            PROCEED TO CHECKOUT (0)
-                        </Link>
+                        <button
+                            onClick={proceedBtnHandler}
+                            className="block w-full bg-green-600 text-white p-3 rounded-lg font-medium text-center hover:bg-green-700 transition text-sm sm:text-base">
+                            PROCEED TO CHECKOUT
+                        </button>
                     </div>
                 </div>
             </div>

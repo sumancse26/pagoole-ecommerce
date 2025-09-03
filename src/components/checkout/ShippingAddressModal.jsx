@@ -28,7 +28,7 @@ const ShippingAddressModal = ({ isOpen, onClose, isOpenNewModal }) => {
     };
 
     return (
-        <div className={`fixed inset-0 z-75 overflow-hidden ${isOpen ? 'block' : 'hidden'}`}>
+        <div className={`fixed inset-0 bg-black/50 z-75 overflow-hidden ${isOpen ? 'block' : 'hidden'}`}>
             {/* Overlay */}
             <div
                 className={`absolute inset-0 bg-opacity-50 transition-opacity duration-300 ${

@@ -1,15 +1,35 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 const AddNewAddress = ({ onClose }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        setIsOpen(true);
+    }, []);
+
+    const handleClose = () => {
+        setIsOpen(false);
+        setTimeout(onClose, 300);
+    };
+
     return (
-        <div className="fixed bg-gray-100 inset-0  bg-opacity-25 flex items-center justify-center p-4 z-50">
+        // Changed bg-gray-100 to bg-black and adjusted opacity
+        <div
+            className={`fixed inset-0 bg-black/50 bg-opacity-40 z-50 transition-opacity duration-300 ${
+                isOpen ? 'opacity-100' : 'opacity-0'
+            }`}>
             {/* Modal content container */}
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl relative max-h-[90vh] overflow-y-auto">
+            <div
+                className={`fixed right-0 top-0 h-full bg-white shadow-xl p-6 w-full max-w-4xl max-h-full overflow-y-auto transform transition-transform duration-300 ease-out ${
+                    isOpen ? 'translate-x-0' : 'translate-x-full'
+                }`}>
                 {/* Close button */}
                 <div className="flex justify-between items-center border-b border-gray-300 pb-4 mb-4 sticky top-0 bg-white z-10">
                     <h2 className="text-2xl font-semibold text-gray-600">Add new shipping Address</h2>
                     <button
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="text-gray-400 hover:text-gray-600 absolute top-2 right-4"
                         aria-label="Close modal">
                         <svg
@@ -139,7 +159,7 @@ const AddNewAddress = ({ onClose }) => {
                         </button>
                         <button className="flex items-center space-x-2 px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <svg
-                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns="http://www.w3.w3.org/2000/svg"
                                 className="h-5 w-5"
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -158,7 +178,7 @@ const AddNewAddress = ({ onClose }) => {
 
                 <div className="flex justify-center space-x-4">
                     <button
-                        onClick={onClose} // Also close on Cancel
+                        onClick={handleClose}
                         className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
                         CANCEL
                     </button>

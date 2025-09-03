@@ -1,7 +1,7 @@
 import ShippingBilling from './ShippingBilling';
-import PackageOption from './PackageOption';
 import ProductItem from './ProductItem';
 import OrderSummary from './OrderSummary';
+import PackageOption from './PackageOption';
 
 const CheckoutPage = () => {
     return (
@@ -11,27 +11,14 @@ const CheckoutPage = () => {
                 <div className="lg:col-span-2">
                     <ShippingBilling />
                     <PackageOption />
+                    <ProductItem />
 
+                    {/* <PackageOption />
                     <div className="bg-white p-6 rounded-lg shadow-md">
                         <h3 className="text-lg font-medium text-gray-700 mb-4">Products in this package</h3>
-                        <ProductItem
-                            name="Yes Synthetic Detergent Powder Lemon 1 kg."
-                            price={96}
-                            originalPrice={150}
-                            discount="-36%"
-                            qty={5}
-                            imageSrc="/images/detergent.png"
-                        />
-                        <ProductItem
-                            name="Silicone Soft Case for Airpod Pro & Pro 2 Wireless Earbuds - Protective Headphone Cover"
-                            price={85}
-                            originalPrice={270}
-                            discount="-69%"
-                            qty={1}
-                            imageSrc="/images/airpods-case.png"
-                        />
-                        {/* Add more ProductItem components as needed */}
-                    </div>
+                        <ProductItem />
+                    </div>{' '}
+                    */}
                 </div>
 
                 {/* Right Column */}

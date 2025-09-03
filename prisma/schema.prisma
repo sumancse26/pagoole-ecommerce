@@ -250,9 +250,12 @@ model Shipping_Addresses {
   full_name             String?         @db.VarChar(100)
   phone                 String?         @db.VarChar(20)
   address_line          String?         @db.VarChar(300)
+  region                String?         @db.VarChar(100)
   city                  String?         @db.VarChar(100)
+  area                  String?         @db.VarChar(100)
   postal_code           String?         @db.VarChar(20)
   country               String?         @db.VarChar(100)
+  address_type          String?         @default("home")
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   
