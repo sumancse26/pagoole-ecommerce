@@ -34,6 +34,7 @@ model Users {
 model Geo_Locations {
   id                      Int                 @id @default(autoincrement())
   name                    String              @db.VarChar(128)
+  loc_type                String?             @default("") @db.VarChar(30)
   full_address            String?             @db.VarChar(255)
   parent_id               Int?
   is_active               Int                 @default(1)

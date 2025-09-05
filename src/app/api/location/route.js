@@ -2,7 +2,15 @@ import { NextResponse } from 'next/server';
 import prisma from '@/config/prisma';
 export const GET = async (req) => {
     try {
-        const location_list = await prisma.geo_Locations.findMany({});
+        const location_list = await prisma.geo_Locations.findMany({
+            select: {
+                id: true,
+                name: true,
+                loc_type: true,
+                full_address: true,
+                is_active: true
+            }
+        });
 
         return NextResponse.json(
             {

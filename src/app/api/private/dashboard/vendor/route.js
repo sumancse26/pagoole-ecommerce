@@ -3,7 +3,7 @@ import prisma from '@/config/prisma';
 
 export const POST = async (req) => {
     try {
-        const userId = req.headers.get('user_id');
+        const userId = await req.headers.get('user_id');
         const payload = await req.json();
 
         const userInfo = await prisma.vendors.findFirst({

@@ -42,7 +42,10 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
                         <p className="text-sm text-gray-600 mt-2">Stock: {item.vendor_products?.stock_qty || 0}</p>
                         <div className="flex items-center space-x-2 mt-2">
                             <ProductIcon productInfo={item} />
-                            <button className="text-gray-400 hover:text-red-500" onClick={() => onRemove(item)}>
+                            <button
+                                className="group relative text-gray-400 hover:text-red-500 transition"
+                                aria-label="Remove Item"
+                                onClick={() => onRemove(item)}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-5 w-5"
@@ -56,6 +59,9 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                     />
                                 </svg>
+                                <span className="opacity-0 group-hover:opacity-100 absolute left-1/2 -translate-x-1/2 bottom-full mb-2 text-xs bg-green-700 text-white py-1 px-2 rounded shadow transition font-bold">
+                                    Remove
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -165,7 +171,11 @@ export default function CartPage({ cartList, wishList }) {
         );
 
     const cartTotal = () => {
-        return cartSubTotal() + Number(shippingFee || 0);
+        return cartSubTotal() + calculateTotalDeliveryFee();
+    };
+
+    const isProceed = () => {
+        return items.some((out) => out.items.some((it) => it.checked));
     };
 
     const handleToggleSelect = (item) => {
@@ -228,6 +238,11 @@ export default function CartPage({ cartList, wishList }) {
         router.push('/checkout');
     };
 
+    const calculateTotalDeliveryFee = () => {
+        const vendors = items.filter((vendor) => vendor?.items?.some((product) => product.checked));
+        return shippingFee * vendors?.length || 0;
+    };
+
     return (
         <div className="container mx-auto px-4 py-6 md:px-6 lg:px-8">
             <h1 className="font-bold text-gray-600 py-6 text-2xl">Your Shopping Cart</h1>
@@ -287,8 +302,8 @@ export default function CartPage({ cartList, wishList }) {
                             <span>৳ {cartSubTotal()}</span>
                         </div>
                         <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
-                            <span>Shipping Fee</span>
-                            <span>৳ {shippingFee || 0}</span>
+                            <span>Delivery Fee</span>
+                            <span>৳ {calculateTotalDeliveryFee() || 0}</span>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-2 mb-4 w-full">
                             <input
@@ -304,9 +319,13 @@ export default function CartPage({ cartList, wishList }) {
                             <span>Total</span>
                             <span>৳ {cartTotal()}</span>
                         </div>
+
                         <button
+                            disabled={!isProceed()}
                             onClick={proceedBtnHandler}
-                            className="block w-full bg-green-600 text-white p-3 rounded-lg font-medium text-center hover:bg-green-700 transition text-sm sm:text-base">
+                            className={`block w-full bg-green-600 text-white p-3 rounded-lg font-medium text-center hover:bg-green-700 transition text-sm sm:text-base ${
+                                !isProceed() ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}>
                             PROCEED TO CHECKOUT
                         </button>
                     </div>

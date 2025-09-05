@@ -47,10 +47,10 @@ const ProductIcon = ({ productInfo, pathFrom }) => {
             <button
                 disabled={product.disable_wish}
                 onClick={(e) => addWishListHandler(e)}
-                className={`text-red-400 rounded-full shadow ${
+                className={`group relative text-red-400 rounded-full shadow ${
                     product.disable_wish ? '' : 'hover:bg-red-600 hover:text-white transition-all duration-300'
                 } p-2`}
-                title={`${product.disable_wish ? 'Already added' : 'Add to Wish List'}`}>
+                aria-label="Remove Item">
                 <svg
                     className="w-5 h-5"
                     fill="none"
@@ -64,6 +64,9 @@ const ProductIcon = ({ productInfo, pathFrom }) => {
                         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                     />
                 </svg>
+                <span className="w-[max-content] opacity-0 group-hover:opacity-100 absolute left-1/2 -translate-x-1/2 bottom-full mb-2 text-xs bg-green-700 text-white py-1 px-2 rounded shadow transition font-bold">
+                    {product.disable_wish ? 'Added to Wishlist' : 'Add to Wishlist'}
+                </span>
             </button>
         </>
     );

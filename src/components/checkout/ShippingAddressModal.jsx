@@ -59,7 +59,7 @@ const ShippingAddressModal = ({ isOpen, onClose, isOpenNewModal }) => {
                     {/* Add New Address */}
                     <div className="text-right">
                         <button onClick={newAddressModal} className="text-green-600 hover:text-green-800 font-medium">
-                            Add new address
+                            <u>ADD NEW ADDRESS</u>
                         </button>
                     </div>
 
