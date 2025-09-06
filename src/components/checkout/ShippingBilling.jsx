@@ -1,26 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import ShippingAddressModal from './ShippingAddressModal';
+import { useState } from 'react';
 import AddNewAddress from './AddNewAddress';
 
-const ShippingBilling = ({ address }) => {
-    const [openModal, setOpenModal] = useState(false);
+const ShippingBilling = ({ address, openModalhandler }) => {
     const [openNewModal, setOpenNewModal] = useState(false);
-    const [deliveryAddress, setDeliveryAddress] = useState(false);
 
-    useEffect(() => {
-        setDeliveryAddress(address);
-
-        return () => {};
-    }, [address]);
-
-    const openModalhandler = () => {
-        setOpenModal(true);
-    };
-    const hideModalHandler = () => {
-        setOpenModal(false);
-    };
     const closeNewAddressModal = () => {
         setOpenNewModal(false);
     };
@@ -30,7 +15,7 @@ const ShippingBilling = ({ address }) => {
 
     return (
         <>
-            {!deliveryAddress && (
+            {!address && (
                 <div className="bg-white px-4 py-3 rounded-lg shadow-md mb-6 flex justify-end">
                     <button
                         className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-lg font-semibold py-2 px-7 rounded-lg shadow-md transition duration-200 flex items-center gap-2 justify-center outline-none ring-2 ring-transparent focus:ring-green-200"
@@ -54,8 +39,8 @@ const ShippingBilling = ({ address }) => {
                 </div>
             )}
 
-            {deliveryAddress && (
-                <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+            {address && (
+                <div className="bg-white p-3 rounded-lg shadow-md mb-6">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold text-gray-900">Shipping & Billing</h2>
                         <button
@@ -73,18 +58,57 @@ const ShippingBilling = ({ address }) => {
                                 <path d="M12 20h9" />
                                 <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z" />
                             </svg>
-                            EDIT
+                            CHANGE ADDRESS
                         </button>
                     </div>
-                    <p className="text-gray-900 font-medium text-lg">Suman Sarkar</p>
-                    <p className="text-gray-700">01796844288</p>
-                    <p className="text-gray-600">
-                        Mirpur-2, Dhaka, Bangladesh, East Joara Dohazari, Chattogram - Chandanaish, Chattogram
-                    </p>
+                    {address && (
+                        <div className="border border-gray-200 rounded-xl p-3 shadow-sm bg-white">
+                            {/* Name & Phone */}
+
+                            <div className="flex items-start mb-2">
+                                <div className="mr-4 mt-1">
+                                    <p className="font-semibold text-gray-800">{address.full_name || ''}</p>
+                                    <span className="text-sm font-medium text-gray-600">📞 {address.phone}</span>
+                                </div>
+                                <span
+                                    className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border ${
+                                        address.address_type === 'HOME'
+                                            ? 'bg-green-100 text-green-700'
+                                            : 'bg-red-100 text-red-700'
+                                    }`}>
+                                    {address.address_type}
+                                </span>
+                            </div>
+
+                            {/* Address */}
+                            <p className="flex items-start gap-2 text-gray-700 mb-2">
+                                {/* Address Icon */}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-5 h-5 text-green-600 mt-1 flex-shrink-0"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}>
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5s-3 1.343-3 3 1.343 3 3 3z"
+                                    />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M19.5 8.25c0 7.25-7.5 12.75-7.5 12.75S4.5 15.5 4.5 8.25a7.5 7.5 0 1115 0z"
+                                    />
+                                </svg>
+                                <span>
+                                    {address.address_line}, {address.area}, {address.city}, {address.region},{' '}
+                                    {address.country}
+                                </span>
+                            </p>
+                        </div>
+                    )}
                 </div>
-            )}
-            {openModal && (
-                <ShippingAddressModal isOpen={openModal} onClose={hideModalHandler} isOpenNewModal={newModalHandler} />
             )}
             {openNewModal && <AddNewAddress onClose={closeNewAddressModal} />}
         </>

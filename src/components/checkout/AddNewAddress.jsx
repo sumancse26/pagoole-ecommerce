@@ -106,21 +106,24 @@ const AddNewAddress = ({ onClose }) => {
     // Save handler
     const saveBtnHandler = async (e) => {
         e.preventDefault();
-        // Example validation: required fields
-        if (!values.full_name || !values.region || !values.phone || !values.city || !values.address_line) {
-            alert('Please fill all required fields!');
-            return;
-        }
+        try {
+            if (!values.full_name || !values.region || !values.phone || !values.city || !values.address_line) {
+                alert('Please fill all required fields!');
+                return;
+            }
 
-        const res = await createDeliveryAddress(values);
-        console.log('Saved Address:', res);
-        // Optionally reset or close
-        // handleClose();
+            const res = await createDeliveryAddress(values);
+            if (res.success) {
+                handleClose();
+            }
+        } catch (err) {
+            throw new Error(err.message);
+        }
     };
 
     return (
         <div
-            className={`fixed inset-0 bg-black/50 bg-opacity-40 z-50 transition-opacity duration-300 ${
+            className={`fixed inset-0 bg-black/50 bg-opacity-40 z-100 transition-opacity duration-300 ${
                 isOpen ? 'opacity-100' : 'opacity-0'
             }`}>
             {/* Modal content container */}

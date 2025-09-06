@@ -257,6 +257,7 @@ model Shipping_Addresses {
   postal_code           String?         @db.VarChar(20)
   country               String?         @db.VarChar(100)
   address_type          String?         @default("home")
+  default_address       String?         @default("0")
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
   

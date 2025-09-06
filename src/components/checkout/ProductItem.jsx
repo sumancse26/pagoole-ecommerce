@@ -11,7 +11,6 @@ const ProductItem = ({ checkoutData }) => {
                         0
                     );
                     const totalQty = vendor?.items?.length;
-                    // const totalQty = vendor?.items?.reduce((sum, prod) => sum + (Number(prod.qty) || 0), 0);
 
                     return (
                         <div key={index} className="mb-10">

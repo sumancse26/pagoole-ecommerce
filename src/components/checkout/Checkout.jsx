@@ -1,20 +1,25 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
+import { getDeliveryAddresstList } from '@/services/deliveryAddress';
 import ShippingBilling from './ShippingBilling';
 import ProductItem from './ProductItem';
 import OrderSummary from './OrderSummary';
 import PackageOption from './PackageOption';
+import ShippingAddressModal from './ShippingAddressModal';
+import AddNewAddress from './AddNewAddress';
 
 const CheckoutPage = () => {
     const [checkoutData, setCheckoutData] = useState([]);
-    const [address, setAddress] = useState(false);
+    const [address, setAddress] = useState({});
+    const [selectedAddress, setSelectedAddress] = useState({});
     const [itemTotal, setItemTotal] = useState(0);
     const [total, setTotal] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
     const [deliveryFee, setDeliveryFee] = useState(60);
     const [totalVendors, setTotalVendors] = useState(0);
+    const [openModal, setOpenModal] = useState(false);
+    const [openNewAddrModal, setOpenNewAddrModal] = useState(false);
 
     useEffect(() => {
         const getProduct = () => {
@@ -29,6 +34,8 @@ const CheckoutPage = () => {
 
         const timeout = setTimeout(getProduct, 1000);
 
+        fetchDelAddressHandler();
+
         return () => clearTimeout(timeout);
     }, []);
 
@@ -40,6 +47,21 @@ const CheckoutPage = () => {
     useEffect(() => {
         calculateTotal();
     }, [itemTotal, deliveryFee]);
+
+    const fetchDelAddressHandler = async () => {
+        try {
+            const res = await getDeliveryAddresstList();
+            if (res.success) {
+                setSelectedAddress(() => {
+                    const defaultAddr = res.address_list.find((addr) => addr.default_address === '1');
+                    return defaultAddr ? defaultAddr : res.address_list[0] || {};
+                });
+                setAddress(res.address_list || []);
+            }
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    };
 
     const calculateItemTotal = () => {
         const total = checkoutData.reduce((vendorAcc, vendor) => {
@@ -70,12 +92,37 @@ const CheckoutPage = () => {
         setDeliveryFee(60 * vendorCount);
     };
 
+    const openModalhandler = () => {
+        setOpenModal(true);
+    };
+
+    const hideModalHandler = () => {
+        setOpenModal(false);
+    };
+
+    const refetchDeliveryAddress = (val) => {
+        if (val) {
+            fetchDelAddressHandler();
+        }
+    };
+
+    const changeAddressHandler = (addr) => {
+        setSelectedAddress(addr);
+    };
+
+    const openNewAddrModalHandler = () => {
+        setOpenNewAddrModal(true);
+        // setTimeout(() => {
+        //     setOpenNewAddrModal(true);
+        // }, 300);
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column */}
                 <div className="lg:col-span-2">
-                    <ShippingBilling address={address} />
+                    <ShippingBilling address={selectedAddress} openModalhandler={openModalhandler} />
                     <PackageOption totalItems={totalItems} totalVendors={totalVendors} />
                     <ProductItem checkoutData={checkoutData} />
                 </div>
@@ -116,6 +163,24 @@ const CheckoutPage = () => {
                     />
                 </div>
             </div>
+            {openModal && (
+                <ShippingAddressModal
+                    isOpen={openModal}
+                    onClose={hideModalHandler}
+                    isOpenNewModal={openNewAddrModalHandler}
+                    deliveryAddress={address}
+                    refetchDeliveryAddress={refetchDeliveryAddress}
+                    updateAddressHandler={changeAddressHandler}
+                />
+            )}
+
+            {openNewAddrModal && (
+                <AddNewAddress
+                    isOpen={openNewAddrModal}
+                    onClose={() => setOpenNewAddrModal(false)}
+                    refetch={refetchDeliveryAddress}
+                />
+            )}
         </div>
     );
 };

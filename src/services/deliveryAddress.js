@@ -8,12 +8,20 @@ export const createDeliveryAddress = async (data) => {
     return res;
 };
 
-export const getAddToCartList = async () => {
-    const res = await fetchApi('/api/private/add-to-cart', {
+export const getDeliveryAddresstList = async () => {
+    const res = await fetchApi('/api/private/delivery-address', {
         method: 'GET',
         next: {
-            tags: ['cartListItem']
+            tags: ['deliveryAddressList']
         }
+    });
+    return res;
+};
+
+export const changeDefaultAddress = async (addressId) => {
+    const res = await fetchApi('/api/private/delivery-address', {
+        method: 'PUT',
+        body: JSON.stringify({ address_id: addressId })
     });
     return res;
 };
