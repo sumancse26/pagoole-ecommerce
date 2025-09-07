@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { deleteWish } from '@/services/wishList';
+import { useRouter } from 'next/navigation';
 
 const TrashIcon = () => (
     <svg
@@ -22,19 +24,28 @@ const TrashIcon = () => (
 const CartListTable = ({ wishList }) => {
     const [cartItems, setCartItems] = useState([]);
 
+    const router = useRouter();
+
     useEffect(() => {
         setCartItems(wishList);
+
         return () => {};
     }, [wishList]);
 
-    const handleRemoveItem = (id) => {
-        setCartItems(
-            cartItems?.length && cartItems?.map((item) => (item.id === id ? { ...item, isRemoving: true } : item))
-        );
+    const handleRemoveItem = async (id) => {
+        try {
+            await deleteWish(id);
+            router.refresh();
+            setCartItems(
+                cartItems?.length && cartItems?.map((item) => (item.id === id ? { ...item, isRemoving: true } : item))
+            );
 
-        setTimeout(() => {
-            setCartItems((currentItems) => currentItems?.filter((item) => item.id !== id));
-        }, 500);
+            setTimeout(() => {
+                setCartItems((currentItems) => currentItems?.filter((item) => item.id !== id));
+            }, 500);
+        } catch (err) {
+            throw new Error(err.message);
+        }
     };
 
     if (cartItems?.length === 0) {

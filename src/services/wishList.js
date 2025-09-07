@@ -17,3 +17,11 @@ export const getWishList = async () => {
     });
     return res;
 };
+
+export const deleteWish = async (id) => {
+    const res = await fetchApi('/api/private/add-to-wish-list', {
+        method: 'DELETE',
+        body: JSON.stringify({ id })
+    });
+    return res;
+};

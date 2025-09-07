@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import AddToCart from '../buttons/AddToCart';
+import { deleteWish } from '@/services/wishList';
+import { useRouter } from 'next/navigation';
 
 const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
     return (
@@ -62,20 +64,33 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
 export default function WishlistPage({ wishList }) {
     const [wishlistItems, setWishlistItems] = useState(wishList);
 
+    const router = useRouter();
+
     useEffect(() => {
         setWishlistItems(wishList?.map((item) => ({ ...item, qty: 1, isRemoving: false })));
 
         return () => {};
     }, [wishList]);
 
-    const handleRemoveItem = (item) => {
-        const currentList = wishlistItems.map((fl) => {
-            if (fl.vendor_info && item.vendor_products?.vendors?.id == fl.vendor_info.id) {
-                fl.items = fl.items?.filter((it) => it.id != item.id);
-            }
-            return fl;
-        });
-        setWishlistItems(currentList);
+    const handleRemoveItem = async (item) => {
+        try {
+            await deleteWish(item.id); // was using undefined `id`
+            router.refresh();
+
+            setWishlistItems((prev) =>
+                prev.map((fl) =>
+                    fl.vendor_info?.id === item.vendor_products?.vendors?.id
+                        ? {
+                              ...fl,
+                              items: fl.items.filter((it) => it.id !== item.id)
+                          }
+                        : fl
+                )
+            );
+        } catch (err) {
+            console.error('Failed to remove wishlist item:', err);
+            throw err; // keep stack trace instead of wrapping in new Error
+        }
     };
 
     return (

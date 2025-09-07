@@ -32,10 +32,10 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
     return (
         <>
             <div>
-                <section className={`bg-gray-50 ${fromWhere == 'vendor' ? 'pt-40' : 'pt-10'}`}>
+                <section className={`bg-gray-50 ${fromWhere == 'vendor' ? 'pt-35' : 'pt-10'}`}>
                     <div className="container mx-auto px-4">
                         {fromWhere == 'vendor' && (
-                            <div className="fixed top-14 right-0  flex items-center justify-center gap-3 bg-white py-3 px-4 sm:px-6 md:px-8 lg:px-10 w-full">
+                            <div className="fixed top-14 right-0 z-10  flex items-center justify-end gap-3 bg-gray-100 py-3 px-4 sm:px-6 md:px-8 lg:px-10 w-full">
                                 <img
                                     src={productList[0]?.vendors?.store_logo}
                                     alt="store image"

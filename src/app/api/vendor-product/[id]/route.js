@@ -3,7 +3,7 @@ import prisma from '@/config/prisma';
 
 export const GET = async (req, { params }) => {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const url = new URL(req.url);
         const searchString = url.searchParams.get('search');

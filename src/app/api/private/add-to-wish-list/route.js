@@ -140,3 +140,36 @@ export const GET = async (req) => {
         );
     }
 };
+
+export const DELETE = async (req) => {
+    try {
+        const headerList = headers();
+        const userIdString = headerList.get('user_id');
+
+        if (!userIdString) {
+            return NextResponse.json({ message: 'Unauthorized User', success: false }, { status: 401 });
+        }
+
+        const userId = parseInt(userIdString, 10);
+        if (isNaN(userId)) {
+            return NextResponse.json({ message: 'Invalid user ID format in header.', success: false }, { status: 400 });
+        }
+
+        const { id } = await req.json();
+
+        if (!id || isNaN(Number(id))) {
+            return NextResponse.json({ message: 'Invalid or missing ID.', success: false }, { status: 400 });
+        }
+
+        await prisma.wishlists.delete({
+            where: { id: Number(id) }
+        });
+
+        revalidateTag('wishListItem');
+
+        return NextResponse.json({ message: 'Deleted Successfully', success: true }, { status: 200 });
+    } catch (err) {
+        console.error('DELETE error:', err);
+        return NextResponse.json({ message: 'Something went wrong', success: false }, { status: 500 });
+    }
+};

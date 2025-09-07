@@ -1,5 +1,6 @@
 'use client';
 
+import { createOrder } from '@/services/order';
 import { useEffect, useState } from 'react';
 import { getDeliveryAddresstList } from '@/services/deliveryAddress';
 import ShippingBilling from './ShippingBilling';
@@ -11,6 +12,7 @@ import AddNewAddress from './AddNewAddress';
 
 const CheckoutPage = () => {
     const [checkoutData, setCheckoutData] = useState([]);
+    const [productList, setProductList] = useState([]);
     const [address, setAddress] = useState({});
     const [selectedAddress, setSelectedAddress] = useState({});
     const [itemTotal, setItemTotal] = useState(0);
@@ -29,6 +31,8 @@ const CheckoutPage = () => {
                 return;
             }
             const item = JSON.parse(itemStr);
+            const prodList = item.checkout_info.flatMap((vendor) => vendor.items);
+            setProductList(prodList || []);
             setCheckoutData(item.checkout_info || []);
         };
 
@@ -117,6 +121,26 @@ const CheckoutPage = () => {
         // }, 300);
     };
 
+    const checkoutHandler = async (val) => {
+        // Proceed to payment or order confirmation
+        const prodToOrder = productList.map((item) => ({
+            vendor_id: item.vendor_products?.vendors?.id,
+            vendor_product_id: item.vendor_prod_id,
+            quantity: item.qty,
+            unit_price: item.vendor_products?.price,
+            cart_id: item.cart_id
+        }));
+
+        try {
+            const res = await createOrder({ order_items: prodToOrder, payment_method: val });
+
+            console.log('Order creation response:', res);
+        } catch (err) {
+            throw new Error(err.message);
+        }
+        console.log('Proceeding to payment with address:', prodToOrder);
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -160,6 +184,7 @@ const CheckoutPage = () => {
                         total={total}
                         address={address}
                         totalItems={totalItems}
+                        checkoutHandler={checkoutHandler}
                     />
                 </div>
             </div>

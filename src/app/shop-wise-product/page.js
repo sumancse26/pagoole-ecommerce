@@ -14,8 +14,6 @@ const shopWiseProduct = async ({ searchParams }) => {
         return item;
     });
 
-    console.log('vendorProducts', vendorProducts);
-
     return <Product prodType="all" fromWhere="vendor" productList={vendorProducts} />;
 };
 

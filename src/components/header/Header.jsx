@@ -21,7 +21,7 @@ const HeaderComp = async () => {
     }
 
     return (
-        <header className="bg-white shadow sticky top-0 z-40">
+        <header className="bg-white shadow sticky top-0 z-45">
             {/* Green Top Bar */}
             <div className="bg-green-600">
                 <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between">

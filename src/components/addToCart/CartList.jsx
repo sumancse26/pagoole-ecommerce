@@ -51,7 +51,7 @@ const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
     }
 
     return (
-        <div>
+        <div className="z-90">
             <div className="relative w-[360px]">
                 <div className="bg-white rounded-xl shadow-lg flex flex-col ">
                     <div>
