@@ -9,6 +9,8 @@ import OrderSummary from './OrderSummary';
 import PackageOption from './PackageOption';
 import ShippingAddressModal from './ShippingAddressModal';
 import AddNewAddress from './AddNewAddress';
+import OrderSuccess from '@/components/order/OrderSuccess';
+import { useRouter } from 'next/navigation';
 
 const CheckoutPage = () => {
     const [checkoutData, setCheckoutData] = useState([]);
@@ -22,6 +24,8 @@ const CheckoutPage = () => {
     const [totalVendors, setTotalVendors] = useState(0);
     const [openModal, setOpenModal] = useState(false);
     const [openNewAddrModal, setOpenNewAddrModal] = useState(false);
+
+    const router = useRouter();
 
     useEffect(() => {
         const getProduct = () => {
@@ -122,7 +126,6 @@ const CheckoutPage = () => {
     };
 
     const checkoutHandler = async (val) => {
-        // Proceed to payment or order confirmation
         const prodToOrder = productList.map((item) => ({
             vendor_id: item.vendor_products?.vendors?.id,
             vendor_product_id: item.vendor_prod_id,
@@ -134,11 +137,12 @@ const CheckoutPage = () => {
         try {
             const res = await createOrder({ order_items: prodToOrder, payment_method: val });
 
-            console.log('Order creation response:', res);
+            if (res.success) {
+                router.push('/order/success');
+            }
         } catch (err) {
             throw new Error(err.message);
         }
-        console.log('Proceeding to payment with address:', prodToOrder);
     };
 
     return (
