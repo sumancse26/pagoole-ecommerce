@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import ProductIcon from '../products/ProductIcon';
 import { useRouter } from 'next/navigation';
+import { deleteCartItem } from '@/services/addToCart';
 
 const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
     return (
@@ -43,7 +44,7 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
                         <div className="flex items-center space-x-2 mt-2">
                             <ProductIcon productInfo={item} />
                             <button
-                                className="group relative text-gray-400 hover:text-red-500 transition"
+                                className="group relative text-gray-400 bg-gray-100 p-2 rounded-full text-red-500  hover:text-red-500 hover:bg-gray-300 transition"
                                 aria-label="Remove Item"
                                 onClick={() => onRemove(item)}>
                                 <svg
@@ -207,14 +208,20 @@ export default function CartPage({ cartList, wishList }) {
         setItems(currentList);
     };
 
-    const handleRemoveItem = (item) => {
-        const currentList = items.map((fl) => {
-            if (fl.vendor_info && item.vendor_products?.vendors?.id == fl.vendor_info.id) {
-                fl.items = fl.items?.filter((it) => it.id != item.id);
-            }
-            return fl;
-        });
-        setItems(currentList);
+    const handleRemoveItem = async (item) => {
+        try {
+            await deleteCartItem(item.id);
+            router.refresh();
+            const currentList = items.map((fl) => {
+                if (fl.vendor_info && item.vendor_products?.vendors?.id == fl.vendor_info.id) {
+                    fl.items = fl.items?.filter((it) => it.id != item.id);
+                }
+                return fl;
+            });
+            setItems(currentList);
+        } catch (err) {
+            throw new Error(err.message);
+        }
     };
 
     const productToProcedHandler = () => {

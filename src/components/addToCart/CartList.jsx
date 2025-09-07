@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { deleteCartItem } from '@/services/addToCart';
+import { useRouter } from 'next/navigation';
 
 const TrashIcon = () => (
     <svg
@@ -22,19 +24,27 @@ const TrashIcon = () => (
 const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
     const [cartItems, setCartItems] = useState([]);
 
+    const router = useRouter();
+
     useEffect(() => {
         setCartItems(cartList);
         return () => {};
     }, [cartList]);
 
-    const handleRemoveItem = (id) => {
-        setCartItems(
-            cartItems?.length && cartItems?.map((item) => (item.id === id ? { ...item, isRemoving: true } : item))
-        );
+    const handleRemoveItem = async (id) => {
+        try {
+            await deleteCartItem(id);
+            router.refresh();
+            setCartItems(
+                cartItems?.length && cartItems?.map((item) => (item.id === id ? { ...item, isRemoving: true } : item))
+            );
 
-        setTimeout(() => {
-            setCartItems((currentItems) => currentItems?.filter((item) => item.id !== id));
-        }, 500);
+            setTimeout(() => {
+                setCartItems((currentItems) => currentItems?.filter((item) => item.id !== id));
+            }, 500);
+        } catch (err) {
+            throw new Error(err.message);
+        }
     };
 
     const closeCartModal = () => {

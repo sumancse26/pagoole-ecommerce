@@ -35,7 +35,10 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
 
                         <p className="text-sm text-gray-600 mt-2">Stock: {item.vendor_products?.stock_qty || 0}</p>
                         <div className="flex items-center space-x-2 mt-2">
-                            <button className="text-gray-400 hover:text-red-500" onClick={() => onRemove(item)}>
+                            <button
+                                className="group relative text-red-400 bg-gray-100 hover:text-red-500 hover:bg-gray-300 p-2 rounded-full transition"
+                                aria-label="Remove Item"
+                                onClick={() => onRemove(item)}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-5 w-5"
@@ -49,6 +52,9 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                     />
                                 </svg>
+                                <span className="opacity-0 group-hover:opacity-100 absolute left-1/2 -translate-x-1/2 bottom-full mb-2 text-xs bg-green-700 text-white py-1 px-2 rounded shadow transition font-bold">
+                                    Remove
+                                </span>
                             </button>
                         </div>
                     </div>

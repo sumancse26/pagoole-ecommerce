@@ -17,3 +17,11 @@ export const getAddToCartList = async () => {
     });
     return res;
 };
+
+export const deleteCartItem = async (id) => {
+    const res = await fetchApi('/api/private/add-to-cart', {
+        method: 'DELETE',
+        body: JSON.stringify({ id })
+    });
+    return res;
+};
