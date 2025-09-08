@@ -30,10 +30,12 @@ export const GET = async (req, { params }) => {
                         description: true,
                         mrp: true,
                         vat: true,
+                        prod_name: true,
                         brands: {
                             select: {
                                 id: true,
-                                name: true
+                                name: true,
+                                brand_logo: true
                             }
                         },
                         file_server: {

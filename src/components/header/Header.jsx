@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import Cart from '@components/addToCart/CartList';
+
 import { getAddToCartList } from '@/services/addToCart';
 import { getWishList } from '@/services/wishList';
-import Wish from '../wishlist/Wish';
+import HeaderIcons from './HeaderIcon';
 import { auth } from '@/auth';
 
 const HeaderComp = async () => {
@@ -34,121 +34,51 @@ const HeaderComp = async () => {
                         </Link>
                     </div>
 
-                    {/* Search Bar */}
                     <div className="hidden md:flex flex-1 justify-center">
-                        <form className="w-full max-w-7xl relative">
-                            <input
-                                type="search"
-                                placeholder="Search for products..."
-                                className="w-full h-12 pl-5 pr-12 rounded-full text-gray-800 placeholder-gray-500 bg-white border border-green-500 shadow focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                                aria-label="Search products"
-                                required
-                            />
-                            <button
-                                type="submit"
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-600 hover:text-green-800"
-                                aria-label="Search">
-                                {/* Magnifying glass SVG */}
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
-                                    />
-                                </svg>
-                            </button>
+                        <form className="w-full max-w-7xl relative flex items-center gap-3">
+                            {/* Search Input */}
+                            <div className="relative flex-1">
+                                <input
+                                    type="search"
+                                    placeholder="Search for products..."
+                                    className="w-full h-12 pl-5 pr-12 rounded-full text-gray-800 placeholder-gray-500 bg-white border border-green-500 shadow focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                                    aria-label="Search products"
+                                    required
+                                />
+                                <button
+                                    type="submit"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-600 hover:text-green-800"
+                                    aria-label="Search">
+                                    <svg
+                                        className="w-5 h-5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            {/* Shop Order Button */}
+                            <Link href="/shop">
+                                <button
+                                    type="button"
+                                    className="px-3 bg-[#ff686e] text-white px-4 py-2 rounded-lg font-medium tracking-[2px] whitespace-nowrap"
+                                    aria-label="Go to Shop Order homepage">
+                                    Shop Order
+                                </button>
+                            </Link>
                         </form>
                     </div>
 
-                    <div className="flex items-center me-2">
-                        <Link href="/shop">
-                            <button
-                                className="bg-[#ff686e] text-white px-2.5 py-1.5 rounded-lg font-medium tracking-[2px]"
-                                aria-label="Go to Shop Order homepage">
-                                Shop Order
-                            </button>
-                        </Link>
-                    </div>
-
                     {/* Icons */}
-                    <div className="flex items-center gap-5 text-white">
-                        {/* Wishlist */}
-                        <div className="relative group">
-                            <Link href="#" className="p-0 hover:text-lime-200" aria-label="Wishlist">
-                                {/* Heart SVG */}
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                                    />
-                                </svg>
-                                <span className="absolute -top-3 -right-2.5 text-xs bg-white text-red-700 font-bold rounded-full px-1.5">
-                                    {wishList?.length || 0}
-                                </span>
-                            </Link>
-                            {/* Dropdown */}
-                            <div className="absolute hidden group-hover:block top-2 -right-6 bg-white shadow-md text-black rounded-md z-50 p-3">
-                                <Wish wishList={wishList} />
-                            </div>
-                        </div>
-
-                        {/* Cart */}
-                        <div className="relative group">
-                            <Link href="#" className="p-0 hover:text-lime-200" aria-label="Cart">
-                                {/* Shopping Cart SVG */}
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8m0 0a2 2 0 104 0m-4 0H17m0 0a2 2 0 104 0m-4 0h-1.4"
-                                    />
-                                </svg>
-                                <span className="absolute -top-3 -right-5 text-xs bg-white text-red-700 font-bold rounded-full px-1.5">
-                                    {cartList?.length || 0}
-                                </span>
-                            </Link>
-                            {/* Dropdown */}
-                            <div className="absolute hidden group-hover:block top-2 -right-2 bg-white shadow-md text-black rounded-md z-50 p-3">
-                                <Cart cartList={cartList} closeCart="" showCrossIcon={false} />
-                            </div>
-                        </div>
-
-                        {/* User Icon */}
-                        <Link href="#" className="p-2 hover:text-lime-200" aria-label="Account">
-                            {/* User SVG */}
-                            <svg
-                                className="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                />
-                            </svg>
-                        </Link>
-                    </div>
+                    <HeaderIcons cartItemList={cartList} wishItemList={wishList} />
                 </div>
             </div>
         </header>

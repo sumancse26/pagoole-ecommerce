@@ -263,22 +263,21 @@ export default function CartPage({ cartList, wishList }) {
                             <div
                                 key={vendorGroup.vendor_info.id}
                                 className="vendor-section mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-                                <div className="bg-gray-100 p-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                                <div className="bg-gray-100 p-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-7">
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            onChange={(e) => handleSelectAll(vendorGroup, e.target.checked)}
+                                            type="checkbox"
+                                            className="form-checkbox h-5 w-5 text-green-600 rounded"
+                                        />
+                                        <span className="mr-2 text-gray-700 text-sm font-bold">Select All</span>
+                                    </div>
                                     <h2 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">
                                         Shop:
                                         <span className="font-bold text-green-700 ps-3">
                                             {vendorGroup.vendor_info.store_name}
                                         </span>
                                     </h2>
-
-                                    <div className="flex items-center">
-                                        <span className="mr-2 text-gray-700 text-sm">Select All</span>
-                                        <input
-                                            onChange={(e) => handleSelectAll(vendorGroup, e.target.checked)}
-                                            type="checkbox"
-                                            className="form-checkbox h-5 w-5 text-green-600 rounded"
-                                        />
-                                    </div>
                                 </div>
 
                                 <div className="vendor-items">

@@ -62,12 +62,12 @@ const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
 
     return (
         <div className="z-90">
-            <div className="relative w-[360px]">
-                <div className="bg-white rounded-xl shadow-lg flex flex-col ">
+            <div className="relative w-[360px] ">
+                <div className="rounded-xl  flex flex-col ">
                     <div>
                         {showCrossIcon && (
                             <div className="flex items-center justify-between p-4 border-b border-gray-300">
-                                <h6 className="font-bold text-gray-500">Added to List</h6>
+                                <h6 className="font-bold text-gray-600">Cart List</h6>
 
                                 <div className="relative h-6 w-6" onClick={closeCartModal}>
                                     <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 rotate-45"></div>
@@ -76,25 +76,25 @@ const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
                             </div>
                         )}
 
-                        <table className="w-full text-sm text-left block">
+                        <table className="w-full text-sm text-left block pb-15">
                             {/* --- Table Header --- */}
-                            <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-200 w-full block">
+                            <thead className="text-xs text-gray-600 uppercase  border-b border-gray-300 w-full block">
                                 <tr className="w-full block">
-                                    <th className="w-5/12 px-6 py-1 font-semibold">Product</th>
-                                    <th className="w-3/12 px-6 py-1 font-semibold text-right">Price</th>
-                                    <th className="w-3/12 px-6 py-1 font-semibold text-right">Total</th>
-                                    <th className="w-1/12 px-1 py-1 text-right"></th>
+                                    <th className="w-5/12 px-6 py-3 font-semibold">Product</th>
+                                    <th className="w-3/12 px-6 py-3 font-semibold text-right">Price</th>
+                                    <th className="w-3/12 px-6 py-3 font-semibold text-right">Total</th>
+                                    <th className="w-1/12 px-1 py-3 text-right"></th>
                                 </tr>
                             </thead>
 
                             {/* --- Table Body --- */}
-                            <tbody className="divide-y divide-gray-200 h-[800px] overflow-y-auto block">
+                            <tbody className="divide-y divide-gray-300 h-[550px] overflow-y-auto block">
                                 {cartItems?.length &&
                                     cartItems?.map((item, indx) => (
                                         <tr
                                             key={indx}
                                             className={`
-                                        transition-opacity duration-500 ease-out
+                                        transition-opacity duration-500 ease-out last:border-b last:border-gray-300
                                         ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
                                     `}>
                                             <td className="px-6 py-1 w-5/12 ">
@@ -125,22 +125,22 @@ const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
                                     ))}
                             </tbody>
                         </table>
+                        <Link
+                            href="/add-to-cart"
+                            className="absolute bottom-0  !w-[100%] left-0 right-0 flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-5">
+                            <svg className="h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                                />
+                            </svg>
+                            Go to Cart Details
+                        </Link>
                     </div>
                 </div>
             </div>
-            <Link
-                href="/add-to-cart"
-                className="absolute bottom-0  !w-[100%] left-0 right-0 flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md  sm:w-auto flex items-center justify-center mt-5">
-                <svg className="h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                </svg>
-                Go to Cart Details
-            </Link>
         </div>
     );
 };

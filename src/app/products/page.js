@@ -22,16 +22,23 @@ const ProductPage = async ({ searchParams }) => {
         relatedProducts = vendorProducts || [];
     }
 
-    console.log('relatedProducts', relatedProducts);
     return (
         <>
             <main className="container mx-auto px-4 py-8 max-w-7xl relative">
-                <div className="flex flex-col lg:flex-row mb-5 gap-5">
+                {/* Product Info Section */}
+                <div className="mb-8">
                     <ProductInfo prodInfo={prodInfo} />
                 </div>
 
-                <ProductDescription />
-                <RelatedProducts productList={relatedProducts} />
+                {/* Product Description Section */}
+                <div className="mt-8 mb-8">
+                    <ProductDescription />
+                </div>
+
+                {/* Related Products Section */}
+                <div>
+                    <RelatedProducts productList={relatedProducts} />
+                </div>
             </main>
         </>
     );

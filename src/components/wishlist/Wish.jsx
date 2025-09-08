@@ -21,7 +21,7 @@ const TrashIcon = () => (
     </svg>
 );
 
-const CartListTable = ({ wishList }) => {
+const CartListTable = ({ wishList, closeWish }) => {
     const [cartItems, setCartItems] = useState([]);
 
     const router = useRouter();
@@ -48,9 +48,13 @@ const CartListTable = ({ wishList }) => {
         }
     };
 
+    const closeWishModal = () => {
+        closeWish();
+    };
+
     if (cartItems?.length === 0) {
         return (
-            <div className="text-center py-20 bg-white rounded-lg shadow-md">
+            <div className="text-center py-20 bg-white rounded-lg">
                 <h2 className="text-2xl font-semibold text-gray-700">Your Cart is Empty</h2>
                 <p className="text-gray-500 mt-3">There are no items to display.</p>
             </div>
@@ -60,27 +64,35 @@ const CartListTable = ({ wishList }) => {
     return (
         <div>
             <div className="relative w-[360px]">
-                <div className="bg-white rounded-xl shadow-lg flex flex-col ">
+                <div className=" rounded-xlflex flex-col ">
                     <div>
+                        <div className="flex items-center justify-between p-4 border-b border-gray-300">
+                            <h6 className="font-bold text-gray-500">Wish List</h6>
+
+                            <div className="relative h-6 w-6" onClick={closeWishModal}>
+                                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 rotate-45"></div>
+                                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-600 transform -translate-x-1/2 -rotate-45"></div>
+                            </div>
+                        </div>
+
                         <table className="w-full text-sm text-left block">
                             {/* --- Table Header --- */}
-                            <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-200">
-                                <tr>
-                                    <th className="w-6/12 px-6 py-1 font-semibold">Product</th>
-                                    <th className="w-2/12 px-6 py-1 font-semibold text-right">Price</th>
-                                    <th className="w-2/12 px-6 py-1 font-semibold text-right">Total</th>
-                                    <th className="w-2/12 px-1 py-1 text-right"></th>
+                            <thead className="text-xs text-gray-600 uppercase ">
+                                <tr className="border-b border-gray-300">
+                                    <th className="w-6/12 px-6 py-3 font-semibold">Product</th>
+                                    <th className="w-2/12 px-6 py-3 font-semibold text-right">Price</th>
+                                    <th className="w-2/12 px-1 py-3 text-right"></th>
                                 </tr>
                             </thead>
 
                             {/* --- Table Body --- */}
-                            <tbody className="divide-y divide-gray-200 h-[600px] overflow-y-auto block">
+                            <tbody className="divide-y divide-gray-300 h-[600px] overflow-y-auto block">
                                 {cartItems?.length &&
                                     cartItems?.map((item, indx) => (
                                         <tr
                                             key={indx}
                                             className={`
-                                               transition-opacity duration-500 ease-out
+                                               transition-opacity duration-500 ease-out last:border-b last:border-gray-300
                                                ${item.isRemoving ? 'opacity-0' : 'opacity-100'}
                                            `}>
                                             <td className="px-6 py-1 w-6/12">
@@ -90,11 +102,6 @@ const CartListTable = ({ wishList }) => {
                                             </td>
                                             <td className="w-2/12 px-6 py-1 text-right text-gray-600 text-right">
                                                 {item?.vendor_products?.price?.toFixed(2) || 0}
-                                            </td>
-                                            <td className="w-2/12 px-6 py-1 text-right font-semibold text-gray-900 text-right">
-                                                {(
-                                                    Number(item?.vendor_products?.price || 0) * Number(item.qty || 0)
-                                                )?.toFixed(2)}
                                             </td>
 
                                             <td className="w-2/12 px-1 py-1 text-right">

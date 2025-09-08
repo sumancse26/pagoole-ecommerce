@@ -195,9 +195,11 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                     </div>
                 </section>
 
-                <div className="fixed top-0 right-0 z-50 h-full transform transition-transform duration-300 ease-in-out">
-                    {sidebar && <CartList cartList={cartList} closeCart={handleRemoveItem} showCrossIcon={true} />}
-                </div>
+                {sidebar && (
+                    <div className="fixed top-40 right-0 z-50 h-full transform transition-transform duration-300 ease-in-out bg-green-100">
+                        <CartList cartList={cartList} closeCart={handleRemoveItem} showCrossIcon={true} />
+                    </div>
+                )}
             </div>
         </>
     );

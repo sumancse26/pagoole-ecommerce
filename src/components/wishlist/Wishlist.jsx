@@ -4,8 +4,11 @@ import { useState, useEffect } from 'react';
 import AddToCart from '../buttons/AddToCart';
 import { deleteWish } from '@/services/wishList';
 import { useRouter } from 'next/navigation';
+import CartList from '@components/addToCart/CartList';
+import { getAddToCartList } from '@/services/addToCart';
+import { useSession } from 'next-auth/react';
 
-const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
+const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect, sidebarHandler }) => {
     return (
         <div className="flex flex-col sm:flex-row items-center p-2 bg-white border-b border-gray-200">
             <div className="flex-grow flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
@@ -17,7 +20,7 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
                     />
                     <div>
                         <h3 className="text-gray-800 font-semibold">
-                            {item.vendor_products?.products?.prod_name || ''} {item.vendor_products?.vendors.id}
+                            {item.vendor_products?.products?.prod_name || ''}
                         </h3>
 
                         <p className="text-sm text-gray-500">{item.vendor_products?.products?.brands?.name || ''}</p>
@@ -59,7 +62,7 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
                         </div>
                     </div>
                     <div className="flex flex-col items-center justify-center sm:items-center ">
-                        <AddToCart vendorProdId={item.vendor_prod_id} hideQty={true} />
+                        <AddToCart vendorProdId={item.vendor_prod_id} hideQty={true} cartListHandler={sidebarHandler} />
                     </div>
                 </div>
             </div>
@@ -69,8 +72,11 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
 
 export default function WishlistPage({ wishList }) {
     const [wishlistItems, setWishlistItems] = useState(wishList);
+    const [cartList, setCartList] = useState(wishList);
+    const [sidebar, setSidebar] = useState(false);
 
     const router = useRouter();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         setWishlistItems(wishList?.map((item) => ({ ...item, qty: 1, isRemoving: false })));
@@ -97,6 +103,21 @@ export default function WishlistPage({ wishList }) {
             console.error('Failed to remove wishlist item:', err);
             throw err; // keep stack trace instead of wrapping in new Error
         }
+    };
+
+    const sidebarHandler = async (val) => {
+        if (session?.user) {
+            const res = await getAddToCartList();
+            const cartListData = res?.cart_items || 0;
+            const list = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+
+            setCartList(list);
+        }
+        setSidebar(val);
+    };
+
+    const closeCart = async () => {
+        setSidebar(false);
     };
 
     return (
@@ -130,6 +151,7 @@ export default function WishlistPage({ wishList }) {
                                                 updateQtyHandler={() => {}}
                                                 onRemove={handleRemoveItem}
                                                 onToggleSelect={() => {}}
+                                                sidebarHandler={sidebarHandler}
                                             />
                                         ))
                                     ) : (
@@ -141,6 +163,11 @@ export default function WishlistPage({ wishList }) {
                     )}
                 </div>
             </div>
+            {sidebar && (
+                <div className="fixed top-[55] right-0 z-50 h-full transform transition-transform duration-300 ease-in-out">
+                    <CartList cartList={cartList} closeCart={closeCart} showCrossIcon={true} />
+                </div>
+            )}
         </div>
     );
 }
