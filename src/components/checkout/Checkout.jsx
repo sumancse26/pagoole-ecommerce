@@ -152,6 +152,14 @@ const CheckoutPage = () => {
         setOpenNewAddrModal(false);
     };
 
+    const deliveryTypeHandler = (val) => {
+        if (val == 'online') {
+            setDeliveryFee(60 * Number(totalVendors));
+        } else {
+            setDeliveryFee(0);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -162,7 +170,11 @@ const CheckoutPage = () => {
                         openModalhandler={openModalhandler}
                         openNewModalHandler={openNewModalHandler}
                     />
-                    <PackageOption totalItems={totalItems} totalVendors={totalVendors} />
+                    <PackageOption
+                        totalItems={totalItems}
+                        totalVendors={totalVendors}
+                        deliveryTypeHandler={deliveryTypeHandler}
+                    />
                     <ProductItem checkoutData={checkoutData} />
                 </div>
 
