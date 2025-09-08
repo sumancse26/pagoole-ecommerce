@@ -1,21 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import AddNewAddress from './AddNewAddress';
+// import AddNewAddress from './AddNewAddress';
 
-const ShippingBilling = ({ address, openModalhandler }) => {
-    const [openNewModal, setOpenNewModal] = useState(false);
+const ShippingBilling = ({ address, openModalhandler, openNewModalHandler }) => {
+    // const [openNewModal, setOpenNewModal] = useState(false);
 
-    const closeNewAddressModal = () => {
-        setOpenNewModal(false);
-    };
+    // const closeNewAddressModal = () => {
+    //     setOpenNewModal(false);
+    // };
     const newModalHandler = () => {
-        setOpenNewModal(true);
+        openNewModalHandler();
+        //setOpenNewModal(true);
     };
 
     return (
         <>
-            {!address && (
+            {(address.full_name == '' || address.full_name == null) && (
                 <div className="bg-white px-4 py-3 rounded-lg shadow-md mb-6 flex justify-end">
                     <button
                         className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-lg font-semibold py-2 px-7 rounded-lg shadow-md transition duration-200 flex items-center gap-2 justify-center outline-none ring-2 ring-transparent focus:ring-green-200"
@@ -39,7 +40,7 @@ const ShippingBilling = ({ address, openModalhandler }) => {
                 </div>
             )}
 
-            {address && (
+            {address.full_name && (
                 <div className="bg-white p-3 rounded-lg shadow-md mb-6">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold text-gray-900">Shipping & Billing</h2>
@@ -110,7 +111,7 @@ const ShippingBilling = ({ address, openModalhandler }) => {
                     )}
                 </div>
             )}
-            {openNewModal && <AddNewAddress onClose={closeNewAddressModal} />}
+            {/* {openNewModal && <AddNewAddress onClose={closeNewAddressModal} />} */}
         </>
     );
 };

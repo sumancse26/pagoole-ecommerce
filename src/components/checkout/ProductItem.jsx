@@ -46,7 +46,7 @@ const ProductItem = ({ checkoutData }) => {
                                                             {prod.vendor_products?.products?.prod_name || ''}
                                                         </p>
                                                         <p className="text-sm text-gray-500">
-                                                            Product ID: {prod.vendor_products?.products?.id || '--'}
+                                                            {prod.vendor_products?.products?.brands?.name || ''}
                                                         </p>
                                                     </div>
                                                     <div className="text-right min-w-[90px]">

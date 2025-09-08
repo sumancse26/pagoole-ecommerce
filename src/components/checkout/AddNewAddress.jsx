@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getRegionList } from '@/services/location';
 import { createDeliveryAddress } from '@/services/deliveryAddress';
 import SearchableDropdown from '@components/SearchableDropdown';
+import { useRouter } from 'next/navigation';
 const AddNewAddress = ({ onClose }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [values, setValues] = useState({
@@ -20,6 +21,8 @@ const AddNewAddress = ({ onClose }) => {
     const [regionList, setRegionList] = useState([]);
     const [citiList, setCitiList] = useState([]);
     const [areaList, setAreaList] = useState([]);
+
+    const router = useRouter();
 
     useEffect(() => {
         setIsOpen(true);
@@ -114,6 +117,7 @@ const AddNewAddress = ({ onClose }) => {
 
             const res = await createDeliveryAddress(values);
             if (res.success) {
+                await router.refresh();
                 handleClose();
             }
         } catch (err) {
@@ -123,7 +127,7 @@ const AddNewAddress = ({ onClose }) => {
 
     return (
         <div
-            className={`fixed inset-0 bg-black/50 bg-opacity-40 z-100 transition-opacity duration-300 ${
+            className={`fixed inset-0 bg-black/50 bg-opacity-40 z-1000 transition-opacity duration-300 ${
                 isOpen ? 'opacity-100' : 'opacity-0'
             }`}>
             {/* Modal content container */}

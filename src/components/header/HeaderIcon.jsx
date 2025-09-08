@@ -43,7 +43,11 @@ const HeaderIcon = ({ cartItemList, wishItemList }) => {
             <div className="flex items-center gap-5 text-white">
                 {/* Wishlist */}
                 <div className="relative group">
-                    <button className="p-0 hover:text-lime-200" aria-label="Wishlist" onClick={wishListHandler}>
+                    <button
+                        className="p-0 hover:text-lime-200"
+                        aria-label="Wishlist"
+                        onClick={wishListHandler}
+                        title="Wish List">
                         {/* Heart SVG */}
                         <svg
                             className="w-5 h-5"
@@ -72,7 +76,11 @@ const HeaderIcon = ({ cartItemList, wishItemList }) => {
 
                 {/* Cart */}
                 <div className="relative group">
-                    <button className="p-0 hover:text-lime-200" aria-label="Cart" onClick={cartIconHandler}>
+                    <button
+                        className="p-0 hover:text-lime-200"
+                        aria-label="Cart"
+                        onClick={cartIconHandler}
+                        title="Cart List">
                         {/* Shopping Cart SVG */}
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path
@@ -81,10 +89,12 @@ const HeaderIcon = ({ cartItemList, wishItemList }) => {
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8m0 0a2 2 0 104 0m-4 0H17m0 0a2 2 0 104 0m-4 0h-1.4"
                             />
                         </svg>
+
                         <span className="absolute -top-3 -right-5 text-xs bg-white text-red-700 font-bold rounded-full px-1.5">
                             {cartList?.length || 0}
                         </span>
                     </button>
+
                     {/* Dropdown */}
                     {showCart && (
                         <div className="absolute  group-hover:block md:top-[40px] md:-right-[60px] bg-green-100 shadow-md shadow-lg text-black rounded-md z-50 p-3">

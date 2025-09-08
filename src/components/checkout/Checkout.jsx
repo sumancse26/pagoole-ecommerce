@@ -9,7 +9,6 @@ import OrderSummary from './OrderSummary';
 import PackageOption from './PackageOption';
 import ShippingAddressModal from './ShippingAddressModal';
 import AddNewAddress from './AddNewAddress';
-import OrderSuccess from '@/components/order/OrderSuccess';
 import { useRouter } from 'next/navigation';
 
 const CheckoutPage = () => {
@@ -59,6 +58,7 @@ const CheckoutPage = () => {
     const fetchDelAddressHandler = async () => {
         try {
             const res = await getDeliveryAddresstList();
+            console.log('res', res);
             if (res.success) {
                 setSelectedAddress(() => {
                     const defaultAddr = res.address_list.find((addr) => addr.default_address === '1');
@@ -104,6 +104,10 @@ const CheckoutPage = () => {
         setOpenModal(true);
     };
 
+    const openNewModalHandler = () => {
+        setOpenNewAddrModal(true);
+    };
+
     const hideModalHandler = () => {
         setOpenModal(false);
     };
@@ -120,9 +124,6 @@ const CheckoutPage = () => {
 
     const openNewAddrModalHandler = () => {
         setOpenNewAddrModal(true);
-        // setTimeout(() => {
-        //     setOpenNewAddrModal(true);
-        // }, 300);
     };
 
     const checkoutHandler = async (val) => {
@@ -145,12 +146,22 @@ const CheckoutPage = () => {
         }
     };
 
+    const closeAddNewAddrsModalHandler = () => {
+        fetchDelAddressHandler();
+
+        setOpenNewAddrModal(false);
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column */}
                 <div className="lg:col-span-2">
-                    <ShippingBilling address={selectedAddress} openModalhandler={openModalhandler} />
+                    <ShippingBilling
+                        address={selectedAddress}
+                        openModalhandler={openModalhandler}
+                        openNewModalHandler={openNewModalHandler}
+                    />
                     <PackageOption totalItems={totalItems} totalVendors={totalVendors} />
                     <ProductItem checkoutData={checkoutData} />
                 </div>
@@ -203,13 +214,7 @@ const CheckoutPage = () => {
                 />
             )}
 
-            {openNewAddrModal && (
-                <AddNewAddress
-                    isOpen={openNewAddrModal}
-                    onClose={() => setOpenNewAddrModal(false)}
-                    refetch={refetchDeliveryAddress}
-                />
-            )}
+            {openNewAddrModal && <AddNewAddress onClose={closeAddNewAddrsModalHandler} />}
         </div>
     );
 };
