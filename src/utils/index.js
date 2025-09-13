@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { SignJWT } from 'jose';
+import { v4 as uuidv4 } from 'uuid';
 
 const saltRounds = 10;
 
@@ -48,13 +49,17 @@ export const buildUrl = (url, params = {}) => {
     return queryString ? `${url}?${queryString}` : url;
 };
 
-export const generateInvoiceNumber = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123adskwlc456789abcdefghijklmnopqrstuvwxyz';
-    let result = 'INV';
-    for (let i = 0; i < 5; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result?.toString();
+// export const generateInvoiceNumber = (type) => {
+//     const chars = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ0123adskwlc456789abcdefghijklmnopqrstuvwxyz';
+//     let result = type || 'INV';
+//     for (let i = 0; i < 5; i++) {
+//         result += chars.charAt(Math.floor(Math.random() * chars.length));
+//     }
+//     return result?.toString();
+// };
+
+export const generateInvoiceNumber = (type = 'INV') => {
+    return `${type}-${uuidv4()}`;
 };
 
 export const generateProductCode = (name) => {

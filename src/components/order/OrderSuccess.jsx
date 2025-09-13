@@ -1,35 +1,6 @@
 'use server';
 
-const order = {
-    id: 'ORD-2025-1234',
-    date: '2025-09-07',
-    paymentMethod: 'Credit Card',
-    total: 152.75,
-    items: [
-        {
-            id: 1,
-            name: 'Wireless Headphones',
-            vendor: 'TechWorld',
-            qty: 1,
-            price: 99.99,
-            image: '/images/products/headphones.jpg'
-        },
-        {
-            id: 2,
-            name: 'Leather Wallet',
-            vendor: 'StyleHub',
-            qty: 2,
-            price: 26.38,
-            image: '/images/products/wallet.jpg'
-        }
-    ],
-    shipping: {
-        name: 'John Doe',
-        address: '123 Main St, Dhaka, Bangladesh',
-        phone: '+880 1234 567 890'
-    }
-};
-const OrderComp = () => {
+const OrderComp = ({ orderInfo }) => {
     // Example mock data (replace with actual props / server data)
 
     return (
@@ -60,19 +31,23 @@ const OrderComp = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
                                 <p className="text-sm text-gray-500">Order ID</p>
-                                <p className="font-medium text-gray-900">{order.id}</p>
+                                <p className="font-medium text-gray-900">{orderInfo.order_code || ''}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Date</p>
-                                <p className="font-medium text-gray-900">{order.date}</p>
+                                <p className="font-medium text-gray-900">{orderInfo.updated_at || ''}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Payment Method</p>
-                                <p className="font-medium text-gray-900">{order.paymentMethod}</p>
+                                <p className="font-medium text-gray-900">
+                                    {orderInfo.payment_status?.toLowerCase() == 'unpaid'
+                                        ? 'Cash on Delivery'
+                                        : 'Internet Banking'}
+                                </p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Total</p>
-                                <p className="font-medium text-gray-900">${order.total.toFixed(2)}</p>
+                                <p className="font-medium text-gray-900">${orderInfo.total_amount.toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
@@ -81,30 +56,39 @@ const OrderComp = () => {
                     <div className="mt-8 border-t border-gray-200 pt-6">
                         <h2 className="text-lg font-semibold text-gray-800 mb-4">Items in Your Order</h2>
                         <ul className="divide-y divide-gray-200">
-                            {order.items.map((item) => (
+                            {orderInfo.order_items.map((item) => (
                                 <li key={item.id} className="py-4 flex items-center gap-4">
                                     <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="w-16 h-16 rounded-lg border object-cover"
+                                        src={item.vendor_products?.products?.file_server?.base_url}
+                                        alt="Product Image"
+                                        className="w-16 h-16 rounded-lg border border-gray-300 object-cover"
                                     />
                                     <div className="flex-1">
-                                        <p className="font-medium text-gray-900">{item.name}</p>
-                                        <p className="text-sm text-gray-500">Vendor: {item.vendor}</p>
-                                        <p className="text-sm text-gray-500">Qty: {item.qty}</p>
+                                        <p className="font-medium text-gray-900">
+                                            {item.vendor_products?.products?.prod_name || 0}
+                                        </p>
+                                        <p className="text-sm text-gray-500">
+                                            {item.vendor_products?.vendors?.store_name || 0}
+                                        </p>
+                                        <p className="text-sm text-gray-500">Qty: {item.quantity || 0}</p>
                                     </div>
-                                    <p className="font-semibold text-gray-900">${item.price.toFixed(2)}</p>
+                                    <p className="font-semibold text-gray-900">
+                                        ${Number(item.quantity || 0) * Number(item.unit_price || 0)}
+                                    </p>
                                 </li>
-                            ))}
+                            )) || []}
                         </ul>
                     </div>
 
                     {/* Shipping Info */}
                     <div className="mt-8 border-t border-gray-200 pt-6">
                         <h2 className="text-lg font-semibold text-gray-800 mb-4">Shipping Information</h2>
-                        <p className="text-gray-700 font-medium">{order.shipping.name}</p>
-                        <p className="text-gray-600">{order.shipping.address}</p>
-                        <p className="text-gray-600">{order.shipping.phone}</p>
+                        <p className="text-gray-700 font-medium">{orderInfo.address.full_name || ''}</p>
+                        <p className="text-gray-600">
+                            {orderInfo.address.address_line || ''} , {orderInfo.address.region || ''},
+                            {orderInfo.address.country || ''}
+                        </p>
+                        <p className="text-gray-600">{orderInfo.address.phone || ''}</p>
                     </div>
 
                     {/* CTA */}

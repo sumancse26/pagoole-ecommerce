@@ -1,18 +1,18 @@
 import { fetchApi } from '@/lib/api';
 
 export const createOrder = async (data) => {
-    const res = await fetchApi('/api/private/invoice', {
+    const res = await fetchApi('/api/private/order', {
         method: 'POST',
         body: JSON.stringify(data)
     });
     return res;
 };
 
-export const getAddToCartList = async () => {
-    const res = await fetchApi('/api/private/invoice', {
+export const getOrderList = async (order_id) => {
+    const res = await fetchApi(`/api/private/order?id=${order_id}`, {
         method: 'GET',
         next: {
-            tags: ['cartListItem']
+            tags: ['orderList']
         }
     });
     return res;

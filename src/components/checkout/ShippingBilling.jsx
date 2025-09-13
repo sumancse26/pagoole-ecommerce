@@ -62,7 +62,7 @@ const ShippingBilling = ({ address, openModalhandler, openNewModalHandler }) => 
                             CHANGE ADDRESS
                         </button>
                     </div>
-                    {address && (
+                    {address.full_name && (
                         <div className="border border-gray-200 rounded-xl p-3 shadow-sm bg-white">
                             {/* Name & Phone */}
 

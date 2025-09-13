@@ -128,7 +128,6 @@ const CheckoutPage = () => {
 
     const checkoutHandler = async (val) => {
         const prodToOrder = productList.map((item) => ({
-            vendor_id: item.vendor_products?.vendors?.id,
             vendor_product_id: item.vendor_prod_id,
             quantity: item.qty,
             unit_price: item.vendor_products?.price,
@@ -136,10 +135,14 @@ const CheckoutPage = () => {
         }));
 
         try {
-            const res = await createOrder({ order_items: prodToOrder, payment_method: val });
+            const res = await createOrder({
+                order_items: prodToOrder,
+                payment_method: val,
+                delivery_address: selectedAddress.id
+            });
 
             if (res.success) {
-                router.push('/order/success');
+                router.push(`/order/success?id=${res.id}`);
             }
         } catch (err) {
             throw new Error(err.message);
