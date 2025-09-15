@@ -3,19 +3,15 @@ import { NextResponse } from 'next/server';
 
 export const GET = async (req) => {
     try {
-        const userId = req.headers.get('userId');
-
+        const userId = req.headers.get('user_id');
+        console.log('userId', userId);
         if (!userId) {
-            return NextResponse.json({
-                success: false,
-                message: 'Unauthorized user'
-            });
+            return NextResponse.json({ success: false, message: 'Unauthorized user' }, { status: 401 });
         }
 
         const orderList = await prisma.orders.findMany({
-            where: {
-                user_id: Number(userId)
-            },
+            // 👈 FIX model name
+            where: { user_id: Number(userId) },
             select: {
                 id: true,
                 user_id: true,
@@ -28,15 +24,10 @@ export const GET = async (req) => {
 
         return NextResponse.json({
             success: true,
-            message: 'Order list fetched successfully.'
+            message: 'Order list fetched successfully.',
+            order_list: orderList ?? []
         });
     } catch (err) {
-        return NextResponse.json(
-            {
-                success: false,
-                message: err.message
-            },
-            { status: 500 }
-        );
+        return NextResponse.json({ success: false, message: err.message }, { status: 500 });
     }
 };

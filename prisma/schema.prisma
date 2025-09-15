@@ -212,6 +212,7 @@ model Orders {
   delivery_address      Int             @default(0)
   total_amount          Float          
   order_status          String          @default("Pending") @db.VarChar(20)
+  payment_method        String          @default("cod") @db.VarChar(15)
   payment_status        String          @default("Unpaid") @db.VarChar(20)
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
