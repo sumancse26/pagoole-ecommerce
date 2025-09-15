@@ -20,9 +20,9 @@ const OrderDetailPage = ({ orderData }) => {
                     </div>
                     <span
                         className={`mt-2 sm:mt-0 px-4 py-1 rounded-full text-sm font-medium ${
-                            orderData.payment_status.toLowerCase() === 'paid'
+                            orderData.payment_status?.toLowerCase() === 'paid'
                                 ? 'bg-green-100 text-green-800'
-                                : orderData.order_status.toLowerCase() === 'pending'
+                                : orderData.order_status?.toLowerCase() === 'pending'
                                 ? 'bg-yellow-100 text-yellow-800'
                                 : 'bg-gray-100 text-gray-800'
                         }`}>
@@ -37,16 +37,16 @@ const OrderDetailPage = ({ orderData }) => {
                         <div>
                             <p className="text-sm text-gray-500">Order Date</p>
                             <p className="font-medium text-gray-900">
-                                {moment(orderData.updated_at).format('DD MMM, YYYY')}
+                                {moment(orderData.updated_at)?.format('DD MMM, YYYY')}
                             </p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Payment Method</p>
-                            <p className="font-medium text-gray-900">{orderData.payment_method || '—'}</p>
+                            <p className="font-medium text-gray-900">{orderData?.payment_method || '—'}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Total</p>
-                            <p className="font-medium text-gray-900">${orderData.total_amount.toFixed(2)}</p>
+                            <p className="font-medium text-gray-900">${orderData.total_amount?.toFixed(2)}</p>
                         </div>
                     </div>
                 </div>
@@ -55,10 +55,10 @@ const OrderDetailPage = ({ orderData }) => {
                 <div className="border-t border-gray-200 pt-6 mb-6">
                     <h2 className="text-lg font-semibold text-gray-800 mb-4">Shipping Information</h2>
                     <p className="text-gray-700 font-medium">{orderData.address.full_name}</p>
-                    <p className="text-gray-600">{orderData.address.address_line}</p>
-                    <p className="text-gray-600">{orderData.address.phone}</p>
+                    <p className="text-gray-600">{orderData.address?.address_line}</p>
+                    <p className="text-gray-600">{orderData.address?.phone}</p>
                     <p className="text-gray-500 text-sm">
-                        {orderData.address.city}, {orderData.address.region}, {orderData.address.country}
+                        {orderData.address?.city}, {orderData.address?.region}, {orderData.address.country}
                     </p>
                 </div>
 
