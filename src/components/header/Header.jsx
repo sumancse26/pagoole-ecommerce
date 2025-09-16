@@ -1,5 +1,4 @@
 import Link from 'next/link';
-
 import { getAddToCartList } from '@/services/addToCart';
 import { getWishList } from '@/services/wishList';
 import HeaderIcons from './HeaderIcon';

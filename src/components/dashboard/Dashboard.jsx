@@ -1,6 +1,5 @@
 'use client';
 
-// import { dashboardAction } from "@/app/actions/dashboardAction";
 import { useEffect, useState } from 'react';
 import DashboardSkeleton from './DashboardSkeleton';
 const UserIcon = () => (

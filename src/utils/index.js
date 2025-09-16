@@ -1,6 +1,7 @@
+import { headers } from 'next/headers';
 import bcrypt from 'bcrypt';
 import { SignJWT } from 'jose';
-import { v4 as uuidv4 } from 'uuid';
+//import { v4 as uuidv4 } from 'uuid';
 
 const saltRounds = 10;
 
@@ -58,9 +59,9 @@ export const buildUrl = (url, params = {}) => {
 //     return result?.toString();
 // };
 
-export const generateInvoiceNumber = (type = 'INV') => {
-    return `${type}-${uuidv4()}`;
-};
+// export const generateInvoiceNumber = (type = 'INV') => {
+//     return `${type}-${uuidv4()}`;
+// };
 
 export const generateProductCode = (name) => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
