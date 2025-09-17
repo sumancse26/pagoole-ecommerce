@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 export default function LayoutManager({ header, sidebar, footer, children }) {
     const pathname = usePathname();
 
-    const hideLayoutComponentsPaths = ['/auth', '/dashboard', '/register', '/login'];
+    const hideLayoutComponentsPaths = ['/auth', '/dashboard', '/register', '/login', '/reset-password'];
     const shouldShowLayoutComponents = !hideLayoutComponentsPaths.includes(pathname);
 
     return (

@@ -55,14 +55,14 @@ const Login = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
             <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl w-full">
                 {/* Left Side - Intro Text */}
-                <div className="md:w-1/2 p-8 flex flex-col justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                <div className="md:w-1/2 p-8 flex flex-col justify-center bg-gradient-to-r from-emerald-400 to-green-500 text-white">
                     <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
                     <p className="text-lg mb-6">
                         Enter your details to access your account and continue where you left off.
                     </p>
                     <p className="text-sm">
-                        Not Link member?
-                        <Link href="/register" className="underline px-2 text-red-700">
+                        Not a member?
+                        <Link href="/register" className="underline px-2 text-red-600">
                             Sign up now
                         </Link>
                         and join our community.
@@ -83,7 +83,7 @@ const Login = () => {
                                 required
                                 autoComplete="email"
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500"
                             />
                         </div>
 
@@ -97,24 +97,24 @@ const Login = () => {
                                 autoComplete="current-password"
                                 onChange={handleChange}
                                 placeholder="Enter your password"
-                                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500"
                             />
                         </div>
 
                         <div className="flex justify-between items-center">
                             <label className="inline-flex items-center text-sm text-gray-600">
-                                <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600" />
+                                <input type="checkbox" className="form-checkbox h-4 w-4 text-green-600" />
                                 <span className="ml-2">Remember me</span>
                             </label>
 
-                            <Link href="/reset-password" className="text-sm text-blue-500 hover:underline">
+                            <Link href="/reset-password" className="text-sm base-text hover:underline">
                                 Forgot Password?
                             </Link>
                         </div>
                         <button
                             disabled={loadingState}
                             type="submit"
-                            className="w-full flex items-center justify-center py-3 mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded hover:from-blue-600 hover:to-purple-700 focus:outline-none">
+                            className="w-full flex items-center justify-center py-3 mt-4 bg-gradient-to-r from-emerald-400 to-green-500 text-white font-semibold rounded hover:from-green-600 hover:to-emerald-400 focus:outline-none">
                             LOGIN {loadingState && <Loader />}
                         </button>
                     </form>

@@ -54,13 +54,13 @@ const ForgotPassword = () => {
                             required
                             autoComplete="email"
                             placeholder="you@example.com"
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                         />
                     </div>
                     <button
                         disabled={loadingState}
                         type="submit"
-                        className="w-full flex items-center justify-center py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 transition-all duration-300 text-white font-semibold rounded-xl shadow-md hover:shadow-lg focus:outline-none">
+                        className="w-full flex items-center justify-center py-3 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 transition-all duration-300 text-white font-semibold rounded-xl shadow-md hover:shadow-lg focus:outline-none">
                         Send Reset Link {loadingState && <Loader />}
                     </button>
                 </form>
@@ -68,7 +68,7 @@ const ForgotPassword = () => {
                 <div className="text-center mt-6">
                     <Link
                         href="/login"
-                        className="text-sm text-purple-600 hover:text-purple-800 transition-colors duration-200 hover:underline">
+                        className="text-sm text-green-500 hover:text-green-700 transition-colors duration-200 hover:underline">
                         ← Back to Login
                     </Link>
                 </div>

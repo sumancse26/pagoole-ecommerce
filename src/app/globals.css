@@ -22,34 +22,28 @@ body .with-sidebar-transition {
     animation: fadeInUp 0.5s ease forwards;
 }
 
-/* @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
-
-.hind-siliguri-light {
-    font-family: 'Hind Siliguri', sans-serif;
-    font-weight: 300;
-    font-style: normal;
+.base {
+    background-color: '#04AA1D';
+}
+.base-light {
+    background-color: '#54C95A';
+}
+.base-semi-dark {
+    background-color: '#039418';
+}
+.base-dark {
+    background-color: '#027B14';
 }
 
-.hind-siliguri-regular {
-    font-family: 'Hind Siliguri', sans-serif;
-    font-weight: 400;
-    font-style: normal;
+.base-text {
+    color: #04aa1d !important;
 }
-
-.hind-siliguri-medium {
-    font-family: 'Hind Siliguri', sans-serif;
-    font-weight: 500;
-    font-style: normal;
+.base-text-light {
+    color: #54c95a;
 }
-
-.hind-siliguri-semibold {
-    font-family: 'Hind Siliguri', sans-serif;
-    font-weight: 600;
-    font-style: normal;
+.base-text-semi-dark {
+    color: #039418;
 }
-
-.hind-siliguri-bold {
-    font-family: 'Hind Siliguri', sans-serif;
-    font-weight: 700;
-    font-style: normal;
-} */
+.base-text-dark {
+    color: #027b14;
+}
