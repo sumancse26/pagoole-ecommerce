@@ -4,24 +4,54 @@ import Wish from '../wishlist/Wish';
 import Cart from '@components/addToCart/CartList';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { getAddToCartList } from '@/services/addToCart';
+import { getWishList } from '@/services/wishList';
+import { useSession } from 'next-auth/react';
 
-const HeaderIcon = ({ cartItemList, wishItemList }) => {
+const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
     const [cartList, setCartList] = useState([]);
     const [wishList, setWishList] = useState([]);
     const [showCart, setShowCart] = useState(false);
     const [showWishList, setShowWishList] = useState(false);
 
-    useEffect(() => {
-        setCartList(cartItemList);
-
-        return () => {};
-    }, [cartItemList]);
+    const { data: session, status } = useSession();
 
     useEffect(() => {
-        setWishList(wishItemList);
+        if (status === 'authenticated') {
+            fetchCartList();
+            fetchWishList();
+        }
 
         return () => {};
-    }, [wishItemList]);
+    }, []);
+
+    // useEffect(() => {
+    //     setWishList(wishItemList);
+    //     setWishList(wishItemList);
+
+    //     return () => {};
+    // }, [wishItemList]);
+
+    const fetchCartList = async () => {
+        try {
+            const res = await getAddToCartList();
+            const cartListData = res?.cart_items || 0;
+            list = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+            setCartList(list || []);
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    };
+
+    const fetchWishList = async () => {
+        try {
+            const wish = await getWishList();
+            list = wish.wish_lists || [];
+            setWishList(list || []);
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    };
 
     const handleRemoveItem = () => {
         setShowCart(false);

@@ -1,23 +1,23 @@
 import Link from 'next/link';
-import { getAddToCartList } from '@/services/addToCart';
-import { getWishList } from '@/services/wishList';
+// import { getAddToCartList } from '@/services/addToCart';
+// import { getWishList } from '@/services/wishList';
 import HeaderIcons from './HeaderIcon';
-import { auth } from '@/auth';
+// import { auth } from '@/auth';
 
 const HeaderComp = async () => {
-    const session = await auth();
+    // const session = await auth();
 
-    let cartList = [];
-    let wishList = [];
+    // let cartList = [];
+    // let wishList = [];
 
-    if (session?.user) {
-        const res = await getAddToCartList();
-        const cartListData = res?.cart_items || 0;
-        cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+    // if (session?.user) {
+    //     const res = await getAddToCartList();
+    //     const cartListData = res?.cart_items || 0;
+    //     cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
 
-        const wish = await getWishList();
-        wishList = wish.wish_lists || [];
-    }
+    //     const wish = await getWishList();
+    //     wishList = wish.wish_lists || [];
+    // }
 
     return (
         <header className="bg-white shadow sticky top-0 z-45">
@@ -77,7 +77,7 @@ const HeaderComp = async () => {
                     </div>
 
                     {/* Icons */}
-                    <HeaderIcons cartItemList={cartList} wishItemList={wishList} />
+                    <HeaderIcons />
                 </div>
             </div>
         </header>
