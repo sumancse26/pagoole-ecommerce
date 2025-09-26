@@ -1,21 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const SearchableDropdown = ({
     options,
     onSelect,
     labelKey = 'name',
     valueKey = 'mobile',
-    placeholder = 'Search...'
+    placeholder = 'Search...',
+    selected // ✅ new prop from parent
 }) => {
     const [query, setQuery] = useState('');
     const [isOpen, setIsOpen] = useState(false);
-    const [selected, setSelected] = useState(null);
+    const [internalSelected, setInternalSelected] = useState(null);
 
-    // Check if query is exactly equal to selected item's label
+    // ✅ Sync when parent gives a new selected value
+    useEffect(() => {
+        if (selected) {
+            setInternalSelected(selected);
+            setQuery(`${selected[labelKey]}${selected[valueKey] ? ' - ' + selected[valueKey] : ''}`);
+        } else {
+            setInternalSelected(null);
+            setQuery('');
+        }
+    }, [selected, labelKey, valueKey]);
+
     const isMatchingSelected =
-        selected && query.trim().toLowerCase() === `${selected[labelKey]} - ${selected[valueKey]}`.toLowerCase();
+        internalSelected &&
+        query.trim().toLowerCase() === `${internalSelected[labelKey]} - ${internalSelected[valueKey]}`.toLowerCase();
 
-    // Filtered results only when typing, not when selected
     const filtered = isMatchingSelected
         ? options
         : options?.filter((item) => `${item[labelKey]} ${item[valueKey]}`.toLowerCase().includes(query.toLowerCase()));
@@ -24,7 +35,7 @@ const SearchableDropdown = ({
         if (item) {
             onSelect(item);
             setQuery(`${item[labelKey]}${item[valueKey] ? '-' + item[valueKey] : ''}`);
-            setSelected(item);
+            setInternalSelected(item);
             setIsOpen(false);
         }
     };

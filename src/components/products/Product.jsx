@@ -1,19 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ProductIcon from './ProductIcon';
 import AddToCart from '../buttons/AddToCart.jsx';
 import { useSession } from 'next-auth/react';
 import { getAddToCartList } from '@/services/addToCart';
 import CartList from '@components/addToCart/CartList';
+import { getWishList } from '@/services/wishList';
 
 const Product = ({ prodType, fromWhere, productList, searchParams }) => {
     const [sidebar, setSidebar] = useState(false);
     const [cartList, setCartList] = useState([]);
+    const [wishList, setWishList] = useState([]);
+    const [products, setproducts] = useState([]);
 
     const { data: session, status } = useSession();
     const activeTab = searchParams?.tab || 'arrival';
+
+    useEffect(() => {
+        wishListHandler();
+
+        return () => {};
+    }, []);
+
+    const wishListHandler = async () => {
+        try {
+            const res = await getWishList();
+            const updatedProd = productList.map((prod) => {
+                const isInWishList = res.wish_lists.find((wish) => wish.vendor_prod_id == prod.id);
+                prod.disable_wish = isInWishList ? true : false;
+                return prod;
+            });
+            setproducts(updatedProd);
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
 
     const sidebarHandler = async (val) => {
         if (session?.user) {
@@ -37,12 +60,12 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                         {fromWhere == 'vendor' && (
                             <div className="fixed top-14 right-0 z-10  flex items-center justify-end gap-3 bg-gray-100 py-3 px-4 sm:px-6 md:px-8 lg:px-10 w-full">
                                 <img
-                                    src={productList[0]?.vendors?.store_logo}
+                                    src={products[0]?.vendors?.store_logo}
                                     alt="store image"
                                     className="h-16 w-16 sm:h-20 sm:w-20 object-contain rounded-full"
                                 />
                                 <span className="text-lg sm:text-xl font-bold text-green-700 text-center">
-                                    {productList[0]?.vendors?.store_name || ''}
+                                    {products[0]?.vendors?.store_name || ''}
                                 </span>
                             </div>
                         )}
@@ -100,7 +123,7 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                             </div>
                         )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {productList?.map((product) => (
+                            {products?.map((product) => (
                                 <div
                                     key={product.id}
                                     className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-sm transition-shadow group">
@@ -111,8 +134,8 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                                         }}>
                                         <div className="relative h-64 w-full overflow-hidden rounded-lg">
                                             <img
-                                                src={product.products?.file_server?.base_url}
-                                                alt={product.products?.file_server?.name}
+                                                src={product.products?.product_images?.[0]?.file_name}
+                                                alt="Product Image"
                                                 className="h-full w-full object-contain transition-all duration-300 ease-in-out group-hover:scale-105"
                                             />
                                             {product?.discount && (
@@ -136,7 +159,7 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                                                     </p>
                                                 </div>
                                                 <div className="flex gap-3">
-                                                    <ProductIcon productInfo={product} />
+                                                    <ProductIcon productInfo={product} from="" />
                                                 </div>
                                             </div>
                                             <div className="flex items-center justify-between">

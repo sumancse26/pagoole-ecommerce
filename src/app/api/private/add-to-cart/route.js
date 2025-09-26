@@ -92,6 +92,8 @@ export const GET = async (req) => {
             return NextResponse.json({ message: 'Invalid user ID format in header.', success: false }, { status: 400 });
         }
 
+        const origin = new URL(req.url).origin;
+
         const selectedCart = await prisma.carts.findFirst({
             where: {
                 user_id: userId
@@ -121,6 +123,7 @@ export const GET = async (req) => {
                         price: true,
                         stock_qty: true,
                         is_active: true,
+
                         vendors: {
                             select: {
                                 id: true,
@@ -132,12 +135,11 @@ export const GET = async (req) => {
                                 id: true,
                                 prod_name: true,
                                 slug: true,
-                                image: true,
                                 mrp: true,
-                                file_server: {
+                                product_images: {
                                     select: {
                                         id: true,
-                                        base_url: true
+                                        file_name: true
                                     }
                                 },
                                 brands: {
@@ -155,9 +157,17 @@ export const GET = async (req) => {
         });
 
         const modifiedItem = cartItems?.map((cart) => {
+            const vp = cart.vendor_products;
+            const p = vp?.products;
+            const vendorImg = vp?.image_url || '';
+            const relImg = p?.image || '';
+            const fsBase = p?.file_server?.base_url || '';
+            const resolvedImage =
+                vendorImg || (relImg ? (relImg.startsWith('http') ? relImg : `${origin}${relImg}`) : fsBase);
             return {
                 ...cart,
-                item_total: Number(cart.qty || 0) * Number(cart.vendor_products?.price || 0)
+                item_total: Number(cart.qty || 0) * Number(vp?.price || 0),
+                image_url: resolvedImage
             };
         });
 

@@ -35,10 +35,10 @@ export const GET = async (req) => {
                                 name: true
                             }
                         },
-                        file_server: {
+                        product_images: {
                             select: {
                                 id: true,
-                                base_url: true
+                                file_name: true
                             }
                         },
                         categories: {

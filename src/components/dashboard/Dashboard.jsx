@@ -49,7 +49,7 @@ const Dashboard = () => {
     const dashboardInfoHandler = async () => {
         try {
             setLoader(true);
-            //   const res = await dashboardAction();
+            //const res = await dashboardAction();
             setLoader(false);
             setCards([
                 {

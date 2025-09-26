@@ -6,7 +6,7 @@ export default function LayoutManager({ header, sidebar, footer, children }) {
     const pathname = usePathname();
 
     const hideLayoutComponentsPaths = ['/auth', '/dashboard', '/register', '/login', '/reset-password'];
-    const shouldShowLayoutComponents = !hideLayoutComponentsPaths.includes(pathname);
+    const shouldShowLayoutComponents = !hideLayoutComponentsPaths.some((path) => pathname.startsWith(path));
 
     return (
         <>

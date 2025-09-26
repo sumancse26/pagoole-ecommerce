@@ -6,28 +6,25 @@ import { useSession } from 'next-auth/react';
 import { doSocialLogin } from '@/app/actions/authAction';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
-const ProductIcon = ({ productInfo, pathFrom }) => {
+const ProductIcon = ({ productInfo, from }) => {
     const [product, setProduct] = useState(productInfo);
+    const [wish, setWish] = useState([]);
 
     const { data: session, status } = useSession();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    useEffect(() => {
-        setProduct(productInfo);
-
-        return () => {};
-    }, [productInfo]);
-
     const addWishListHandler = async (e) => {
         try {
             e.preventDefault();
             e.stopPropagation();
+
             const prodId = product.id;
 
             if (status === 'authenticated') {
                 const res = await addToWishList({ vendor_prod_id: prodId });
+
                 router.refresh();
                 setProduct((val) => ({ ...val, disable_wish: true }));
                 alert('Added to wish list');
@@ -38,7 +35,7 @@ const ProductIcon = ({ productInfo, pathFrom }) => {
                 const result = await doSocialLogin('google', fullPath);
             }
         } catch (err) {
-            throw new Error(err.message);
+            console.error(err.message);
         }
     };
 

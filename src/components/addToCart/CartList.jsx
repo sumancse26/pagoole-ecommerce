@@ -21,8 +21,9 @@ const TrashIcon = () => (
     </svg>
 );
 
-const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
+const CartListTable = ({ showCart, cartList, closeCart, showCrossIcon }) => {
     const [cartItems, setCartItems] = useState([]);
+    const [isCart, setIsCart] = useState(false);
 
     const router = useRouter();
 
@@ -30,6 +31,11 @@ const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
         setCartItems(cartList);
         return () => {};
     }, [cartList]);
+
+    useEffect(() => {
+        setIsCart(showCart);
+        return () => {};
+    }, [showCart]);
 
     const handleRemoveItem = async (id) => {
         try {
@@ -51,9 +57,9 @@ const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
         closeCart();
     };
 
-    if (cartItems?.length === 0) {
+    if (showCart && cartItems?.length === 0) {
         return (
-            <div className="text-center py-20 bg-white rounded-lg shadow-md">
+            <div className="text-center py-20 bg-white rounded-lg shadow-md w-full">
                 <h2 className="text-2xl font-semibold text-gray-700">Your Cart is Empty</h2>
                 <p className="text-gray-500 mt-3">There are no items to display.</p>
             </div>
@@ -89,7 +95,7 @@ const CartListTable = ({ cartList, closeCart, showCrossIcon }) => {
 
                             {/* --- Table Body --- */}
                             <tbody className="divide-y divide-gray-300 h-[550px] overflow-y-auto block">
-                                {cartItems?.length &&
+                                {cartItems?.length > 0 &&
                                     cartItems?.map((item, indx) => (
                                         <tr
                                             key={indx}

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/config/prisma';
-import { encryptPassword, jwtEncode } from '@/utils';
+import { encryptJSPassword, jwtEncode } from '@/utils';
 import { cookies } from 'next/headers';
 
 export const POST = async (req) => {
@@ -24,10 +24,10 @@ export const POST = async (req) => {
         } = body;
 
         if (!isCustomer) {
-            if (!user_name || !email || !password || !store_name || !location_id) {
+            if (!(user_name || email || password || store_name || location_id)) {
                 return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
             }
-            const hashedPassword = (await encryptPassword(password?.toString())) || '';
+            const hashedPassword = (await encryptJSPassword(password?.toString())) || '';
             await prisma.$transaction(async (tx) => {
                 const savedUser = await tx.users.create({
                     data: {
@@ -57,46 +57,6 @@ export const POST = async (req) => {
             });
 
             return NextResponse.json({ message: 'User registered successfully', success: true }, { status: 200 });
-        } else {
-            const savedUser = await prisma.users.create({
-                data: {
-                    user_name: name,
-                    email,
-                    otp: 0,
-                    is_admin: 2,
-                    is_active: 1,
-                    image: image || ''
-                }
-            });
-
-            const payload = {
-                name: savedUser.user_name,
-                email: savedUser.email,
-                user_id: savedUser.id,
-                role: 'customer'
-            };
-            const token = await jwtEncode(payload);
-
-            const res = NextResponse.json(
-                {
-                    message: 'User registered successfully',
-                    success: true,
-                    user: savedUser
-                },
-                { status: 200 }
-            );
-
-            res.cookies.set({
-                name: 'token',
-                value: token,
-                maxAge: 60 * 60 * 24 * 7,
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'lax',
-                path: '/'
-            });
-
-            return res;
         }
     } catch (error) {
         console.error('Error parsing request body:', error);

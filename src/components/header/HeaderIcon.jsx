@@ -4,8 +4,8 @@ import Wish from '../wishlist/Wish';
 import Cart from '@components/addToCart/CartList';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { getAddToCartList } from '@/services/addToCart';
-import { getWishList } from '@/services/wishList';
+// import { getAddToCartList } from '@/services/addToCart';
+// import { getWishList } from '@/services/wishList';
 import { useSession } from 'next-auth/react';
 
 const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
@@ -14,44 +14,50 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
     const [showCart, setShowCart] = useState(false);
     const [showWishList, setShowWishList] = useState(false);
 
-    const { data: session, status } = useSession();
+    useEffect(() => {
+        setCartList(cartItemList);
+        return () => {};
+    }, [cartItemList]);
 
     useEffect(() => {
-        if (status === 'authenticated') {
-            fetchCartList();
-            fetchWishList();
-        }
-
+        setWishList(wishItemList);
         return () => {};
-    }, []);
+    }, [wishItemList]);
+
+    //const { data: session, status } = useSession();
 
     // useEffect(() => {
-    //     setWishList(wishItemList);
-    //     setWishList(wishItemList);
+    //     console.log('session', status, session);
+    //     if (status === 'authenticated') {
+    //         fetchCartList();
+    //         fetchWishList();
+    //     }
 
     //     return () => {};
-    // }, [wishItemList]);
+    // }, [status]);
 
-    const fetchCartList = async () => {
-        try {
-            const res = await getAddToCartList();
-            const cartListData = res?.cart_items || 0;
-            list = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
-            setCartList(list || []);
-        } catch (err) {
-            throw new Error(err.message);
-        }
-    };
+    // const fetchCartList = async () => {
+    //     try {
+    //         const res = await getAddToCartList();
+    //         const cartListData = res?.cart_items || 0;
+    //         const list = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
 
-    const fetchWishList = async () => {
-        try {
-            const wish = await getWishList();
-            list = wish.wish_lists || [];
-            setWishList(list || []);
-        } catch (err) {
-            throw new Error(err.message);
-        }
-    };
+    //         console.log('list', list);
+    //         setCartList(list || []);
+    //     } catch (err) {
+    //         throw new Error(err.message);
+    //     }
+    // };
+
+    // const fetchWishList = async () => {
+    //     try {
+    //         const wish = await getWishList();
+    //         const list = wish.wish_lists || [];
+    //         setWishList(list || []);
+    //     } catch (err) {
+    //         throw new Error(err.message);
+    //     }
+    // };
 
     const handleRemoveItem = () => {
         setShowCart(false);
@@ -98,8 +104,8 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
                     </button>
                     {/* Dropdown */}
                     {showWishList && (
-                        <div className="absolute  group-hover:block md:top-[40px] md:-right-[100px] bg-green-100 shadow-md text-black rounded-md z-50 p-3">
-                            <Wish wishList={wishList} closeWish={closeWishModal} />
+                        <div className="w-100 absolute  group-hover:block md:top-[40px] md:-right-[100px] bg-green-100 shadow-md text-black rounded-md z-50 p-3">
+                            <Wish showWishList={showWishList} wishList={wishList} closeWish={closeWishModal} />
                         </div>
                     )}
                 </div>
@@ -127,8 +133,13 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
 
                     {/* Dropdown */}
                     {showCart && (
-                        <div className="absolute  group-hover:block md:top-[40px] md:-right-[60px] bg-green-100 shadow-md shadow-lg text-black rounded-md z-50 p-3">
-                            <Cart cartList={cartList} closeCart={handleRemoveItem} showCrossIcon={true} />
+                        <div className="w-100 absolute  group-hover:block md:top-[40px] md:-right-[60px] bg-green-100 shadow-md shadow-lg text-black rounded-md z-50 p-3">
+                            <Cart
+                                showCart={showCart}
+                                cartList={cartList}
+                                closeCart={handleRemoveItem}
+                                showCrossIcon={true}
+                            />
                         </div>
                     )}
                 </div>

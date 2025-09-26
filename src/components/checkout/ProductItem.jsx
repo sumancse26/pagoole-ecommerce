@@ -37,7 +37,10 @@ const ProductItem = ({ checkoutData }) => {
                                                     key={prodIndx}
                                                     className="flex flex-col sm:flex-row items-center gap-4 py-4 px-2 rounded-lg bg-white shadow hover:shadow-md border border-green-100 transition-all">
                                                     <img
-                                                        src={prod.vendor_products?.products?.file_server?.base_url}
+                                                        src={
+                                                            prod.vendor_products?.products?.product_images?.[0]
+                                                                ?.file_name
+                                                        }
                                                         alt={prod.vendor_products?.products?.prod_name || 'Product'}
                                                         className="w-20 h-20 object-cover rounded-lg border-2 border-green-200 shadow-sm"
                                                     />

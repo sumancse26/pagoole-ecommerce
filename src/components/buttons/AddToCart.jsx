@@ -36,7 +36,6 @@ const AddToCart = ({ vendorProdId, hideQty = false, cartListHandler = () => {} }
     };
 
     const qtyHandler = (val) => {
-        alert(val);
         setQty((prevQty) => {
             const currentQty = Number(prevQty); // ensure number
             if (val === 'decrement' && currentQty > 1) {
@@ -45,7 +44,7 @@ const AddToCart = ({ vendorProdId, hideQty = false, cartListHandler = () => {} }
             if (val === 'increment') {
                 return currentQty + 1;
             }
-            return currentQty; // default: no change
+            return currentQty;
         });
     };
 

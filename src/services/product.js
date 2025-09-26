@@ -40,3 +40,28 @@ export const getRelatedProducts = async (data) => {
     });
     return res;
 };
+
+export const getVendorProducts = async () => {
+    const res = await fetchApi(`/api/private/dashboard/product`, {
+        method: 'GET',
+        next: {
+            tags: ['vendorProductList']
+        }
+    });
+    return res;
+};
+
+export const addVendorProducts = async (data) => {
+    const res = await fetchApi(`/api/private/dashboard/product`, {
+        method: 'POST',
+        body: data
+    });
+    return res;
+};
+export const updateVendorProducts = async (data) => {
+    const res = await fetchApi(`/api/private/dashboard/product`, {
+        method: 'PUT',
+        body: data
+    });
+    return res;
+};

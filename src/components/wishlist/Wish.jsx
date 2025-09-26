@@ -21,8 +21,9 @@ const TrashIcon = () => (
     </svg>
 );
 
-const CartListTable = ({ wishList, closeWish }) => {
+const CartListTable = ({ showWishList, wishList, closeWish }) => {
     const [cartItems, setCartItems] = useState([]);
+    const [showWish, setShowWish] = useState(false);
 
     const router = useRouter();
 
@@ -31,6 +32,12 @@ const CartListTable = ({ wishList, closeWish }) => {
 
         return () => {};
     }, [wishList]);
+
+    useEffect(() => {
+        setShowWish(showWishList);
+
+        return () => {};
+    }, [showWishList]);
 
     const handleRemoveItem = async (id) => {
         try {
@@ -52,7 +59,7 @@ const CartListTable = ({ wishList, closeWish }) => {
         closeWish();
     };
 
-    if (cartItems?.length === 0) {
+    if (showWish && cartItems?.length === 0) {
         return (
             <div className="text-center py-20 bg-white rounded-lg">
                 <h2 className="text-2xl font-semibold text-gray-700">Your Cart is Empty</h2>
@@ -87,7 +94,7 @@ const CartListTable = ({ wishList, closeWish }) => {
 
                             {/* --- Table Body --- */}
                             <tbody className="divide-y divide-gray-300 h-[600px] overflow-y-auto block">
-                                {cartItems?.length &&
+                                {cartItems?.length > 0 &&
                                     cartItems?.map((item, indx) => (
                                         <tr
                                             key={indx}

@@ -9,6 +9,8 @@ import { useState } from 'react';
 const ProductInfo = ({ prodInfo }) => {
     const [sidebar, setSidebar] = useState(false);
     const [cartList, setCartList] = useState([]);
+    const [displayImage, setDisplayImage] = useState(prodInfo[0]?.products?.product_images?.[0]?.file_name);
+    const [selectedProduct, setSelectedProduct] = useState(prodInfo[0]);
 
     const { data: session, status } = useSession();
 
@@ -27,30 +29,35 @@ const ProductInfo = ({ prodInfo }) => {
         setSidebar(false);
     };
 
+    const productChangeHandler = (prodItem, e) => {
+        e.stopPropagation();
+        setSelectedProduct(prodItem);
+    };
+
     return (
         <div className="flex flex-col gap-5 w-full">
-            {/* Product Images and Info */}
             <div className="flex flex-col sm:flex-row gap-5">
                 {/* Images */}
-                <div className="md:w-1/4">
+                <div className="md:w-2/4">
                     <h1 className="text-2xl font-bold text-emerald-600 mb-2">
-                        {prodInfo[0]?.products?.prod_name || ''}
+                        {selectedProduct.products?.prod_name || ''}
                     </h1>
 
                     <img
-                        src={prodInfo[0]?.products?.file_server?.base_url}
-                        alt="Dell Laptop"
+                        src={displayImage}
+                        alt="Image"
                         className="w-full h-64 object-contain border border-gray-300 rounded-lg shadow-sm mb-3"
                     />
 
                     {/* Thumbnails */}
                     <div className="flex gap-2">
                         {prodInfo?.length &&
-                            prodInfo?.map((prodImg, imgKey) => (
+                            prodInfo?.[0]?.products?.product_images?.map((prodImg, imgKey) => (
                                 <img
                                     key={imgKey}
-                                    src={prodImg.products?.file_server?.base_url}
+                                    src={prodImg.file_name}
                                     alt="thumb"
+                                    onClick={() => setDisplayImage(prodImg.file_name)}
                                     className="w-20 h-16 object-contain border border-gray-300 rounded"
                                 />
                             ))}
@@ -62,8 +69,8 @@ const ProductInfo = ({ prodInfo }) => {
                     <h2 className="text-lg font-bold text-emerald-600 mb-2">Price in Bangladesh</h2>
                     <p className="text-sm text-gray-700 mb-6">
                         The lowest price of Dell latitude 7420 core i7 11th gen 16gb ddr5 ram in Bangladesh is
-                        <span className="font-semibold text-emerald-600">Tk {prodInfo[0]?.price || 0}</span> only. Buy
-                        from Dhaka at low price in
+                        <span className="font-semibold text-emerald-600">Tk {selectedProduct.price || 0}</span> only.
+                        Buy from Dhaka at low price in
                         <span className="text-emerald-600 font-medium underline cursor-pointer ml-1">
                             Pagoole Discount Shop
                         </span>
@@ -75,7 +82,9 @@ const ProductInfo = ({ prodInfo }) => {
                             <div
                                 key={prodIndex}
                                 className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 mb-5 flex items-start justify-between">
-                                <div className="flex items-start gap-3 w-2/4">
+                                <div
+                                    className="flex items-start gap-3 w-2/4"
+                                    onClick={(e) => productChangeHandler(prodItem, e)}>
                                     <img
                                         src={prodItem.products.brands?.brand_logo}
                                         alt="Seller Logo"

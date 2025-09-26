@@ -1,13 +1,14 @@
 import { headers } from 'next/headers';
-import bcrypt from 'bcrypt';
+import bcryptJs from 'bcryptjs';
 import { SignJWT } from 'jose';
 //import { v4 as uuidv4 } from 'uuid';
 
 const saltRounds = 10;
 
-export const encryptPassword = async (password) => await bcrypt.hash(password, saltRounds);
+export const encryptJSPassword = async (password) => await bcryptJs.hash(password, saltRounds);
 
-export const decryptPassword = async (password, encryptedPassword) => await bcrypt.compare(password, encryptedPassword);
+export const decryptJSPassword = async (password, encryptedPassword) =>
+    await bcryptJs.compare(password, encryptedPassword);
 
 export const jwtEncode = async ({ name, email, user_id, role }) => {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);

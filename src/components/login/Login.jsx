@@ -1,12 +1,12 @@
 'use client';
-// import { loginAction } from '@/app/actions/authAction';
 import { useAlert } from '@/context/AlertContext';
 import { useApiLoader } from '@/lib/useApiLoader';
 import Loader from '@components/Loader';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -15,6 +15,7 @@ const Login = () => {
     });
     const [loadingState, setLoadingState] = useState(false);
 
+    const { data: session, status } = useSession();
     const router = useRouter();
     const { showAlert } = useAlert();
     const { start, stop } = useApiLoader();
@@ -29,25 +30,27 @@ const Login = () => {
 
         setLoadingState(true);
         start();
-        // const result = await loginAction(null, formData);
+
+        const result = await signIn('credentials', {
+            redirect: false,
+            email: formData.email,
+            password: formData.password
+        });
+
         stop();
         setLoadingState(false);
-        if (result && result.success) {
-            showAlert(result.message, 'success');
-            router.push('/dashboard');
-            Cookies.set('token', result.token, {
-                secure: true,
-                expires: 7,
-                path: '/'
-            });
 
-            setFormData({
-                email: '',
-                password: ''
-            });
+        if (result?.ok && !result?.error) {
+            showAlert('Login successful!', 'success');
+            if (session.user?.role == 1 || session.user?.role == 0) {
+                router.push('/dashboard');
+            } else {
+                router.push('/');
+            }
+
+            setFormData({ email: '', password: '' });
         } else {
-            stop();
-            showAlert(result.message, 'error');
+            showAlert('Invalid credentials', 'error');
         }
     };
 
@@ -71,7 +74,7 @@ const Login = () => {
 
                 {/* Right Side - Login Form */}
                 <div className="md:w-1/2 p-8">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login as Vendor</h2>
                     <form className="space-y-6" onSubmit={handleFormSubmit}>
                         <div>
                             <label className="block text-sm font-medium text-gray-600 mb-1">Email Address</label>

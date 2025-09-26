@@ -72,7 +72,7 @@ const OrderDetailPage = ({ orderData }) => {
                                 {groupedVendors[vendor].map((item) => (
                                     <li key={item.id} className="py-4 flex items-center gap-4">
                                         <img
-                                            src={item.vendor_products.products.file_server.base_url}
+                                            src={item.vendor_products.products.product_images?.[0]?.file_name}
                                             alt={item.vendor_products.products.prod_name}
                                             className="w-16 h-16 rounded-lg border object-cover"
                                         />

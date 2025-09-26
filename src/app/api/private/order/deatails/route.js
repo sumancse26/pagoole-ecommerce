@@ -4,13 +4,12 @@ import { NextResponse } from 'next/server';
 export const GET = async (req) => {
     try {
         const userId = req.headers.get('user_id');
-        console.log('userId', userId);
+
         if (!userId) {
             return NextResponse.json({ success: false, message: 'Unauthorized user' }, { status: 401 });
         }
 
         const orderList = await prisma.orders.findMany({
-            // 👈 FIX model name
             where: { user_id: Number(userId) },
             select: {
                 id: true,

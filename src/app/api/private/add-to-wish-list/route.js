@@ -78,14 +78,11 @@ export const GET = async (req) => {
             return NextResponse.json({ message: 'Invalid user ID format in header.', success: false }, { status: 400 });
         }
 
-        const wishLish = await prisma.wishlists.findMany({
-            where: {
-                user_id: userId
-            },
+        const wishList = await prisma.wishlists.findMany({
+            where: { user_id: userId },
             select: {
                 id: true,
-                user_id: true,
-                user_id: true,
+                user_id: true, // removed duplicate user_id
                 vendor_prod_id: true,
                 vendor_products: {
                     select: {
@@ -97,12 +94,11 @@ export const GET = async (req) => {
                                 id: true,
                                 prod_name: true,
                                 slug: true,
-                                image: true,
                                 mrp: true,
-                                file_server: {
+                                product_images: {
                                     select: {
                                         id: true,
-                                        base_url: true
+                                        file_name: true
                                     }
                                 },
                                 brands: true
@@ -125,19 +121,11 @@ export const GET = async (req) => {
         return NextResponse.json({
             message: 'Fetch Wish List Successfully.',
             success: true,
-            wish_lists: wishLish || []
+            wish_lists: wishList || []
         });
     } catch (err) {
-        console.error('Error fetching cart items:', err);
-        return NextResponse.json(
-            {
-                message: 'Something went wrong.',
-                success: false
-            },
-            {
-                status: 500
-            }
-        );
+        console.error('Error fetching wish list items:', err);
+        return NextResponse.json({ message: 'Something went wrong.', success: false }, { status: 500 });
     }
 };
 

@@ -1,8 +1,6 @@
 'use server';
 
 const OrderComp = ({ orderInfo }) => {
-    // Example mock data (replace with actual props / server data)
-
     return (
         <>
             <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4">
@@ -59,7 +57,7 @@ const OrderComp = ({ orderInfo }) => {
                             {orderInfo.order_items.map((item) => (
                                 <li key={item.id} className="py-4 flex items-center gap-4">
                                     <img
-                                        src={item.vendor_products?.products?.file_server?.base_url}
+                                        src={item.vendor_products?.products?.product_images?.[0]?.file_name}
                                         alt="Product Image"
                                         className="w-16 h-16 rounded-lg border border-gray-300 object-cover"
                                     />
@@ -94,7 +92,7 @@ const OrderComp = ({ orderInfo }) => {
                     {/* CTA */}
                     <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
                         <a
-                            href="/orders"
+                            href="/order"
                             className="px-6 py-3 bg-gray-800 text-white text-sm font-medium rounded-lg shadow hover:bg-gray-700 transition">
                             View My Orders
                         </a>

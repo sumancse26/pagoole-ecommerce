@@ -14,7 +14,7 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect, sidebarHan
             <div className="flex-grow flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
                 <div className="flex gap-2 w-full sm:w-[60%]">
                     <img
-                        src={item.vendor_products?.products?.file_server?.base_url}
+                        src={item.vendor_products?.products?.product_images?.[0]?.file_name}
                         alt="Product"
                         className="w-20 h-20 object-cover mr-4 rounded"
                     />
@@ -86,7 +86,7 @@ export default function WishlistPage({ wishList }) {
 
     const handleRemoveItem = async (item) => {
         try {
-            await deleteWish(item.id); // was using undefined `id`
+            await deleteWish(item.id);
             router.refresh();
 
             setWishlistItems((prev) =>
@@ -101,7 +101,7 @@ export default function WishlistPage({ wishList }) {
             );
         } catch (err) {
             console.error('Failed to remove wishlist item:', err);
-            throw err; // keep stack trace instead of wrapping in new Error
+            throw err;
         }
     };
 

@@ -4,22 +4,45 @@ import { useAlert } from '@/context/AlertContext';
 import { useApiLoader } from '@/lib/useApiLoader';
 import Loader from '@components/Loader';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import SearchableDropdown from '../SearchableDropdown';
+import { getLocationList } from '@/services/vendor';
+import { register } from '@/services/users';
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
         email: '',
-        first_name: '',
-        last_name: '',
-        mobile: '',
+        user_name: '',
+        phone: '',
         password: '',
+        store_name: '',
+        store_description: '',
+        address: '',
+        location_id: '',
+        store_logo: '',
         image: ''
     });
     const [loadingState, setLoadingState] = useState(false);
+    const [locations, setLocations] = useState([]);
 
     const router = useRouter();
     const { showAlert } = useAlert();
     const { start, stop } = useApiLoader();
+
+    useEffect(() => {
+        fetchLocations();
+
+        return () => {};
+    }, []);
+
+    const fetchLocations = async () => {
+        try {
+            const res = await getLocationList();
+            setLocations(res.location_list || []);
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,17 +54,22 @@ const SignUp = () => {
 
         setLoadingState(true);
         start();
-        // const result = await registerAction(null, formData);
+        const result = await register(formData);
         setLoadingState(false);
         if (result && result.success) {
             router.push('/login');
             showAlert(result.message, 'success');
             setFormData({
                 email: '',
-                first_name: '',
+                user_name: '',
                 last_name: '',
-                mobile: '',
+                phone: '',
                 password: '',
+                store_name: '',
+                store_description: '',
+                address: '',
+                location_id: '',
+                store_logo: '',
                 image: ''
             });
             stop();
@@ -49,6 +77,14 @@ const SignUp = () => {
             stop();
             showAlert(result.message, 'error');
         }
+    };
+
+    const handleLocation = (val) => {
+        setFormData({
+            ...formData,
+            address: val.full_address,
+            location_id: val.id
+        });
     };
 
     return (
@@ -77,30 +113,15 @@ const SignUp = () => {
 
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            First Name <span className="text-red-500">*</span>
+                            Name <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
-                            name="first_name"
+                            name="user_name"
                             required
-                            value={formData.first_name}
+                            value={formData.user_name}
                             onChange={handleChange}
                             placeholder="First Name"
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Last Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="last_name"
-                            required
-                            value={formData.last_name}
-                            onChange={handleChange}
-                            placeholder="Last Name"
                             className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                         />
                     </div>
@@ -111,9 +132,9 @@ const SignUp = () => {
                         </label>
                         <input
                             type="tel"
-                            name="mobile"
+                            name="phone"
                             required
-                            value={formData.mobile}
+                            value={formData.phone}
                             onChange={handleChange}
                             placeholder="Mobile"
                             className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
@@ -133,6 +154,52 @@ const SignUp = () => {
                             required
                             className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                         />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Store Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="store_name"
+                            required
+                            value={formData.store_name}
+                            onChange={handleChange}
+                            placeholder="Store Name"
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Store Description <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="store_description"
+                            required
+                            value={formData.store_description}
+                            onChange={handleChange}
+                            placeholder="Store Name"
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Location <span className="text-red-500">*</span>
+                        </label>
+
+                        <SearchableDropdown options={locations} onSelect={handleLocation} labelKey="full_address" />
+                        {/* <input
+                            type="text"
+                            name="location_id"
+                            required
+                            value={formData.location_id}
+                            onChange={handleChange}
+                            placeholder="Store Name"
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                        /> */}
                     </div>
                 </div>
 

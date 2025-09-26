@@ -109,11 +109,12 @@ model Weights {
 }
 
 model File_Server {
-  id                    Int      @id @default(autoincrement())
-  name                  String   @unique @db.VarChar(64)
-  base_url              String   @default("") @db.Text
-  created_at            DateTime? @default(now())
-  
+  id                    Int                 @id @default(autoincrement())
+  name                  String              @unique @db.VarChar(64) 
+  base_url              String              @default("") @db.Text
+  created_at            DateTime            @default(now())
+  updated_at            DateTime            @updatedAt
+
   products              Products[]
   product_images        Product_Images[]
 }
@@ -122,61 +123,56 @@ model Products {
   id                    Int                   @id @default(autoincrement())
   prod_name             String                @db.VarChar(150)
   slug                  String                @db.VarChar(150)
-  description           String?               @db.VarChar(512)
-  unit_price            Float           
-  trade_price           Float           
+  description           String?               @db.VarChar(512)           
   mrp                   Float           
-  vat                   Float
+  vat                   Float                 @default(0)
   brand_id              Int?
   category_id           Int?
   server_id             Int?
   weight_id             Int?
   created_at            DateTime              @default(now())
   updated_at            DateTime              @updatedAt
-  image_id              Int?
-  image                 String                @default("") @db.Text
 
   brands                Brands?               @relation(fields: [brand_id], references: [id])
   categories            Categories?           @relation(fields: [category_id], references: [id])
-  weights               Weights?              @relation(fields: [weight_id], references: [id])
-  file_server           File_Server?          @relation(fields: [server_id], references: [id])
-  //Product_Images      Product_Images?      @relation(fields: [image_id], references: [id])
+  weights               Weights?              @relation(fields: [weight_id], references: [id]) 
   vendor_products       Vendor_Products[]
   vendor_reviews        Product_Reviews[]
   product_images        Product_Images[] 
+  file_server           File_Server?          @relation(fields: [server_id], references: [id])
 }
 
 model Product_Images {
-  id                    Int             @id @default(autoincrement())
+  id                    Int               @id @default(autoincrement())
   product_id            Int
   vendor_product_id     Int?
   vendor_id             Int
   server_id             Int?
-  file_name             String          @db.VarChar(64)
-  created_at            DateTime        @default(now())
-  updated_at            DateTime        @updatedAt
+  file_name             String            @db.VarChar(64)
+  created_at            DateTime          @default(now())
+  updated_at            DateTime          @updatedAt
 
-  products              Products        @relation(fields: [product_id], references: [id])
-  vendor_products       Vendor_Products? @relation(fields: [vendor_product_id], references: [id])
-  file_server           File_Server?    @relation(fields: [server_id], references: [id])
+  products              Products          @relation(fields: [product_id], references: [id])
+  vendor_products       Vendor_Products?  @relation(fields: [vendor_product_id], references: [id])
+  file_server           File_Server?      @relation(fields: [server_id], references: [id])
 }
 
 model Vendor_Products {
   id                     Int             @id @default(autoincrement())
   product_id             Int
   vendor_id              Int
-  category_id            Int?           
-
+  product_location       Int            @default(null)
+  category_id            Int?            
   price                  Float           
   stock_qty              Int             @default(0)
   is_active              Int             @default(1)
   created_at             DateTime        @default(now())
   updated_at             DateTime        @updatedAt
-  image_url              String          @default("") @db.Text
 
   products               Products        @relation(fields: [product_id], references: [id]) 
   vendors                Vendors         @relation(fields: [vendor_id], references: [id])
   categories             Categories?     @relation(fields: [category_id], references: [id])
+  
   cart_items             Cart_Items[]
   order_items            Order_Items[]
   product_images         Product_Images[]

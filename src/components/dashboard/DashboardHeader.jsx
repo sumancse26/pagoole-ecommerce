@@ -2,7 +2,7 @@
 // import { doLogoutAction, getProfileAction } from '@/app/actions/authAction';
 import { useAlert } from '@/context/AlertContext';
 import { useApiLoader } from '@/lib/useApiLoader';
-import Cookies from 'js-cookie';
+//import Cookies from 'js-cookie';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -33,7 +33,6 @@ const Header = ({ logoHandler }) => {
             }
         } catch (error) {
             stop();
-            showAlert('Failed to fetch profile', 'error');
         }
     };
 
@@ -52,7 +51,7 @@ const Header = ({ logoHandler }) => {
         // const result = await doLogoutAction();
         if (result.success) {
             showAlert(result.message, 'success');
-            await Cookies.remove('token');
+            // await Cookies.remove('token');
             router.push('/login');
         } else {
             showAlert(result.message, 'error');
@@ -71,7 +70,7 @@ const Header = ({ logoHandler }) => {
                         <Link href="/dashboard" className="flex items-center">
                             <Image
                                 src="/uploads/logo.png"
-                                alt="SalesInventory Logo"
+                                alt="pagoole shop"
                                 width={50}
                                 height={36}
                                 priority
@@ -86,7 +85,7 @@ const Header = ({ logoHandler }) => {
                     </div>
 
                     {/* Search Bar - Desktop */}
-                    <div className="hidden md:flex flex-1 max-w-md mx-4">
+                    {/* <div className="hidden md:flex flex-1 max-w-md mx-4">
                         <div className="relative w-full">
                             <input
                                 type="text"
@@ -103,7 +102,7 @@ const Header = ({ logoHandler }) => {
                                 </svg>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Right Side */}
                     <div className="flex items-center space-x-4">

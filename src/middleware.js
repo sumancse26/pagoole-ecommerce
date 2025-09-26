@@ -14,7 +14,7 @@ export default auth((req) => {
 
     if (session && session?.user?.id) {
         const requestHeaders = new Headers(req.headers);
-        requestHeaders.set('user_id', String(session?.user?.id));
+        requestHeaders.set('user_id', String(session?.user.id));
         requestHeaders.set('user_role', String(session?.user?.role));
         if (session.email) {
             requestHeaders.set('user_email', session?.user.email);

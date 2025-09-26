@@ -18,7 +18,7 @@ const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
             <div className="flex-grow flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
                 <div className="flex gap-2 w-full sm:w-[60%]">
                     <img
-                        src={item.vendor_products?.products?.file_server?.base_url}
+                        src={item.vendor_products?.products?.product_images?.[0]?.file_name}
                         alt="Product"
                         className="w-20 h-20 object-cover mr-4 rounded"
                     />
@@ -239,7 +239,7 @@ export default function CartPage({ cartList, wishList }) {
         const now = Date.now();
         const item = {
             checkout_info: data,
-            expiry: now + 10 * 60 * 1000 // 10 minutes
+            expiry: now + 10 * 60 * 1000
         };
         localStorage.setItem('checkout_data', JSON.stringify(item));
         router.push('/checkout');

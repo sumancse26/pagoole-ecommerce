@@ -4,14 +4,8 @@ import { useState } from 'react';
 // import AddNewAddress from './AddNewAddress';
 
 const ShippingBilling = ({ address, openModalhandler, openNewModalHandler }) => {
-    // const [openNewModal, setOpenNewModal] = useState(false);
-
-    // const closeNewAddressModal = () => {
-    //     setOpenNewModal(false);
-    // };
     const newModalHandler = () => {
         openNewModalHandler();
-        //setOpenNewModal(true);
     };
 
     return (
