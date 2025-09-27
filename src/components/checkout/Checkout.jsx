@@ -58,7 +58,7 @@ const CheckoutPage = () => {
     const fetchDelAddressHandler = async () => {
         try {
             const res = await getDeliveryAddresstList();
-            console.log('res', res);
+
             if (res.success) {
                 setSelectedAddress(() => {
                     const defaultAddr = res.address_list.find((addr) => addr.default_address === '1');
@@ -140,7 +140,6 @@ const CheckoutPage = () => {
                 payment_method: val,
                 delivery_address: selectedAddress.id
             });
-
             if (res.success) {
                 router.push(`/order/success?id=${res.id}`);
             }

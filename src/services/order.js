@@ -37,3 +37,10 @@ export const getOrderDtlById = async (id) => {
     });
     return res;
 };
+
+export const vendorOrderList = async () => {
+    const res = await fetchApi(`/api/private/dashboard/vendor`, {
+        method: 'GET'
+    });
+    return res;
+};

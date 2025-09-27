@@ -47,3 +47,19 @@ body .with-sidebar-transition {
 .base-text-dark {
     color: #027b14;
 }
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #printable,
+    #printable * {
+        visibility: visible;
+    }
+    #printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}

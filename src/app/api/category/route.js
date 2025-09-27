@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/config/prisma';
-import Category from '@/app/dashboard/category/page';
 
 export const GET = async (req) => {
     try {
@@ -12,8 +11,6 @@ export const GET = async (req) => {
                 updated_at: true
             }
         });
-
-        console.log('category', Category);
 
         return NextResponse.json(
             { message: 'Category fetched successfully', success: true, categories },
