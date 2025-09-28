@@ -141,6 +141,7 @@ const CheckoutPage = () => {
                 delivery_address: selectedAddress.id
             });
             if (res.success) {
+                router.refresh();
                 router.push(`/order/success?id=${res.id}`);
             }
         } catch (err) {

@@ -69,11 +69,16 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                     <div className="container mx-auto px-4">
                         {fromWhere == 'vendor' && (
                             <div className="fixed top-14 right-0 z-10  flex items-center justify-end gap-3 bg-gray-100 py-3 px-4 sm:px-6 md:px-8 lg:px-10 w-full">
-                                <img
-                                    src={products[0]?.vendors?.store_logo}
-                                    alt="store image"
-                                    className="h-16 w-16 sm:h-20 sm:w-20 object-contain rounded-full"
-                                />
+                                {products[0]?.vendors?.store_logo ? (
+                                    <img
+                                        src={products[0]?.vendors?.store_logo}
+                                        alt="store image"
+                                        className="h-16 w-16 sm:h-20 sm:w-20 object-contain rounded-full"
+                                    />
+                                ) : (
+                                    ''
+                                )}
+
                                 <span className="text-lg sm:text-xl font-bold text-green-700 text-center">
                                     {products[0]?.vendors?.store_name || ''}
                                 </span>

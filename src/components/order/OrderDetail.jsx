@@ -95,7 +95,7 @@ const OrderDetailPage = ({ orderData }) => {
                 {/* Back to Orders */}
                 <div className="flex justify-end">
                     <Link
-                        href="/orders"
+                        href="/order"
                         className="px-6 py-3 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition">
                         Back to Orders
                     </Link>

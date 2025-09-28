@@ -49,7 +49,6 @@ export const GET = async (req) => {
                         }
                     }
                 }
-                // wish_lists: true
             }
         });
 

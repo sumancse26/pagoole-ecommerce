@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/config/prisma';
+import { revalidateTag } from 'next/cache';
 
 export const POST = async (req) => {
     try {
@@ -71,6 +72,8 @@ export const POST = async (req) => {
 
             return order;
         });
+
+        revalidateTag('cartListItem');
 
         return NextResponse.json(
             {

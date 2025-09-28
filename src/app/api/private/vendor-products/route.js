@@ -30,6 +30,12 @@ export const GET = async (req) => {
                                 name: true,
                                 base_url: true
                             }
+                        },
+                        product_images: {
+                            select: {
+                                id: true,
+                                file_name: true
+                            }
                         }
                     }
                 },
