@@ -77,7 +77,7 @@ export const POST = async (req) => {
 
         return NextResponse.json(
             {
-                message: 'Orders placed successfully, selected cart items removed, empty carts deleted',
+                message: 'Orders placed successfully',
                 success: true,
                 id: results.id
             },
@@ -85,7 +85,10 @@ export const POST = async (req) => {
         );
     } catch (err) {
         console.error('Error placing order:', err);
-        return NextResponse.json({ error: 'Invalid request or server error.' }, { status: 400 });
+        return NextResponse.json(
+            { error: 'Invalid request or server error.', message: 'Internal server error' },
+            { status: 400 }
+        );
     }
 };
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useAlert } from '@/context/AlertContext';
 import { addToWishList } from '@/services/wishList';
 import { useSession } from 'next-auth/react';
 import { doSocialLogin } from '@/app/actions/authAction';
@@ -14,6 +15,7 @@ const ProductIcon = ({ productInfo, from }) => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { showAlert } = useAlert();
 
     const addWishListHandler = async (e) => {
         try {
@@ -27,7 +29,7 @@ const ProductIcon = ({ productInfo, from }) => {
 
                 router.refresh();
                 setProduct((val) => ({ ...val, disable_wish: true }));
-                alert('Added to wish list');
+                showAlert(res.message, 'success');
             }
             if (status === 'unauthenticated') {
                 const fullPath = searchParams.toString() ? `${pathname}?${searchParams.toString()}` : pathname;

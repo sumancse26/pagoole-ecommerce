@@ -32,7 +32,7 @@ const Alert = () => {
 
     return (
         <div
-            className={`fixed top-4 right-4 max-w-sm w-full px-4 py-3 border-l-4 rounded shadow-lg transition-opacity duration-500 ${
+            className={`fixed top-2 right-4 max-w-sm w-full px-4 py-3 border-l-4 rounded shadow-lg transition-opacity duration-500 ${
                 alertStyles[alert.type]
             } ${isVisible ? 'opacity-100' : 'opacity-0'}`}
             style={{ zIndex: 1000 }}

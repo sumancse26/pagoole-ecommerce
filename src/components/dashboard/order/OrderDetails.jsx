@@ -1,6 +1,5 @@
 'use client';
 
-//import SkeletonList from '@components/skeleton';
 import moment from 'moment';
 import Image from 'next/image';
 
@@ -8,11 +7,6 @@ const InvoiceDetail = ({ closeModalHandler, invInfo = {}, invDtlSkeleton }) => {
     const closeBtnHandler = () => {
         closeModalHandler();
     };
-
-    // const printBtnHandler = () => {
-    //     window.print();
-    //     closeModalHandler();
-    // };
 
     const printBtnHandler = () => {
         window.print();

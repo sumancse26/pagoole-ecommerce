@@ -10,6 +10,7 @@ import PackageOption from './PackageOption';
 import ShippingAddressModal from './ShippingAddressModal';
 import AddNewAddress from './AddNewAddress';
 import { useRouter } from 'next/navigation';
+import { useAlert } from '@/context/AlertContext';
 
 const CheckoutPage = () => {
     const [checkoutData, setCheckoutData] = useState([]);
@@ -25,6 +26,7 @@ const CheckoutPage = () => {
     const [openNewAddrModal, setOpenNewAddrModal] = useState(false);
 
     const router = useRouter();
+    const { showAlert } = useAlert();
 
     useEffect(() => {
         const getProduct = () => {
@@ -141,6 +143,7 @@ const CheckoutPage = () => {
                 delivery_address: selectedAddress.id
             });
             if (res.success) {
+                showAlert(res.message, 'success');
                 router.refresh();
                 router.push(`/order/success?id=${res.id}`);
             }
