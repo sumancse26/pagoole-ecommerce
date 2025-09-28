@@ -26,13 +26,23 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
 
     const wishListHandler = async () => {
         try {
-            const res = await getWishList();
-            const updatedProd = productList.map((prod) => {
-                const isInWishList = res.wish_lists.find((wish) => wish.vendor_prod_id == prod.id);
-                prod.disable_wish = isInWishList ? true : false;
-                return prod;
-            });
-            setproducts(updatedProd);
+            if (session) {
+                const res = await getWishList();
+
+                const wishLists = Array.isArray(res.wish_lists) ? res.wish_lists : [];
+
+                const updatedProd = productList.map((prod) => {
+                    const isInWishList = wishLists.find((wish) => wish.vendor_prod_id == prod.id);
+                    return {
+                        ...prod,
+                        disable_wish: Boolean(isInWishList)
+                    };
+                });
+
+                setproducts(updatedProd);
+            } else {
+                setproducts(productList);
+            }
         } catch (err) {
             console.error(err.message);
         }

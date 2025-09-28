@@ -70,7 +70,7 @@ export const GET = async (req) => {
         const userIdString = headerList.get('user_id');
 
         if (!userIdString) {
-            return NextResponse.json({ message: 'Unauthorized User', success: false }, { status: 401 });
+            return NextResponse.json({ message: 'Unauthorized User', success: false, wish_lists: [] }, { status: 401 });
         }
 
         const userId = parseInt(userIdString, 10);

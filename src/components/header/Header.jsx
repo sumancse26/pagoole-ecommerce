@@ -17,8 +17,6 @@ const HeaderComp = async () => {
 
         const wish = await getWishList();
         wishList = wish.wish_lists || [];
-
-        console.log('cartList, wishList', cartList, wishList);
     }
 
     return (

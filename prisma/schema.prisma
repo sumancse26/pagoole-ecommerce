@@ -204,7 +204,6 @@ model Cart_Items {
 model Orders {
   id                    Int             @id @default(autoincrement())
   user_id               Int
-  vendor_id             Int             @default(0)
   order_code            String?         @default("")
   delivery_address      Int             @default(0)
   total_amount          Float          

@@ -48,8 +48,8 @@ export const GET = async (req) => {
                             }
                         }
                     }
-                },
-                wish_lists: true
+                }
+                // wish_lists: true
             }
         });
 

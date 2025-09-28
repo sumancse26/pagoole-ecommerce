@@ -12,15 +12,16 @@ export const metadata = {
 
 export default async function Home() {
     const result = await doProductList();
-    const productList = result.product_list?.map((item) => {
-        if (item.wish_lists?.length > 0) {
-            item.disable_wish = true;
-        } else {
-            item.disable_wish = false;
-        }
+    const productList = result.product_list || [];
+    // const productList = result.product_list?.map((item) => {
+    //     if (item.wish_lists?.length > 0) {
+    //         item.disable_wish = true;
+    //     } else {
+    //         item.disable_wish = false;
+    //     }
 
-        return item;
-    });
+    //     return item;
+    // });
 
     const brandResult = await brandListAction();
     const brands = brandResult.brands;

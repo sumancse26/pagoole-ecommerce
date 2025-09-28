@@ -5,8 +5,7 @@ import Loader from '@components/Loader';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useSession } from 'next-auth/react';
+import { signIn, getSession, useSession } from 'next-auth/react';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -41,8 +40,9 @@ const Login = () => {
         setLoadingState(false);
 
         if (result?.ok && !result?.error) {
+            const newSession = await getSession();
             showAlert('Login successful!', 'success');
-            if (session.user?.role == 1 || session.user?.role == 0) {
+            if (newSession.user?.role == 1 || newSession.user?.role == 0) {
                 router.push('/dashboard');
             } else {
                 router.push('/');
