@@ -10,7 +10,6 @@ const OrderSummary = ({ itemsTotal, deliveryFee, deliveryDiscount, total, addres
     };
 
     const proceedToPay = () => {
-        // Call the checkout handler passed from parent component
         checkoutHandler(paymentMethod);
     };
     return (
@@ -78,9 +77,9 @@ const OrderSummary = ({ itemsTotal, deliveryFee, deliveryDiscount, total, addres
             </div>
 
             <button
-                disabled={!address}
+                disabled={address?.length == 0}
                 className={`w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg mt-6 transition duration-200 ${
-                    !address ? 'opacity-50 cursor-not-allowed' : ''
+                    address?.length == 0 ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 onClick={proceedToPay}>
                 PROCEED TO PAY

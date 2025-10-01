@@ -13,15 +13,6 @@ export const metadata = {
 export default async function Home() {
     const result = await doProductList();
     const productList = result.product_list || [];
-    // const productList = result.product_list?.map((item) => {
-    //     if (item.wish_lists?.length > 0) {
-    //         item.disable_wish = true;
-    //     } else {
-    //         item.disable_wish = false;
-    //     }
-
-    //     return item;
-    // });
 
     const brandResult = await brandListAction();
     const brands = brandResult.brands;
@@ -29,7 +20,7 @@ export default async function Home() {
     return (
         <div className="bg-gray-50">
             {/* Loader */}
-            <Loader />
+            {/* <Loader /> */}
             {/* Product Tabs Section */}
             <Products prodType="all" from="" productList={productList} />
             {/* <Products /> */}

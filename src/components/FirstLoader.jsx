@@ -10,8 +10,8 @@ const FirstLoader = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
-            setTimeout(() => setShowPopup(true), 2000);
-        }, 1000);
+            setTimeout(() => setShowPopup(true), 500);
+        }, 500);
 
         return () => clearTimeout(timer);
     }, []);

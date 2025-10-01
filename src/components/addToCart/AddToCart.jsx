@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import ProductIcon from '../products/ProductIcon';
 import { useRouter } from 'next/navigation';
 import { deleteCartItem } from '@/services/addToCart';
+import CartSkeleton from './CartSkeleton';
 
 const CartItem = ({ item, updateQtyHandler, onRemove, onToggleSelect }) => {
     return (
@@ -251,92 +252,98 @@ export default function CartPage({ cartList, wishList }) {
     };
 
     return (
-        <div className="container mx-auto px-4 py-6 md:px-6 lg:px-8">
-            <h1 className="font-bold text-gray-600 py-6 text-2xl">Your Shopping Cart</h1>
+        <>
+            {items?.length > 0 ? (
+                <div className="container mx-auto px-4 py-6 md:px-6 lg:px-8">
+                    <h1 className="font-bold text-gray-600 py-6 text-2xl">Your Shopping Cart</h1>
 
-            <div className="flex flex-col lg:flex-row gap-6">
-                <div className="w-full lg:w-[70%] space-y-6">
-                    {items.length === 0 ? (
-                        <div className="text-center py-10 text-gray-600">Your cart is empty.</div>
-                    ) : (
-                        items.map((vendorGroup) => (
-                            <div
-                                key={vendorGroup.vendor_info.id}
-                                className="vendor-section mb-6 bg-white shadow-md rounded-lg overflow-hidden">
-                                <div className="bg-gray-100 p-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-7">
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            onChange={(e) => handleSelectAll(vendorGroup, e.target.checked)}
-                                            type="checkbox"
-                                            className="form-checkbox h-5 w-5 text-green-600 rounded"
-                                        />
-                                        <span className="mr-2 text-gray-700 text-sm font-bold">Select All</span>
+                    <div className="flex flex-col lg:flex-row gap-6">
+                        <div className="w-full lg:w-[70%] space-y-6">
+                            {items.length === 0 ? (
+                                <div className="text-center py-10 text-gray-600">Your cart is empty.</div>
+                            ) : (
+                                items.map((vendorGroup) => (
+                                    <div
+                                        key={vendorGroup.vendor_info.id}
+                                        className="vendor-section mb-6 bg-white shadow-md rounded-lg overflow-hidden">
+                                        <div className="bg-gray-100 p-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-7">
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    onChange={(e) => handleSelectAll(vendorGroup, e.target.checked)}
+                                                    type="checkbox"
+                                                    className="form-checkbox h-5 w-5 text-green-600 rounded"
+                                                />
+                                                <span className="mr-2 text-gray-700 text-sm font-bold">Select All</span>
+                                            </div>
+                                            <h2 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">
+                                                Shop:
+                                                <span className="font-bold text-green-700 ps-3">
+                                                    {vendorGroup.vendor_info.store_name}
+                                                </span>
+                                            </h2>
+                                        </div>
+
+                                        <div className="vendor-items">
+                                            {Array.isArray(vendorGroup.items) && vendorGroup.items.length > 0 ? (
+                                                vendorGroup.items.map((item) => (
+                                                    <CartItem
+                                                        key={item.id}
+                                                        item={item}
+                                                        updateQtyHandler={qtyHandler}
+                                                        onRemove={handleRemoveItem}
+                                                        onToggleSelect={handleToggleSelect}
+                                                    />
+                                                ))
+                                            ) : (
+                                                <div className="p-4 text-gray-500">No items from this vendor.</div>
+                                            )}
+                                        </div>
                                     </div>
-                                    <h2 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">
-                                        Shop:
-                                        <span className="font-bold text-green-700 ps-3">
-                                            {vendorGroup.vendor_info.store_name}
-                                        </span>
-                                    </h2>
+                                ))
+                            )}
+                        </div>
+
+                        <div className="w-full max-w-full lg:w-[30%]">
+                            <div className="bg-white p-4 lg:p-6 rounded-lg shadow h-fit lg:sticky lg:top-6">
+                                <h2 className="font-bold text-gray-600 py-6 text-2xl">Order Summary</h2>
+                                <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
+                                    <span>Subtotal</span>
+                                    <span>৳ {cartSubTotal()}</span>
+                                </div>
+                                <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
+                                    <span>Delivery Fee</span>
+                                    <span>৳ {calculateTotalDeliveryFee() || 0}</span>
+                                </div>
+                                <div className="flex flex-col sm:flex-row gap-2 mb-4 w-full">
+                                    <input
+                                        type="text"
+                                        placeholder="Enter Voucher Code"
+                                        className="flex-1 border border-green-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
+                                    />
+                                    <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm sm:text-base">
+                                        APPLY
+                                    </button>
+                                </div>
+                                <div className="flex justify-between font-bold text-gray-800 text-lg mb-4">
+                                    <span>Total</span>
+                                    <span>৳ {cartTotal()}</span>
                                 </div>
 
-                                <div className="vendor-items">
-                                    {Array.isArray(vendorGroup.items) && vendorGroup.items.length > 0 ? (
-                                        vendorGroup.items.map((item) => (
-                                            <CartItem
-                                                key={item.id}
-                                                item={item}
-                                                updateQtyHandler={qtyHandler}
-                                                onRemove={handleRemoveItem}
-                                                onToggleSelect={handleToggleSelect}
-                                            />
-                                        ))
-                                    ) : (
-                                        <div className="p-4 text-gray-500">No items from this vendor.</div>
-                                    )}
-                                </div>
+                                <button
+                                    disabled={!isProceed()}
+                                    onClick={proceedBtnHandler}
+                                    className={`block w-full bg-green-600 text-white p-3 rounded-lg font-medium text-center hover:bg-green-700 transition text-sm sm:text-base ${
+                                        !isProceed() ? 'opacity-50 cursor-not-allowed' : ''
+                                    }`}>
+                                    PROCEED TO CHECKOUT
+                                </button>
                             </div>
-                        ))
-                    )}
-                </div>
-
-                <div className="w-full max-w-full lg:w-[30%]">
-                    <div className="bg-white p-4 lg:p-6 rounded-lg shadow h-fit lg:sticky lg:top-6">
-                        <h2 className="font-bold text-gray-600 py-6 text-2xl">Order Summary</h2>
-                        <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
-                            <span>Subtotal</span>
-                            <span>৳ {cartSubTotal()}</span>
                         </div>
-                        <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
-                            <span>Delivery Fee</span>
-                            <span>৳ {calculateTotalDeliveryFee() || 0}</span>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-2 mb-4 w-full">
-                            <input
-                                type="text"
-                                placeholder="Enter Voucher Code"
-                                className="flex-1 border border-green-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-                            />
-                            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm sm:text-base">
-                                APPLY
-                            </button>
-                        </div>
-                        <div className="flex justify-between font-bold text-gray-800 text-lg mb-4">
-                            <span>Total</span>
-                            <span>৳ {cartTotal()}</span>
-                        </div>
-
-                        <button
-                            disabled={!isProceed()}
-                            onClick={proceedBtnHandler}
-                            className={`block w-full bg-green-600 text-white p-3 rounded-lg font-medium text-center hover:bg-green-700 transition text-sm sm:text-base ${
-                                !isProceed() ? 'opacity-50 cursor-not-allowed' : ''
-                            }`}>
-                            PROCEED TO CHECKOUT
-                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
+            ) : (
+                <CartSkeleton />
+            )}
+        </>
     );
 }

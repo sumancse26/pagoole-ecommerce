@@ -1,8 +1,11 @@
+import { Suspense } from 'react';
 import { productByIdAction, relatedProductAction } from '@app/actions/productAction';
 import ProductDescription from '@/components/productDetail/ProductDescription';
 import ProductInfo from '@/components/productDetail/ProductInfo';
 import RelatedProducts from '@components/productDetail/RelatedProduct';
-const ProductPage = async ({ searchParams }) => {
+import ProductDtlSkeleton from '@components/productDetail/ProductDtlSkeleton';
+
+const ProductContent = async ({ searchParams }) => {
     const { product_id: prodId } = await searchParams;
 
     const result = await productByIdAction(prodId);
@@ -23,24 +26,30 @@ const ProductPage = async ({ searchParams }) => {
     }
 
     return (
-        <>
-            <main className="container mx-auto px-4 py-8 max-w-7xl relative">
-                {/* Product Info Section */}
-                <div className="mb-8">
-                    <ProductInfo prodInfo={prodInfo} />
-                </div>
+        <main className="container mx-auto px-4 py-8 max-w-7xl relative">
+            {/* Product Info Section */}
+            <div className="mb-8">
+                <ProductInfo prodInfo={prodInfo} />
+            </div>
 
-                {/* Product Description Section */}
-                <div className="mt-8 mb-8">
-                    <ProductDescription />
-                </div>
+            {/* Product Description Section */}
+            <div className="mt-8 mb-8">
+                <ProductDescription />
+            </div>
 
-                {/* Related Products Section */}
-                <div>
-                    <RelatedProducts productList={relatedProducts} />
-                </div>
-            </main>
-        </>
+            {/* Related Products Section */}
+            <div>
+                <RelatedProducts productList={relatedProducts} />
+            </div>
+        </main>
+    );
+};
+
+const ProductPage = async ({ searchParams }) => {
+    return (
+        <Suspense fallback={<ProductDtlSkeleton />}>
+            <ProductContent searchParams={searchParams} />
+        </Suspense>
     );
 };
 

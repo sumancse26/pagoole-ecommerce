@@ -11,6 +11,7 @@ import ShippingAddressModal from './ShippingAddressModal';
 import AddNewAddress from './AddNewAddress';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '@/context/AlertContext';
+import CheckoutSkeleton from '@components/checkout/CheckoutSkeleton';
 
 const CheckoutPage = () => {
     const [checkoutData, setCheckoutData] = useState([]);
@@ -167,73 +168,79 @@ const CheckoutPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Column */}
-                <div className="lg:col-span-2">
-                    <ShippingBilling
-                        address={selectedAddress}
-                        openModalhandler={openModalhandler}
-                        openNewModalHandler={openNewModalHandler}
-                    />
-                    <PackageOption
-                        totalItems={totalItems}
-                        totalVendors={totalVendors}
-                        deliveryTypeHandler={deliveryTypeHandler}
-                    />
-                    <ProductItem checkoutData={checkoutData} />
-                </div>
-
-                {/* Right Column */}
-                <div>
-                    <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold text-gray-800">Promotion</h2>
-                        </div>
-                        <div className="flex space-x-2">
-                            <input
-                                type="text"
-                                placeholder="Enter Store/Daraz Code"
-                                className="flex-grow border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        <>
+            {productList?.length > 0 ? (
+                <div className="min-h-screen bg-gray-100 p-8">
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Left Column */}
+                        <div className="lg:col-span-2">
+                            <ShippingBilling
+                                address={selectedAddress}
+                                openModalhandler={openModalhandler}
+                                openNewModalHandler={openNewModalHandler}
                             />
-                            <button className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
-                                APPLY
-                            </button>
+                            <PackageOption
+                                totalItems={totalItems}
+                                totalVendors={totalVendors}
+                                deliveryTypeHandler={deliveryTypeHandler}
+                            />
+                            <ProductItem checkoutData={checkoutData} />
+                        </div>
+
+                        {/* Right Column */}
+                        <div>
+                            <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 className="text-xl font-semibold text-gray-800">Promotion</h2>
+                                </div>
+                                <div className="flex space-x-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Enter Store/Daraz Code"
+                                        className="flex-grow border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    />
+                                    <button className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                                        APPLY
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 className="text-xl font-semibold text-gray-800">Invoice and Contact Info</h2>
+                                    <button className="text-green-600 hover:text-green-800 font-medium">Edit</button>
+                                </div>
+                                <p className="text-gray-600">No invoice details provided in original image.</p>
+                            </div>
+
+                            <OrderSummary
+                                itemsTotal={itemTotal}
+                                deliveryFee={deliveryFee}
+                                deliveryDiscount={0}
+                                total={total}
+                                address={address}
+                                totalItems={totalItems}
+                                checkoutHandler={checkoutHandler}
+                            />
                         </div>
                     </div>
+                    {openModal && (
+                        <ShippingAddressModal
+                            isOpen={openModal}
+                            onClose={hideModalHandler}
+                            isOpenNewModal={openNewAddrModalHandler}
+                            deliveryAddress={address}
+                            refetchDeliveryAddress={refetchDeliveryAddress}
+                            updateAddressHandler={changeAddressHandler}
+                        />
+                    )}
 
-                    <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold text-gray-800">Invoice and Contact Info</h2>
-                            <button className="text-green-600 hover:text-green-800 font-medium">Edit</button>
-                        </div>
-                        <p className="text-gray-600">No invoice details provided in original image.</p>
-                    </div>
-
-                    <OrderSummary
-                        itemsTotal={itemTotal}
-                        deliveryFee={deliveryFee}
-                        deliveryDiscount={0}
-                        total={total}
-                        address={address}
-                        totalItems={totalItems}
-                        checkoutHandler={checkoutHandler}
-                    />
+                    {openNewAddrModal && <AddNewAddress onClose={closeAddNewAddrsModalHandler} />}
                 </div>
-            </div>
-            {openModal && (
-                <ShippingAddressModal
-                    isOpen={openModal}
-                    onClose={hideModalHandler}
-                    isOpenNewModal={openNewAddrModalHandler}
-                    deliveryAddress={address}
-                    refetchDeliveryAddress={refetchDeliveryAddress}
-                    updateAddressHandler={changeAddressHandler}
-                />
+            ) : (
+                <CheckoutSkeleton />
             )}
-
-            {openNewAddrModal && <AddNewAddress onClose={closeAddNewAddrsModalHandler} />}
-        </div>
+        </>
     );
 };
 

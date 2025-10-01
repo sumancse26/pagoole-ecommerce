@@ -1,6 +1,6 @@
 import Checkout from '@components/checkout/Checkout';
 
-const CheckoutPage = () => {
+const CheckoutPage = async () => {
     return (
         <>
             <Checkout />

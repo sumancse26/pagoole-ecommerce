@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react';
 import { getAddToCartList } from '@/services/addToCart';
 import CartList from '@components/addToCart/CartList';
 import { getWishList } from '@/services/wishList';
+import ProductSkeleton from './ProductSkeleton';
 
 const Product = ({ prodType, fromWhere, productList, searchParams }) => {
     const [sidebar, setSidebar] = useState(false);
@@ -138,92 +139,99 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                             </div>
                         )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {products?.map((product) => (
-                                <div
-                                    key={product.id}
-                                    className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-sm transition-shadow group">
-                                    <Link
-                                        href={{
-                                            pathname: '/products',
-                                            query: { product_id: product.products?.id }
-                                        }}>
-                                        <div className="relative h-64 w-full overflow-hidden rounded-lg">
-                                            <img
-                                                src={product.products?.product_images?.[0]?.file_name}
-                                                alt="Product Image"
-                                                className="h-full w-full object-contain transition-all duration-300 ease-in-out group-hover:scale-105"
-                                            />
-                                            {product?.discount && (
-                                                <span className="absolute top-4 left-4 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded shadow">
-                                                    -{product?.discount || 0}%
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="p-4">
-                                            <div className="flex justify-between items-start mb-2">
-                                                <div>
-                                                    <h3 className="font-medium text-gray-900 mb-1 hover:text-green-600 transition-colors">
-                                                        {product.products?.slug || ''}
-                                                    </h3>
-                                                    <span className="text-xs text-gray-500">
-                                                        {product.products?.categories?.category_name || ''} (
-                                                        {product.products?.brands?.name || ''})
+                            {products?.length > 0 ? (
+                                products?.map((product) => (
+                                    <div
+                                        key={product.id}
+                                        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-sm transition-shadow group">
+                                        <Link
+                                            href={{
+                                                pathname: '/products',
+                                                query: { product_id: product.products?.id }
+                                            }}>
+                                            <div className="relative h-64 w-full overflow-hidden rounded-lg">
+                                                <img
+                                                    src={product.products?.product_images?.[0]?.file_name}
+                                                    alt="Product Image"
+                                                    className="h-full w-full object-contain transition-all duration-300 ease-in-out group-hover:scale-105"
+                                                />
+                                                {product?.discount && (
+                                                    <span className="absolute top-4 left-4 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded shadow">
+                                                        -{product?.discount || 0}%
                                                     </span>
-                                                    <p className="text-xs text-gray-500">
-                                                        {product.vendors?.store_name || ''}
-                                                    </p>
-                                                </div>
-                                                <div className="flex gap-3">
-                                                    <ProductIcon productInfo={product} from="" />
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center justify-between">
-                                                <span className="font-bold text-gray-900">
-                                                    TK. {product.price?.toFixed(2)}
-                                                </span>
-                                                {product.products?.mrp && (
-                                                    <del className="text-sm text-gray-500 ml-1">
-                                                        TK. {product.products?.mrp?.toFixed(2)}
-                                                    </del>
                                                 )}
                                             </div>
-                                            {fromWhere == 'vendor' && (
-                                                <div className="mt-4">
-                                                    <AddToCart
-                                                        vendorProdId={product?.id}
-                                                        hideQty={true}
-                                                        cartListHandler={sidebarHandler}
-                                                        className="w-[100%]"
-                                                    />
+                                            <div className="p-4">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <div>
+                                                        <h3 className="font-medium text-gray-900 mb-1 hover:text-green-600 transition-colors">
+                                                            {product.products?.slug || ''}
+                                                        </h3>
+                                                        <span className="text-xs text-gray-500">
+                                                            {product.products?.categories?.category_name || ''} (
+                                                            {product.products?.brands?.name || ''})
+                                                        </span>
+                                                        <p className="text-xs text-gray-500">
+                                                            {product.vendors?.store_name || ''}
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex gap-3">
+                                                        <ProductIcon productInfo={product} from="" />
+                                                    </div>
                                                 </div>
-                                            )}
-                                            {fromWhere != 'vendor' && (
-                                                <div className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center mt-4">
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="h-4 w-4 mr-1"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
-                                                        strokeWidth={2}>
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                        />
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                                        />
-                                                    </svg>
-                                                    View Product Details
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-bold text-gray-900">
+                                                        TK. {product.price?.toFixed(2)}
+                                                    </span>
+                                                    {product.products?.mrp && (
+                                                        <del className="text-sm text-gray-500 ml-1">
+                                                            TK. {product.products?.mrp?.toFixed(2)}
+                                                        </del>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                    </Link>
-                                </div>
-                            ))}
+                                                {fromWhere == 'vendor' && (
+                                                    <div className="mt-4">
+                                                        <AddToCart
+                                                            vendorProdId={product?.id}
+                                                            hideQty={true}
+                                                            cartListHandler={sidebarHandler}
+                                                            className="w-[100%]"
+                                                        />
+                                                    </div>
+                                                )}
+                                                {fromWhere != 'vendor' && (
+                                                    <div className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center mt-4">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            className="h-4 w-4 mr-1"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                            strokeWidth={2}>
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                            />
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                            />
+                                                        </svg>
+                                                        View Product Details
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </Link>
+                                    </div>
+                                ))
+                            ) : (
+                                <>
+                                    {}
+                                    <ProductSkeleton loadNumbers={[1, 2, 3, 4, 5, 6]} />
+                                </>
+                            )}
                         </div>
                         <div className="text-center mt-10 mb-7">
                             <button className="inline-block px-6 py-3 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-green-600 hover:text-white transition-colors">

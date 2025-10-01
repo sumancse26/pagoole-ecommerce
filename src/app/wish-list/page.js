@@ -1,7 +1,10 @@
+import { Suspense } from 'react';
 import Wishlist from '@components/wishlist/Wishlist';
 import { auth } from '@/auth';
 import { getWishList } from '@/services/wishList';
-const WishListPage = async () => {
+import WishListSkeleton from '@components/wishlist/WishListSkeleton';
+
+const WishListContent = async () => {
     const session = await auth();
 
     let wishList = [];
@@ -26,10 +29,14 @@ const WishListPage = async () => {
         wishList = Object.values(groupedByVendor);
     }
 
+    return <Wishlist wishList={wishList} />;
+};
+
+const WishListPage = async () => {
     return (
-        <>
-            <Wishlist wishList={wishList} />
-        </>
+        <Suspense fallback={<WishListSkeleton />}>
+            <WishListContent />
+        </Suspense>
     );
 };
 
