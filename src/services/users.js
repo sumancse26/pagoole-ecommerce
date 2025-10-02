@@ -1,7 +1,7 @@
 import { fetchApi } from '@/lib/api';
 
-export const getUserList = async () => {
-    const res = await fetchApi('/api/dashboard/users', {
+export const getUserInfo = async () => {
+    const res = await fetchApi('/api/private/dashboard/user', {
         method: 'GET'
     });
     return res;

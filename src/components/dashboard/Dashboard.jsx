@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import DashboardSkeleton from './DashboardSkeleton';
+import { getSession } from 'next-auth/react';
+
 const UserIcon = () => (
     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path d="M17 21v-2a4 4 0 0 0-3-3.87" />
@@ -37,108 +39,104 @@ const CollectionIcon = () => (
     </svg>
 );
 
-const Dashboard = () => {
-    const [cards, setCards] = useState({});
-    const [loader, setLoader] = useState(false);
+const Dashboard = ({ dashboardInfo }) => {
+    const [cards, setCards] = useState([]);
 
     useEffect(() => {
         dashboardInfoHandler();
-
-        return () => {};
     }, []);
+
     const dashboardInfoHandler = async () => {
         try {
-            setLoader(true);
-            //const res = await dashboardAction();
-            setLoader(false);
-            setCards([
-                {
-                    label: 'Total Users',
-                    value: 0,
-                    // value: res.data?.total_users || 0,
-                    tooltip: 'The number of daily users',
-                    color: 'bg-blue-500',
-                    icon: <UserIcon />
-                },
+            const newSession = await getSession();
+            console.log('new snewSession', newSession);
+            const cards = [
+                // Add Users card only if role == 0
+                ...(newSession?.user?.role === 0
+                    ? [
+                          {
+                              label: 'Total Users',
+                              value: dashboardInfo.total_users || 0,
+                              tooltip: 'The number of daily users',
+                              color: 'bg-blue-500',
+                              icon: <UserIcon />
+                          }
+                      ]
+                    : []),
+
                 {
                     label: 'Products',
-                    // value: res.data?.total_products || 0,
-                    value: 0,
+                    value: dashboardInfo.total_products || 0,
+                    tooltip: 'Total vendor products',
                     color: 'bg-green-500',
                     icon: <ProductIcon />
                 },
                 {
-                    label: 'Total Invoices',
-                    // value: res.data?.total_invoices || 0,
-                    value: 0,
+                    label: 'Total Orders',
+                    value: dashboardInfo.total_orders || 0,
+                    tooltip: 'All pending orders',
                     color: 'bg-yellow-500',
                     icon: <InvoiceIcon />
                 },
                 {
                     label: 'Total Sale',
-                    // value: res.data?.total_sale || 0,
-                    value: 0,
+                    value: dashboardInfo.total_order_amount || 0,
+                    tooltip: 'Sum of order amounts',
                     color: 'bg-red-500',
                     icon: <SaleIcon />
                 },
                 {
                     label: 'Total Collections',
-                    // value: res.data?.total_collection || 0,
-                    value: 0,
+                    value: dashboardInfo.total_order_amount || 0, // if backend provides
+                    tooltip: 'Total collected payments',
                     color: 'bg-indigo-500',
                     icon: <CollectionIcon />
                 }
-            ]);
+            ];
+
+            setCards(cards);
         } catch (err) {
             console.log(err.message);
         }
     };
 
     return (
-        <>
-            {loader ? (
-                <DashboardSkeleton />
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {cards.length > 0 &&
-                        cards.map((card, idx) => (
-                            <div
-                                key={idx}
-                                className="flex items-center justify-between p-4 sm:p-5 rounded-2xl shadow-md bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 transition hover:shadow-lg">
-                                <div className="flex-1">
-                                    <div className="text-sm font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wide flex items-center gap-1">
-                                        {card.label}
-                                        {card.tooltip && (
-                                            <div className="group relative cursor-pointer">
-                                                <svg
-                                                    className="w-4 h-4 text-gray-400 dark:text-neutral-500"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor">
-                                                    <circle cx="12" cy="12" r="10" />
-                                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                                                    <path d="M12 17h.01" />
-                                                </svg>
-                                                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block text-xs text-white bg-gray-900 dark:bg-neutral-700 px-2 py-1 rounded shadow">
-                                                    {card.tooltip}
-                                                </div>
-                                            </div>
-                                        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {cards?.map((card, idx) => (
+                <div
+                    key={idx}
+                    className="flex items-center justify-between p-4 sm:p-5 rounded-2xl shadow-md bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 transition hover:shadow-lg">
+                    <div className="flex-1">
+                        <div className="text-sm font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wide flex items-center gap-1">
+                            {card.label}
+                            {card.tooltip && (
+                                <div className="group relative cursor-pointer">
+                                    <svg
+                                        className="w-4 h-4 text-gray-400 dark:text-neutral-500"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                        <path d="M12 17h.01" />
+                                    </svg>
+                                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block text-xs text-white bg-gray-900 dark:bg-neutral-700 px-2 py-1 rounded shadow">
+                                        {card.tooltip}
                                     </div>
-                                    <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mt-1 sm:mt-2">
-                                        {card.value}
-                                    </h3>
                                 </div>
-                                <div
-                                    className={`ml-4 p-3 sm:p-4 rounded-full ${card.color} flex items-center justify-center`}>
-                                    {card.icon}
-                                </div>
-                            </div>
-                        ))}
+                            )}
+                        </div>
+                        <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mt-1 sm:mt-2">
+                            {card.value}
+                        </h3>
+                    </div>
+                    <div className={`ml-4 p-3 sm:p-4 rounded-full ${card.color} flex items-center justify-center`}>
+                        {card.icon}
+                    </div>
                 </div>
-            )}
-        </>
+            ))}
+        </div>
     );
 };
 

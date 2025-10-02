@@ -36,7 +36,7 @@ export const POST = async (req) => {
                         phone: phone || '',
                         password: hashedPassword,
                         otp: 0,
-                        is_admin: 0,
+                        is_admin: 1,
                         image: image || ''
                     }
                 });

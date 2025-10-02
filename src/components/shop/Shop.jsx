@@ -38,15 +38,6 @@ const ProductListing = ({ vendorList, locationList }) => {
     }, []);
 
     const getSelectedLocation = async (val) => {
-        // const isparent = vendorList?.find((ven) => ven.parent_location_id == val.id);
-        // if (isparent) {
-        //     const vendorByLocation = vendorList?.filter((item) => item?.parent_location_id == val.id);
-        //     setFilteredVendors(vendorByLocation);
-        // } else {
-        //     const vendorByLocation = vendorList?.filter((item) => item?.location_id == val.id);
-        //     setFilteredVendors(vendorByLocation);
-        // }
-
         try {
             const res = await vendorListByLocationAction(val.id);
             setFilteredVendors(res.vendor_list || []);
