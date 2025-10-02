@@ -2,7 +2,6 @@ import { doProductList } from '@app/actions/productAction.js';
 import { brandListAction } from '@app/actions/brandAction.js';
 import Products from './products/Product.jsx';
 import Brands from './brand/Brand.jsx';
-import Loader from './FirstLoader.jsx';
 
 export const metadata = {
     title: 'Pagoole Discount Shop',
@@ -19,22 +18,9 @@ export default async function Home() {
 
     return (
         <div className="bg-gray-50">
-            {/* Loader */}
-            {/* <Loader /> */}
-            {/* Product Tabs Section */}
             <Products prodType="all" from="" productList={productList} />
-            {/* <Products /> */}
 
-            {/* Promo Banners */}
-            {/* <PromoBanner /> */}
-
-            {/* Brands Section */}
             <Brands brandList={brands} />
-
-            {/* Testimonials */}
-            {/* <Testimonial /> */}
-
-            {/* Global styles */}
         </div>
     );
 }

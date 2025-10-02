@@ -2,39 +2,131 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getPublicCategoryList } from '@/services/categories';
+
+const iconMap = {
+    Electronics: <span className="material-icons">devices</span>,
+    Fashion: <span className="material-icons">checkroom</span>,
+    'Home & Garden': <span className="material-icons">home</span>,
+    'Sports & Outdoors': <span className="material-icons">sports_soccer</span>,
+    Beauty: <span className="material-icons">face_retouching_natural</span>,
+    Books: <span className="material-icons">menu_book</span>,
+    Toys: <span className="material-icons">toys</span>,
+    Default: <span className="material-icons text-green-500">folder</span>
+};
 
 const SidebarSlider = () => {
     const [isOpen, setIsOpen] = useState(true);
+    const [categories, setCategories] = useState([]);
     const [filteredCategories, setFilteredCategories] = useState([]);
-    const categories = [
-        { name: 'Electronics', icon: <span className="material-icons">devices</span> },
-        { name: 'Fashion', icon: <span className="material-icons">checkroom</span> },
-        { name: 'Home & Garden', icon: <span className="material-icons">home</span> }
-    ];
+    const [openIds, setOpenIds] = useState([]); // track open accordions
 
-    const searchCategoryHandler = (e) => {
-        const searchTerm = e?.toString()?.toLowerCase();
+    // Fetch categories from API
+    useEffect(() => {
+        fetchCategory();
+    }, []);
 
-        if (searchTerm?.length > 0 && searchTerm) {
-            setFilteredCategories(
-                categories?.filter((item) => {
-                    return Object.entries(item)
-                        .reduce(
-                            (result, [, value]) => (!(value instanceof Object) ? (result += ` ${value}`) : result),
-                            ''
-                        )
-                        .toLowerCase()
-                        .includes(searchTerm);
-                })
-            );
-        } else {
-            setFilteredCategories(categories);
+    const fetchCategory = async () => {
+        try {
+            const data = await getPublicCategoryList(); // should return array
+            const formatted = data.map((cat) => ({
+                ...cat,
+                icon: iconMap[cat.category_name] || iconMap.Default
+            }));
+
+            setCategories(formatted);
+            setFilteredCategories(formatted);
+
+            // Open all categories by default
+            const allIds = getAllCategoryIds(formatted);
+            setOpenIds(allIds);
+        } catch (err) {
+            console.error(err.message);
         }
     };
 
-    useEffect(() => {
-        searchCategoryHandler('');
-    }, []);
+    // Helper: get all category ids recursively
+    const getAllCategoryIds = (cats) => {
+        let ids = [];
+        cats.forEach((cat) => {
+            ids.push(cat.id);
+            if (cat.children?.length > 0) {
+                ids = ids.concat(getAllCategoryIds(cat.children));
+            }
+        });
+        return ids;
+    };
+
+    // Toggle accordion
+    const toggleAccordion = (id) => {
+        setOpenIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    };
+
+    // Search categories recursively
+    const filterCategoriesRecursive = (cats, term) => {
+        return cats
+            .map((cat) => {
+                const matches = cat.category_name.toLowerCase().includes(term);
+                const filteredChildren = cat.children ? filterCategoriesRecursive(cat.children, term) : [];
+
+                if (matches || filteredChildren.length > 0) {
+                    return { ...cat, children: filteredChildren };
+                }
+                return null;
+            })
+            .filter(Boolean);
+    };
+
+    // Filter categories by search term
+    const searchCategoryHandler = (searchTerm) => {
+        const term = searchTerm?.toString()?.toLowerCase() || '';
+        if (term.length > 0) {
+            const filtered = filterCategoriesRecursive(categories, term);
+            setFilteredCategories(filtered);
+
+            // Automatically open all matching categories
+            const allIds = getAllCategoryIds(filtered);
+            setOpenIds(allIds);
+        } else {
+            setFilteredCategories(categories);
+            const allIds = getAllCategoryIds(categories);
+            setOpenIds(allIds);
+        }
+    };
+
+    // Recursive accordion render
+    const renderCategories = (cats) => {
+        return cats.map((category) => (
+            <div key={category.id} className="group relative">
+                <button
+                    onClick={() => toggleAccordion(category.id)}
+                    className="flex items-center justify-between w-full px-4 py-3 hover:bg-green-100 rounded focus:outline-none">
+                    <div className="flex items-center">
+                        <span className="mr-3">{category.icon}</span>
+                        <span>{category.category_name}</span>
+                    </div>
+                    {category.children?.length > 0 && (
+                        <span
+                            className={`transition-transform duration-300 ${
+                                openIds.includes(category.id) ? 'rotate-90' : ''
+                            }`}>
+                            <svg
+                                className="w-4 h-4 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </span>
+                    )}
+                </button>
+
+                {category.children?.length > 0 && openIds.includes(category.id) && (
+                    <div className="ml-6 border-l border-gray-200">{renderCategories(category.children)}</div>
+                )}
+            </div>
+        ));
+    };
 
     return (
         <>
@@ -47,18 +139,18 @@ const SidebarSlider = () => {
                 </svg>
             </button>
 
-            {/* Sidebar — this element is part of layout flow */}
+            {/* Sidebar */}
             <div
-                className={`sticky top-[58px] transition-all duration-300 h-full overflow-y-auto shadow-lg z-85 bg-white ${
+                className={`sticky top-[58px] transition-all duration-300 h-full overflow-y-auto shadow-lg z-50 bg-white ${
                     isOpen ? 'w-80' : 'w-0'
                 }`}>
                 <div
                     className={`pt-5 transition-opacity duration-300 ${
-                        isOpen ? 'opacity-100 z-index-[999999]' : 'opacity-0'
+                        isOpen ? 'opacity-100 z-[999999]' : 'opacity-0'
                     } px-4`}>
-                    <div className="px-4 pb-2 font-normal text-lg border-b border-gray-200 ">All Categories</div>
+                    <div className="px-4 pb-2 font-normal text-lg border-b border-gray-200">All Categories</div>
 
-                    <div className="p-2 ">
+                    <div className="p-2">
                         <input
                             onInput={(e) => searchCategoryHandler(e.target.value)}
                             type="text"
@@ -66,29 +158,10 @@ const SidebarSlider = () => {
                             placeholder="Search categories"
                         />
                     </div>
-                    <div className="divide-y divide-gray-100">
-                        {filteredCategories.map((category, index) => (
-                            <div key={index} className="group relative">
-                                <Link className="flex items-center px-4 py-3 hover:bg-green-100" href="#">
-                                    <span className="mr-3">{category.icon}</span>
-                                    <span>{category.name}</span>
-                                    <span className="ml-auto">
-                                        <svg
-                                            className="w-4 h-4 text-gray-400"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M9 5l7 7-7 7"
-                                            />
-                                        </svg>
-                                    </span>
-                                </Link>
-                            </div>
-                        ))}
+
+                    {/* Scrollable area */}
+                    <div className="divide-y divide-gray-100 max-h-[calc(100vh-150px)] overflow-y-auto scrollbar-thin scrollbar-thumb-green-400 scrollbar-track-gray-200">
+                        {renderCategories(filteredCategories)}
                     </div>
                 </div>
             </div>

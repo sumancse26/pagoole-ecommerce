@@ -42,11 +42,6 @@ export default async function RootLayout({ children }) {
                     <DialogProvider>
                         <AlertProvider>
                             <Alert />
-                            {/*
-                                Render Header, SidebarSlider, Footer as Server Components here.
-                                Pass them as props to LayoutManager (Client Component).
-                                LayoutManager will decide whether to display them using usePathname.
-                            */}
                             <LayoutManager header={<Header />} sidebar={<SidebarSlider />} footer={<Footer />}>
                                 {children}
                             </LayoutManager>

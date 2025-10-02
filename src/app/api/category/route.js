@@ -1,23 +1,27 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/config/prisma';
+import { PrismaClient } from '@prisma/client';
 
-export const GET = async (req) => {
+const prisma = new PrismaClient();
+
+export async function GET() {
     try {
         const categories = await prisma.categories.findMany({
-            omit: {
-                is_active: true,
-                order_by: true,
-                created_at: true,
-                updated_at: true
+            where: { is_active: 1 },
+            include: {
+                children: {
+                    include: {
+                        children: true // grandchildren (you can nest more if needed)
+                    }
+                }
+            },
+            orderBy: {
+                order_by: 'asc'
             }
         });
 
-        return NextResponse.json(
-            { message: 'Category fetched successfully', success: true, categories },
-            { status: 200 }
-        );
+        return NextResponse.json(categories);
     } catch (error) {
-        console.error('Error parsing request body:', error);
-        return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+        console.error('Error fetching categories:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
-};
+}
