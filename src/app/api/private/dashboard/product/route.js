@@ -272,14 +272,19 @@ export const POST = async (req) => {
 export const GET = async (req) => {
     try {
         const userId = Number(req.headers.get('user_id'));
+        const userRole = Number(req.headers.get('user_role'));
+
         if (!Number.isInteger(userId) || userId <= 0) {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 
+        let whereClause = {};
+
+        if (userRole == 1) {
+            whereClause.vendor_id = userId;
+        }
         const products = await prisma.vendor_Products.findMany({
-            where: {
-                vendor_id: userId
-            },
+            where: whereClause,
             select: {
                 id: true,
                 price: true,
@@ -518,6 +523,40 @@ export const PUT = async (req) => {
             }
         }
 
+        return NextResponse.json({ success: false, message: err.message || 'Internal server error' }, { status: 500 });
+    }
+};
+
+export const PATCH = async (req) => {
+    try {
+        const userId = Number(req.headers.get('user_id'));
+        if (!Number.isInteger(userId) || userId <= 0) {
+            return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
+        }
+
+        // Parse body
+        const data = await req.json();
+        console.log('data', data);
+        const productId = Number(data.id);
+        if (!productId) {
+            return NextResponse.json({ success: false, message: 'Product ID is required' }, { status: 400 });
+        }
+
+        // Update product
+        await prisma.vendor_Products.update({
+            where: { id: productId },
+            data: {
+                is_active: 1
+            }
+        });
+
+        revalidateTag('vendorProductList');
+
+        return NextResponse.json({
+            success: true,
+            message: 'Product updated successfully'
+        });
+    } catch (err) {
         return NextResponse.json({ success: false, message: err.message || 'Internal server error' }, { status: 500 });
     }
 };

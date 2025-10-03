@@ -71,3 +71,11 @@ export const updateVendorProducts = async (data) => {
     });
     return res;
 };
+
+export const approveProduct = async (data) => {
+    const res = await fetchApi(`/api/private/dashboard/product`, {
+        method: 'PATCH',
+        body: data
+    });
+    return res;
+};

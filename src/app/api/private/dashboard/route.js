@@ -4,49 +4,73 @@ import prisma from '@/config/prisma';
 export const GET = async (req) => {
     try {
         const vendorId = Number(req.headers.get('user_id'));
+        const userRole = Number(req.headers.get('user_role'));
 
         if (!Number.isInteger(vendorId) || vendorId <= 0) {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 
-        // ✅ Total number of vendor products
-        const totalProducts = await prisma.vendor_Products.count({
-            where: { vendor_id: vendorId }
-        });
+        let totalProducts = 0;
+        let orderList = [];
 
-        // ✅ Get pending orders for vendor (with user info)
-        const orderList = await prisma.orders.findMany({
-            where: {
-                order_status: 'Pending',
-                order_items: {
-                    some: {
-                        vendor_products: { vendor_id: vendorId }
+        if (userRole == 0) {
+            totalProducts = await prisma.vendor_Products.count({});
+
+            // ✅ Get pending orders for vendor (with user info)
+            orderList = await prisma.orders.findMany({
+                where: {
+                    order_status: 'Pending'
+                },
+                select: {
+                    id: true,
+                    total_amount: true,
+                    users: {
+                        select: {
+                            id: true,
+                            user_name: true,
+                            email: true,
+                            phone: true
+                        }
                     }
                 }
-            },
-            select: {
-                id: true,
-                total_amount: true,
-                users: {
-                    select: {
-                        id: true,
-                        user_name: true,
-                        email: true,
-                        phone: true
+            });
+        }
+        if (userRole == 1) {
+            // ✅ Total number of vendor products
+            totalProducts = await prisma.vendor_Products.count({
+                where: { vendor_id: vendorId }
+            });
+
+            // ✅ Get pending orders for vendor (with user info)
+            orderList = await prisma.orders.findMany({
+                where: {
+                    order_status: 'Pending',
+                    order_items: {
+                        some: {
+                            vendor_products: { vendor_id: vendorId }
+                        }
+                    }
+                },
+                select: {
+                    id: true,
+                    total_amount: true,
+                    users: {
+                        select: {
+                            id: true,
+                            user_name: true,
+                            email: true,
+                            phone: true
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         const users = await prisma.users.findMany({});
 
         // ✅ Calculate stats
         const totalOrders = orderList.length;
         const totalOrderAmount = orderList.reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
-
-        // ✅ Count distinct users from order list
-        const uniqueUserIds = new Set(orderList.map((o) => o.users?.id).filter(Boolean));
-        const totalUsers = uniqueUserIds.size;
 
         const dashboardInfo = {
             total_products: totalProducts,

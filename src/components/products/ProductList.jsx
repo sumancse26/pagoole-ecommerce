@@ -7,6 +7,9 @@ import EmptyState from '@components/EmptyState.jsx';
 import Image from 'next/image';
 import { useEffect, useState, useMemo } from 'react';
 import AddProduct from './AddProducts';
+import { approveProduct } from '@/services/product';
+import { useAlert } from '@/context/AlertContext';
+import { useRouter } from 'next/navigation';
 
 const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
     const [showModal, setShowModal] = useState(false);
@@ -20,6 +23,8 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
 
     const { start, stop } = useApiLoader();
     const { openDialog } = useDialog();
+    const { showAlert } = useAlert();
+    const router = useRouter();
 
     useEffect(() => {
         setProductList(prodList);
@@ -36,6 +41,19 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
     const updateProductHandler = (val) => {
         setSelectedProduct(val);
         setShowModal(true);
+    };
+    const approvalHandler = async (id) => {
+        try {
+            const res = await approveProduct(JSON.stringify({ id: id }));
+            if (res.success) {
+                router.refresh();
+                showAlert(res.message, 'success');
+            } else {
+                showAlert(res.message, 'error');
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
     };
 
     const openProductModal = () => {
@@ -151,35 +169,35 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                             <thead className="bg-gray-100 dark:bg-neutral-700 border-b border-gray-300 dark:border-neutral-600 sticky top-0 z-10">
                                                 <tr>
                                                     {/* Header Cells with right border (border-r) */}
-                                                    <th className="px-3 py-3 text-center border-r border-gray-200 dark:border-neutral-600 min-w-[50px]">
+                                                    <th className="px-2 py-3 text-center border-r border-gray-200 dark:border-neutral-600 min-w-[50px]">
                                                         <span className="font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200">
                                                             SL
                                                         </span>
                                                     </th>
-                                                    <th className="px-3 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-start border-r border-gray-200 dark:border-neutral-600 min-w-[80px]">
+                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-start border-r border-gray-200 dark:border-neutral-600 min-w-[80px]">
                                                         Image
                                                     </th>
-                                                    <th className="px-3 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-start border-r border-gray-200 dark:border-neutral-600 min-w-[150px]">
+                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-start border-r border-gray-200 dark:border-neutral-600 min-w-[150px]">
                                                         Name
                                                     </th>
-                                                    <th className="px-3 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-start border-r border-gray-200 dark:border-neutral-600 min-w-[120px]">
+                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-start border-r border-gray-200 dark:border-neutral-600 min-w-[120px]">
                                                         Category
                                                     </th>
-                                                    <th className="px-3 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[100px]">
+                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[100px]">
                                                         Price (TK)
                                                     </th>
-                                                    <th className="px-3 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[80px]">
+                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[80px]">
                                                         Stock
                                                     </th>
-                                                    <th className="px-3 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-center border-r border-gray-200 dark:border-neutral-600 min-w-[80px]">
+                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-center border-r border-gray-200 dark:border-neutral-600 min-w-[80px]">
                                                         VAT (%)
                                                     </th>
-                                                    <th className="px-3 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[120px]">
+                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[120px]">
                                                         Discount (TK)
                                                     </th>
 
                                                     {/* Last TH: No border-r */}
-                                                    <th className="px-3 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-center min-w-[100px]">
+                                                    <th className="px-1 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-center min-w-[100px]">
                                                         Action
                                                     </th>
                                                 </tr>
@@ -190,12 +208,12 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                                         className="group hover:bg-gray-50 dark:hover:bg-neutral-700 transition"
                                                         key={indx}>
                                                         {/* SL Column */}
-                                                        <td className="px-3 py-3 text-center font-medium text-gray-800 dark:text-white border-r border-gray-200 dark:border-neutral-700">
+                                                        <td className="px-2 py-3 text-center font-medium text-gray-800 dark:text-white border-r border-gray-200 dark:border-neutral-700">
                                                             {indx + 1}
                                                         </td>
 
                                                         {/* Image Column */}
-                                                        <td className="px-3 py-2 text-start border-r border-gray-200 dark:border-neutral-700">
+                                                        <td className="px-2 py-2 text-start border-r border-gray-200 dark:border-neutral-700">
                                                             {product?.products?.product_images?.length ? (
                                                                 <Image
                                                                     src={
@@ -213,38 +231,45 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                                         </td>
 
                                                         {/* Name Column */}
-                                                        <td className="px-3 py-2 text-gray-600 dark:text-neutral-300 text-start border-r border-gray-200 dark:border-neutral-700">
+                                                        <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-start border-r border-gray-200 dark:border-neutral-700">
                                                             {product?.products?.prod_name || ''}
                                                         </td>
 
                                                         {/* Category Column */}
-                                                        <td className="px-3 py-2 text-gray-600 dark:text-neutral-300 text-start border-r border-gray-200 dark:border-neutral-700">
+                                                        <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-start border-r border-gray-200 dark:border-neutral-700">
                                                             {product?.products?.categories?.category_name || ''}
                                                         </td>
 
                                                         {/* Price Column */}
-                                                        <td className="px-3 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200 dark:border-neutral-700">
+                                                        <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200 dark:border-neutral-700">
                                                             {product?.price || 0}
                                                         </td>
 
                                                         {/* Stock Column */}
-                                                        <td className="px-3 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200 dark:border-neutral-700">
+                                                        <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200 dark:border-neutral-700">
                                                             {product.stock_qty || 0}
                                                         </td>
 
                                                         {/* VAT Column */}
-                                                        <td className="px-3 py-2 text-gray-600 dark:text-neutral-300 text-center border-r border-gray-200 dark:border-neutral-700">
+                                                        <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-center border-r border-gray-200 dark:border-neutral-700">
                                                             {product?.products?.vat || 0}
                                                         </td>
 
                                                         {/* Discount Column */}
-                                                        <td className="px-3 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200 dark:border-neutral-700">
+                                                        <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200 dark:border-neutral-700">
                                                             {product?.products?.discount || 0}
                                                         </td>
 
                                                         {/* Action Column - Last TD: No border-r, ensured full height to align buttons */}
-                                                        <td className="px-3 py-2 h-full">
-                                                            <div className="flex items-center justify-center gap-2">
+                                                        <td className="px-1 py-2 h-full">
+                                                            <div className="flex items-center justify-center gap-1 flex-wrap max-w-full overflow-hidden">
+                                                                {product.is_active == 0 && (
+                                                                    <button
+                                                                        onClick={() => approvalHandler(product.id)}
+                                                                        className="material-icons opacity-0 group-hover:opacity-100 bg-sky-500 hover:bg-sky-700 text-white rounded-full w-7 h-7 flex items-center justify-center text-base transition">
+                                                                        approval_delegation
+                                                                    </button>
+                                                                )}
                                                                 <button
                                                                     onClick={() => updateProductHandler(product)}
                                                                     className="material-icons opacity-0 group-hover:opacity-100 bg-green-500 hover:bg-green-700 text-white rounded-full w-7 h-7 flex items-center justify-center text-base transition">
