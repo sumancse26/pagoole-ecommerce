@@ -8,12 +8,11 @@ import { useSession } from 'next-auth/react';
 import { getAddToCartList } from '@/services/addToCart';
 import CartList from '@components/addToCart/CartList';
 import { getWishList } from '@/services/wishList';
-import ProductSkeleton from './ProductSkeleton';
+import EmptyState from '../EmptyState';
 
 const Product = ({ prodType, fromWhere, productList, searchParams }) => {
     const [sidebar, setSidebar] = useState(false);
     const [cartList, setCartList] = useState([]);
-    const [wishList, setWishList] = useState([]);
     const [products, setproducts] = useState([]);
 
     const { data: session, status } = useSession();
@@ -23,7 +22,7 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
         wishListHandler();
 
         return () => {};
-    }, []);
+    }, [productList]);
 
     const wishListHandler = async () => {
         try {
@@ -139,7 +138,7 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                             </div>
                         )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {products?.length > 0 ? (
+                            {products?.length > 0 &&
                                 products?.map((product) => (
                                     <div
                                         key={product.id}
@@ -225,19 +224,16 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                                             </div>
                                         </Link>
                                     </div>
-                                ))
-                            ) : (
-                                <>
-                                    {}
-                                    <ProductSkeleton loadNumbers={[1, 2, 3, 4, 5, 6]} />
-                                </>
-                            )}
+                                ))}
                         </div>
-                        <div className="text-center mt-10 mb-7">
-                            <button className="inline-block px-6 py-3 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-green-600 hover:text-white transition-colors">
-                                View All Products
-                            </button>
-                        </div>
+                        {products?.length == 0 && <EmptyState />}
+                        {products?.length > 0 && (
+                            <div className="text-center mt-10 mb-7">
+                                <button className="inline-block px-6 py-3 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-green-600 hover:text-white transition-colors">
+                                    View All Products
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </section>
 

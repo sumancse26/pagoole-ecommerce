@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getPublicCategoryList } from '@/services/categories';
 
 const iconMap = {
@@ -19,7 +19,9 @@ const SidebarSlider = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [categories, setCategories] = useState([]);
     const [filteredCategories, setFilteredCategories] = useState([]);
-    const [openIds, setOpenIds] = useState([]); // track open accordions
+    const [openIds, setOpenIds] = useState([]);
+
+    const router = useRouter();
 
     // Fetch categories from API
     useEffect(() => {
@@ -28,7 +30,7 @@ const SidebarSlider = () => {
 
     const fetchCategory = async () => {
         try {
-            const data = await getPublicCategoryList(); // should return array
+            const data = await getPublicCategoryList();
             const formatted = data.map((cat) => ({
                 ...cat,
                 icon: iconMap[cat.category_name] || iconMap.Default
@@ -37,7 +39,6 @@ const SidebarSlider = () => {
             setCategories(formatted);
             setFilteredCategories(formatted);
 
-            // Open all categories by default
             const allIds = getAllCategoryIds(formatted);
             setOpenIds(allIds);
         } catch (err) {
@@ -45,7 +46,6 @@ const SidebarSlider = () => {
         }
     };
 
-    // Helper: get all category ids recursively
     const getAllCategoryIds = (cats) => {
         let ids = [];
         cats.forEach((cat) => {
@@ -57,12 +57,10 @@ const SidebarSlider = () => {
         return ids;
     };
 
-    // Toggle accordion
     const toggleAccordion = (id) => {
         setOpenIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
     };
 
-    // Search categories recursively
     const filterCategoriesRecursive = (cats, term) => {
         return cats
             .map((cat) => {
@@ -77,37 +75,42 @@ const SidebarSlider = () => {
             .filter(Boolean);
     };
 
-    // Filter categories by search term
     const searchCategoryHandler = (searchTerm) => {
         const term = searchTerm?.toString()?.toLowerCase() || '';
         if (term.length > 0) {
             const filtered = filterCategoriesRecursive(categories, term);
             setFilteredCategories(filtered);
-
-            // Automatically open all matching categories
-            const allIds = getAllCategoryIds(filtered);
-            setOpenIds(allIds);
+            setOpenIds(getAllCategoryIds(filtered));
         } else {
             setFilteredCategories(categories);
-            const allIds = getAllCategoryIds(categories);
-            setOpenIds(allIds);
+            setOpenIds(getAllCategoryIds(categories));
         }
     };
 
-    // Recursive accordion render
+    // Handle category click (fetch products)
+    const handleCategoryClick = async (id) => {
+        router.push(`category-wise-product?category=${id}`);
+    };
+
     const renderCategories = (cats) => {
         return cats.map((category) => (
             <div key={category.id} className="group relative">
-                <button
-                    onClick={() => toggleAccordion(category.id)}
-                    className="flex items-center justify-between w-full px-4 py-3 hover:bg-green-100 rounded focus:outline-none">
+                <div
+                    className="flex items-center justify-between w-full px-4 py-3 hover:bg-green-100 rounded cursor-pointer"
+                    onClick={() => handleCategoryClick(category.id)} // ✅ category click fetches products
+                >
                     <div className="flex items-center">
                         <span className="mr-3">{category.icon}</span>
                         <span>{category.category_name}</span>
                     </div>
+
                     {category.children?.length > 0 && (
                         <span
-                            className={`transition-transform duration-300 ${
+                            onClick={(e) => {
+                                e.stopPropagation(); // ✅ prevent firing category click
+                                toggleAccordion(category.id);
+                            }}
+                            className={`transition-transform duration-300 cursor-pointer ${
                                 openIds.includes(category.id) ? 'rotate-90' : ''
                             }`}>
                             <svg
@@ -119,7 +122,7 @@ const SidebarSlider = () => {
                             </svg>
                         </span>
                     )}
-                </button>
+                </div>
 
                 {category.children?.length > 0 && openIds.includes(category.id) && (
                     <div className="ml-6 border-l border-gray-200">{renderCategories(category.children)}</div>
@@ -130,7 +133,6 @@ const SidebarSlider = () => {
 
     return (
         <>
-            {/* Toggle Button */}
             <button
                 onClick={() => setIsOpen((prev) => !prev)}
                 className="fixed top-[7px] left-4 z-50 p-2 bg-green-500 text-white rounded-lg cursor-pointer">
@@ -139,7 +141,6 @@ const SidebarSlider = () => {
                 </svg>
             </button>
 
-            {/* Sidebar */}
             <div
                 className={`sticky top-[58px] transition-all duration-300 h-full overflow-y-auto shadow-lg z-50 bg-white ${
                     isOpen ? 'w-80' : 'w-0'
@@ -159,7 +160,6 @@ const SidebarSlider = () => {
                         />
                     </div>
 
-                    {/* Scrollable area */}
                     <div className="divide-y divide-gray-100 max-h-[calc(100vh-150px)] overflow-y-auto scrollbar-thin scrollbar-thumb-green-400 scrollbar-track-gray-200">
                         {renderCategories(filteredCategories)}
                     </div>

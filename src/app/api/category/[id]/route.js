@@ -3,7 +3,7 @@ import prisma from '@/config/prisma';
 
 export const GET = async (req, { params }) => {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const vendorProducts = await prisma.products.findMany({
             where: {

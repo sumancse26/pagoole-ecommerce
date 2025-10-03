@@ -20,6 +20,12 @@ export const getProductByVendorList = async (id, search_string) => {
     });
     return res;
 };
+export const getProductByCategoryId = async (id) => {
+    const res = await fetchApi(`/api/category-wise-product/${id}`, {
+        method: 'GET'
+    });
+    return res;
+};
 
 export const getProductById = async (id) => {
     const res = await fetchApi(`/api/product-details/${id}`, {

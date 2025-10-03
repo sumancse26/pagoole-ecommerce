@@ -1,6 +1,6 @@
 const SkeletonCard = ({ loadNumbers }) => {
     return (
-        <>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {loadNumbers.map((num, indx) => (
                 <div key={indx} className="border border-gray-200 rounded-lg shadow-sm w-full">
                     <div className="bg-gray-200 h-48 rounded-t-lg animate-pulse"></div>
@@ -18,7 +18,7 @@ const SkeletonCard = ({ loadNumbers }) => {
                     </div>
                 </div>
             ))}
-        </>
+        </div>
     );
 };
 

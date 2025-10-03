@@ -5,22 +5,10 @@ export const GET = async (req, { params }) => {
     try {
         const { id } = await params;
 
-        const url = new URL(req.url);
-        const searchString = url.searchParams.get('search');
-
         const whereClause = {
-            vendor_id: Number(id),
+            category_id: Number(id),
             is_active: 1
         };
-
-        if (searchString) {
-            whereClause.products = {
-                prod_name: {
-                    contains: searchString,
-                    mode: 'insensitive'
-                }
-            };
-        }
 
         const vendorProducts = await prisma.vendor_Products.findMany({
             where: whereClause,
