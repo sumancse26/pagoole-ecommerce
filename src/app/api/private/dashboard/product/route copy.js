@@ -2,12 +2,11 @@ import { NextResponse } from 'next/server';
 import prisma from '@/config/prisma';
 import { revalidateTag } from 'next/cache';
 import fs from 'fs';
-import sharp from 'sharp';
 import path from 'path';
 
 export const runtime = 'nodejs';
 
-const UPLOADS_DIR = path.join(process.cwd(), 'public/uploads/products');
+const UPLOADS_DIR = path.join(process.cwd(), 'src', 'app', 'uploads', 'products');
 const UPLOADS_URL_PREFIX = '/uploads/products';
 
 export const POST = async (req) => {
@@ -42,7 +41,7 @@ export const POST = async (req) => {
             ...formData.getAll('images[]')
         ].filter(Boolean);
 
-        // Coerce numeric values
+        // Coerce numeric values for Prisma
         const priceNum = price ? parseFloat(price) : 0;
         const mrpNum = mrp ? parseFloat(mrp) : 0;
         const vatNum = vat ? parseFloat(vat) : 0;
@@ -57,7 +56,7 @@ export const POST = async (req) => {
             return NextResponse.json({ success: false, message: 'All fields are required' }, { status: 400 });
         }
 
-        // Handle uploaded files
+        // Handle uploaded files (multiple supported)
         if (imagesInput.length > 0) {
             let uploadDir = UPLOADS_DIR;
             try {
@@ -65,6 +64,7 @@ export const POST = async (req) => {
                     fs.mkdirSync(uploadDir, { recursive: true });
                 }
             } catch (e) {
+                // Fallback for read-only filesystems (e.g., some serverless): use OS temp dir
                 uploadDir = path.join('/tmp', 'uploads', 'products');
                 if (!fs.existsSync(uploadDir)) {
                     fs.mkdirSync(uploadDir, { recursive: true });
@@ -84,7 +84,7 @@ export const POST = async (req) => {
                 const timePart = Date.now().toString();
                 const uniquePart = `${timePart}-${i}`;
                 const maxTotal = 64;
-                const reserved = uniquePart.length + ext.length + 1;
+                const reserved = uniquePart.length + ext.length + 1; // hyphen
                 const maxBase = Math.max(1, maxTotal - reserved);
                 const safeBase = (safeBaseRaw || 'file').slice(0, maxBase);
                 let fileName = `${uniquePart}-${safeBase}${ext}`;
@@ -95,28 +95,7 @@ export const POST = async (req) => {
                 }
 
                 const filePath = path.join(uploadDir, fileName);
-
-                // ✅ Compress image with sharp before saving (~90% smaller)
-                let compressedBuffer;
-                try {
-                    const img = sharp(buffer).resize({
-                        width: 1200, // resize down large images
-                        withoutEnlargement: true
-                    });
-
-                    if (ext === '.png') {
-                        compressedBuffer = await img.png({ compressionLevel: 9 }).toBuffer();
-                    } else if (ext === '.webp') {
-                        compressedBuffer = await img.webp({ quality: 10 }).toBuffer();
-                    } else {
-                        compressedBuffer = await img.jpeg({ quality: 10 }).toBuffer();
-                    }
-                } catch (err) {
-                    console.error('Image compression error:', err);
-                    compressedBuffer = buffer;
-                }
-
-                fs.writeFileSync(filePath, compressedBuffer);
+                fs.writeFileSync(filePath, buffer);
                 savedFilePaths.push(filePath);
 
                 const url = `${UPLOADS_URL_PREFIX}/${fileName}`;
@@ -135,6 +114,7 @@ export const POST = async (req) => {
         });
         if (!userInfo) return NextResponse.json({ success: false, message: 'User not found' }, { status: 400 });
 
+        // Validate foreign keys to avoid FK errors
         const [brandExists, categoryExists, weightExists] = await Promise.all([
             prisma.brands.findUnique({ where: { id: brandIdNum } }),
             prisma.categories.findUnique({ where: { id: categoryIdNum } }),
@@ -160,6 +140,7 @@ export const POST = async (req) => {
             vendorProduct = await prisma.$transaction(async (tx) => {
                 const slug = prod_name.replace(/\s+/g, '-').toLowerCase();
 
+                // Resolve/Create File_Server using only domain (origin) if we have images or explicit server id
                 let fileServer = null;
                 if (serverIdNum) {
                     fileServer = await tx.file_Server.findUnique({ where: { id: serverIdNum } });
@@ -197,6 +178,7 @@ export const POST = async (req) => {
                     }
                 });
 
+                // Save Product_Images for each uploaded file (multiple supported)
                 if (savedFiles.length > 0 && fileServer) {
                     for (const f of savedFiles) {
                         await tx.product_Images.create({
@@ -225,6 +207,7 @@ export const POST = async (req) => {
                 }
             });
 
+            // Resolve/Create File_Server for this origin only if there are images or server id provided
             let fileServer = null;
             if (serverIdNum) {
                 fileServer = await prisma.file_Server.findUnique({ where: { id: serverIdNum } });
@@ -237,6 +220,7 @@ export const POST = async (req) => {
                 });
             }
 
+            // Create Product_Images entries for uploaded files and link to product/vendor_product
             if (savedFiles.length > 0 && fileServer) {
                 for (const f of savedFiles) {
                     await prisma.product_Images.create({
@@ -250,6 +234,7 @@ export const POST = async (req) => {
                     });
                 }
 
+                // Set product's server_id to this file server (used as image host)
                 await prisma.products.update({
                     where: { id: product.id },
                     data: { server_id: fileServer.id }
@@ -267,6 +252,7 @@ export const POST = async (req) => {
     } catch (err) {
         console.error('Upload error:', err);
 
+        // Delete uploaded files if transaction failed
         if (savedFilePaths && savedFilePaths.length > 0) {
             for (const fileFullPath of savedFilePaths) {
                 try {
@@ -296,7 +282,6 @@ export const GET = async (req) => {
 
         if (userRole == 1) {
             whereClause.vendor_id = userId;
-            whereClause.is_active = 1;
         }
         const products = await prisma.vendor_Products.findMany({
             where: whereClause,
@@ -413,35 +398,16 @@ export const PUT = async (req) => {
                 if (!file || !file.arrayBuffer || file.size <= 0) continue;
 
                 const buffer = Buffer.from(await file.arrayBuffer());
-                const ext = path.extname(file.name || '.jpg').toLowerCase();
+                const ext = path.extname(file.name || '.png').toLowerCase();
                 const safeBase = path.basename(file.name, ext).replace(/[^a-zA-Z0-9-_]/g, '');
                 const unique = `${Date.now()}-${i}`;
                 const fileName = `${unique}-${safeBase}${ext}`.slice(0, 64);
 
                 const filePath = path.join(UPLOADS_DIR, fileName);
-
-                let compressedBuffer;
-                try {
-                    const img = sharp(buffer).resize({
-                        width: 1200,
-                        withoutEnlargement: true
-                    });
-
-                    if (ext === '.png') {
-                        compressedBuffer = await img.png({ compressionLevel: 9 }).toBuffer();
-                    } else if (ext === '.webp') {
-                        compressedBuffer = await img.webp({ quality: 10 }).toBuffer();
-                    } else {
-                        compressedBuffer = await img.jpeg({ quality: 10 }).toBuffer();
-                    }
-                } catch (err) {
-                    console.error('Image compression failed:', err);
-                    compressedBuffer = buffer;
-                }
-
-                fs.writeFileSync(filePath, compressedBuffer);
+                fs.writeFileSync(filePath, buffer);
                 savedFilePaths.push(filePath);
 
+                // Save relative path
                 const url = `${UPLOADS_URL_PREFIX}/${fileName}`;
                 savedFiles.push({ fileName, url });
             }
@@ -498,9 +464,11 @@ export const PUT = async (req) => {
                 }
             });
         } else {
+            // If no existing images sent and no new uploads → keep current images
             if (savedFiles.length === 0) {
-                // keep current images
+                // skip delete
             } else {
+                // replace all
                 await prisma.product_Images.deleteMany({
                     where: {
                         product_id: productId,
@@ -533,7 +501,7 @@ export const PUT = async (req) => {
                         vendor_product_id: vendorProductId,
                         vendor_id: vendor.id,
                         server_id: fileServer.id,
-                        file_name: f.url
+                        file_name: f.url // stored as relative path
                     }
                 });
             }

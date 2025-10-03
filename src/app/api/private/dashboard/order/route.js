@@ -71,6 +71,9 @@ export const GET = async (req) => {
                         }
                     }
                 }
+            },
+            orderBy: {
+                id: 'desc'
             }
         });
 

@@ -11,9 +11,6 @@ export const GET = async (req, { params }) => {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        //const { searchParams } = new URL(req.url);
-        // const orderId = searchParams.get('id');
-
         if (!id) {
             return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
         }

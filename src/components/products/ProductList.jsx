@@ -10,6 +10,7 @@ import AddProduct from './AddProducts';
 import { approveProduct } from '@/services/product';
 import { useAlert } from '@/context/AlertContext';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
     const [showModal, setShowModal] = useState(false);
@@ -25,6 +26,7 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
     const { openDialog } = useDialog();
     const { showAlert } = useAlert();
     const router = useRouter();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         setProductList(prodList);
@@ -263,7 +265,7 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                                         {/* Action Column - Last TD: No border-r, ensured full height to align buttons */}
                                                         <td className="px-1 py-2 h-full">
                                                             <div className="flex items-center justify-center gap-1 flex-wrap max-w-full overflow-hidden">
-                                                                {product.is_active == 0 && (
+                                                                {product.is_active == 0 && session.user.role == 0 && (
                                                                     <button
                                                                         onClick={() => approvalHandler(product.id)}
                                                                         className="material-icons opacity-0 group-hover:opacity-100 bg-sky-500 hover:bg-sky-700 text-white rounded-full w-7 h-7 flex items-center justify-center text-base transition">
