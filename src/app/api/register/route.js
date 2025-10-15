@@ -23,6 +23,7 @@ export const POST = async (req) => {
             name = ''
         } = body;
 
+        console.log('body, body');
         if (!isCustomer) {
             if (!(user_name || email || password || store_name || location_id)) {
                 return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -47,7 +48,7 @@ export const POST = async (req) => {
                         store_name,
                         store_description: store_description || '',
                         address: address || '',
-                        location_id,
+                        location_id: Number(location_id),
                         otp: 0,
                         store_logo: store_logo || ''
                     }
