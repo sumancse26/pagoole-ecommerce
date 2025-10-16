@@ -3,10 +3,16 @@ import prisma from '@/config/prisma';
 
 export const GET = async (req) => {
     try {
-        const vendorId = Number(req.headers.get('user_id'));
+        const userId = Number(req.headers.get('user_id'));
         const userRole = Number(req.headers.get('user_role'));
 
-        if (!Number.isInteger(vendorId) || vendorId <= 0) {
+        const vendorInfo = await prisma.vendors.findFirst({
+            where: {
+                user_id: Number(userId)
+            }
+        });
+
+        if (!Number.isInteger(userId) || userId <= 0) {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 
@@ -38,7 +44,7 @@ export const GET = async (req) => {
         if (userRole == 1) {
             // ✅ Total number of vendor products
             totalProducts = await prisma.vendor_Products.count({
-                where: { vendor_id: vendorId }
+                where: { vendor_id: vendorInfo.id }
             });
 
             // ✅ Get pending orders for vendor (with user info)
@@ -47,7 +53,7 @@ export const GET = async (req) => {
                     order_status: 'Pending',
                     order_items: {
                         some: {
-                            vendor_products: { vendor_id: vendorId }
+                            vendor_products: { vendor_id: vendorInfo.id }
                         }
                     }
                 },

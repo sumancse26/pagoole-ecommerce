@@ -49,7 +49,7 @@ const Dashboard = ({ dashboardInfo }) => {
     const dashboardInfoHandler = async () => {
         try {
             const newSession = await getSession();
-            console.log('new snewSession', newSession);
+
             const cards = [
                 // Add Users card only if role == 0
                 ...(newSession?.user?.role === 0

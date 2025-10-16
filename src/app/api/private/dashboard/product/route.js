@@ -189,7 +189,7 @@ export const POST = async (req) => {
                 const vendorProductCreated = await tx.vendor_Products.create({
                     data: {
                         product_id: savedProduct.id,
-                        vendor_id: userInfo.id,
+                        vendor_id: userInfo.user_id,
                         price: priceNum || 0,
                         stock_qty: stockQtyNum || 0,
                         category_id: categoryIdNum || null,
@@ -292,10 +292,16 @@ export const GET = async (req) => {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 
+        const vendor = await prisma.vendors.findFirst({
+            where: {
+                user_id: Number(userId)
+            }
+        });
+
         let whereClause = {};
 
         if (userRole == 1) {
-            whereClause.vendor_id = userId;
+            whereClause.vendor_id = vendor.id;
             whereClause.is_active = 1;
         }
         const products = await prisma.vendor_Products.findMany({
