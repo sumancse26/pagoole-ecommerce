@@ -222,6 +222,8 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     options={categoryList}
                                     onSelect={onSelectHandler}
                                     labelKey="category_name"
+                                    valueKey="id"
+                                    placeholder="Select"
                                     selected={category}
                                 />
                             </div>

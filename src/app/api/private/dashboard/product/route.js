@@ -189,7 +189,7 @@ export const POST = async (req) => {
                 const vendorProductCreated = await tx.vendor_Products.create({
                     data: {
                         product_id: savedProduct.id,
-                        vendor_id: userInfo.user_id,
+                        vendor_id: userInfo.id,
                         price: priceNum || 0,
                         stock_qty: stockQtyNum || 0,
                         category_id: categoryIdNum || null,

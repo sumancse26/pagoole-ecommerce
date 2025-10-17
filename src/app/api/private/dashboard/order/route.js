@@ -9,7 +9,11 @@ export const GET = async (req) => {
             return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
         }
 
-        const vendorId = Number(userId);
+        const vendors = await prisma.vendors.findFirst({
+            where: {
+                user_id: Number(userId)
+            }
+        });
 
         // Fetch orders where this vendor has products (ignore orders.vendor_id)
         const order_list = await prisma.orders.findMany({
@@ -17,7 +21,7 @@ export const GET = async (req) => {
                 order_items: {
                     some: {
                         vendor_products: {
-                            vendor_id: vendorId
+                            vendor_id: vendors.id
                         }
                     }
                 }
@@ -43,7 +47,7 @@ export const GET = async (req) => {
                 order_items: {
                     where: {
                         vendor_products: {
-                            vendor_id: vendorId
+                            vendor_id: vendors.id
                         }
                     },
                     select: {
