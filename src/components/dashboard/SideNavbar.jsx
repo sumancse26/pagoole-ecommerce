@@ -89,13 +89,33 @@ const Nav = () => {
                                 </Link>
                             </li>
 
-                            {/* Order */}
+                            {/* Vendors */}
                             <li>
                                 <Link
-                                    href="/dashboard/order"
-                                    className="flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 group">
+                                    href="/dashboard/vendor"
+                                    className="flex items-center justify-between p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 group">
+                                    <div className="flex items-center space-x-3">
+                                        {/* 🏬 Vendor / Store Icon */}
+                                        <svg
+                                            className="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M3 9l1-5h16l1 5M4 9h16v11H4V9zm4 11v-5h8v5"
+                                            />
+                                        </svg>
+
+                                        <span className="font-medium">Vendor</span>
+                                    </div>
+
+                                    {/* → Arrow Icon */}
                                     <svg
-                                        className="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200"
+                                        className="w-4 h-4 text-gray-400 dark:text-gray-500"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24">
@@ -103,24 +123,49 @@ const Nav = () => {
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
                                             strokeWidth="2"
-                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                            d="M9 5l7 7-7 7"
                                         />
                                     </svg>
-                                    <span className="ml-3 font-medium bg-brand-500">Order</span>
-                                    <span className="ml-auto">
+                                </Link>
+                            </li>
+
+                            {/* Order */}
+                            <li>
+                                <Link
+                                    href="/dashboard/order"
+                                    className="flex items-center justify-between p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 group">
+                                    <div className="flex items-center space-x-3">
+                                        {/* 🛍️ Order / Shopping Bag Icon */}
                                         <svg
-                                            className="w-4 h-4 text-gray-400 dark:text-gray-500"
+                                            className="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200"
                                             fill="none"
                                             stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 strokeLinecap="round"
                                                 strokeLinejoin="round"
                                                 strokeWidth="2"
-                                                d="M9 5l7 7-7 7"
+                                                d="M6 2l1 5h10l1-5m-1 5H6a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V9a2 2 0 00-2-2zM9 13a3 3 0 006 0"
                                             />
                                         </svg>
-                                    </span>
+
+                                        <span className="font-medium">Order</span>
+                                    </div>
+
+                                    {/* → Arrow Icon */}
+                                    <svg
+                                        className="w-4 h-4 text-gray-400 dark:text-gray-500"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M9 5l7 7-7 7"
+                                        />
+                                    </svg>
                                 </Link>
                             </li>
 

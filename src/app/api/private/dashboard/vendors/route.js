@@ -4,14 +4,15 @@ import prisma from '@/config/prisma';
 export const GET = async (req) => {
     try {
         const vendor_list = await prisma.vendors.findMany({
-            where: {
-                is_active: 1
-            },
-
-            omit: {
+            select: {
+                id: true,
+                user_id: true,
+                store_name: true,
+                store_description: true,
+                address: true,
+                location_id: true,
                 is_active: true,
-                created_at: true,
-                updated_at: true
+                store_logo: true
             }
         });
         return NextResponse.json(

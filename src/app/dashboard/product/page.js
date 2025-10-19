@@ -10,8 +10,6 @@ const ProductPageContent = async () => {
     const res = await getVendorProducts();
     const prodList = res.products_list || [];
 
-    console.log('prodList', prodList);
-
     const cat = await getCategoryList();
     const categoryList = cat.categories || [];
 

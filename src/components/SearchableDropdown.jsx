@@ -17,8 +17,7 @@ const SearchableDropdown = ({
     const formatLabel = (item) => {
         if (!item) return '';
         const label = item[labelKey] ?? '';
-        const value = item[valueKey] ?? '';
-        return value ? `${label} - ${value}` : label;
+        return label;
     };
 
     // ✅ Sync when parent provides a selected item

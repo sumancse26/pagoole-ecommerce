@@ -8,11 +8,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Configurations{
+  id                    Int               @id @default(autoincrement())
+  config_key            String            @unique @db.VarChar(100)
+  config_value          String            @db.VarChar(500)
+  created_at            DateTime          @default(now())
+  updated_at            DateTime          @updatedAt
+}
+
 model Users {
   id                    Int               @id @default(autoincrement())
-  user_name             String            @db.VarChar(100)
-  email                 String            @unique @db.VarChar(150)
-  phone                 String?           @db.VarChar(20)
+  user_name             String            @db.VarChar(32)
+  email                 String            @unique @db.VarChar(64)
+  phone                 String?           @db.VarChar(16)
   password              String?       
   otp                   Int               @default(0) 
   is_admin              Int               @default(1)
@@ -56,10 +64,6 @@ model Vendors {
   store_description      String?              @db.VarChar(500)
   address                String?              @db.VarChar(300)
   location_id            Int
-  parent_location_id     Int                  @default(24)
-  password               String?       
-  otp                    Int                  @default(0)
-  is_admin               Int                  @default(0)
   is_active              Int                  @default(0)
   created_at             DateTime             @default(now())
   updated_at             DateTime             @updatedAt
@@ -111,7 +115,7 @@ model Weights {
 model File_Server {
   id                    Int                 @id @default(autoincrement())
   name                  String              @unique @db.VarChar(64) 
-  base_url              String              @default("") @db.Text
+  base_url              String              @default("") @db.VarChar(1000)
   created_at            DateTime            @default(now())
   updated_at            DateTime            @updatedAt
 
@@ -148,7 +152,7 @@ model Product_Images {
   vendor_product_id     Int?
   vendor_id             Int
   server_id             Int?
-  file_name             String            @db.VarChar(64)
+  file_name             String            @db.VarChar(100)
   created_at            DateTime          @default(now())
   updated_at            DateTime          @updatedAt
 

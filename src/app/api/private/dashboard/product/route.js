@@ -7,8 +7,34 @@ import path from 'path';
 
 export const runtime = 'nodejs';
 
-const UPLOADS_DIR = path.join(process.cwd(), 'public/uploads/products');
+const UPLOADS_DIR = path.join(process.cwd(), 'src', 'app', 'uploads', 'products');
 const UPLOADS_URL_PREFIX = '/uploads/products';
+
+// function formatFileNameForDB(fileName, maxLength = 64) {
+//     if (!fileName) return '';
+
+//     const ext = path.extname(fileName);
+//     const base = path.basename(fileName, ext);
+
+//     const prefix = `${UPLOADS_URL_PREFIX}/`;
+//     const availableForBase = maxLength - prefix.length - ext.length;
+
+//     const trimmedBase =
+//         availableForBase > 0 ? base.slice(0, availableForBase) : base.slice(0, maxLength - prefix.length);
+
+//     return `${prefix}${trimmedBase}${ext}`;
+// }
+
+// function generateShortFileName(originalName, index) {
+//     const ext = path.extname(originalName).toLowerCase();
+//     let base = path.basename(originalName, ext).replace(/[^a-zA-Z0-9]/g, ''); // safe characters
+
+//     // Limit base length to leave room for index + extension
+//     const maxBaseLength = 25 - ext.length - index.toString().length;
+//     base = base.slice(0, Math.max(1, maxBaseLength));
+
+//     return `${base}${index}${ext}`; // e.g., "myfile0.jpg"
+// }
 
 export const POST = async (req) => {
     let imagePath = null;
@@ -96,11 +122,10 @@ export const POST = async (req) => {
 
                 const filePath = path.join(uploadDir, fileName);
 
-                // ✅ Compress image with sharp before saving (~90% smaller)
                 let compressedBuffer;
                 try {
                     const img = sharp(buffer).resize({
-                        width: 1200, // resize down large images
+                        width: 1200,
                         withoutEnlargement: true
                     });
 
@@ -123,6 +148,23 @@ export const POST = async (req) => {
                 const abs = `${origin}${url}`;
                 savedFiles.push({ fileName, url, abs, filePath });
             }
+
+            // for (let i = 0; i < imagesInput.length; i++) {
+            //     const file = imagesInput[i];
+            //     if (!file || !file.arrayBuffer || file.size <= 0) continue;
+
+            //     const buffer = Buffer.from(await file.arrayBuffer());
+
+            //     const fileName = generateShortFileName(file.name || 'upload', i);
+            //     const filePath = path.join(uploadDir, fileName);
+
+            //     fs.writeFileSync(filePath, buffer); // save file as is
+            //     savedFilePaths.push(filePath);
+
+            //     const url = `${UPLOADS_URL_PREFIX}/${fileName}`;
+            //     const abs = `${origin}${url}`;
+            //     savedFiles.push({ fileName, url, abs, filePath });
+            // }
 
             if (savedFiles.length > 0) {
                 imagePath = savedFiles[0].url;
@@ -205,7 +247,7 @@ export const POST = async (req) => {
                                 vendor_product_id: vendorProductCreated.id,
                                 vendor_id: userInfo.id,
                                 server_id: fileServer.id,
-                                file_name: f.url.slice(0, 64)
+                                file_name: f.url
                             }
                         });
                     }
@@ -338,9 +380,11 @@ export const GET = async (req) => {
                             select: {
                                 id: true,
                                 product_id: true,
-                                file_name: true
+                                file_name: true,
+                                file_server: true
                             }
                         },
+
                         weights: {
                             select: {
                                 id: true,

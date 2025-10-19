@@ -114,9 +114,9 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                 {/* 1. Title/Description - Takes full width on small screens, fixed width on md+ */}
                                 <div className="w-[20%] md:w-auto">
                                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Products</h2>
-                                    <p className="text-sm text-gray-500 dark:text-neutral-400">
+                                    {/* <p className="text-sm text-gray-500 dark:text-neutral-400">
                                         Manage your products here.
-                                    </p>
+                                    </p> */}
                                 </div>
 
                                 {/* 2. Search & Button - MODIFIED FOR CENTER ALIGNMENT on md+ */}
@@ -222,9 +222,9 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                                                         product?.products?.product_images?.[0]
                                                                             ?.file_name
                                                                     }
+                                                                    width={60}
+                                                                    height={60}
                                                                     alt="Product"
-                                                                    width={40}
-                                                                    height={40}
                                                                     className="w-10 h-10 rounded-md bg-gray-100"
                                                                 />
                                                             ) : (

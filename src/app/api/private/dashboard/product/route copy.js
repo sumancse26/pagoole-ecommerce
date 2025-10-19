@@ -9,6 +9,20 @@ export const runtime = 'nodejs';
 const UPLOADS_DIR = path.join(process.cwd(), 'src', 'app', 'uploads', 'products');
 const UPLOADS_URL_PREFIX = '/uploads/products';
 
+function formatFileNameForDB(fileName, maxLength = 64) {
+    if (!fileName) return '';
+
+    const ext = path.extname(fileName);
+    const base = path.basename(fileName, ext);
+
+    const prefix = `${UPLOADS_URL_PREFIX}/`;
+    const availableForBase = maxLength - prefix.length - ext.length;
+
+    const trimmedBase =
+        availableForBase > 0 ? base.slice(0, availableForBase) : base.slice(0, maxLength - prefix.length);
+
+    return `${prefix}${trimmedBase}${ext}`;
+}
 export const POST = async (req) => {
     let imagePath = null;
     let absoluteImageUrl = null;
