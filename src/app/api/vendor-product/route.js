@@ -28,7 +28,6 @@ export const GET = async (req) => {
                         slug: true,
                         description: true,
                         mrp: true,
-                        vat: true,
                         brands: {
                             select: {
                                 id: true,

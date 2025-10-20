@@ -3,14 +3,57 @@
 import { activeVendor } from '@/services/vendor';
 import EmptyState from '@components/EmptyState.jsx';
 import Image from 'next/image';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useAlert } from '@/context/AlertContext';
 import { useRouter } from 'next/navigation';
 
 const VendorList = ({ vendorList = [] }) => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [previousSearches, setPreviousSearches] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef(null);
+    const inputRef = useRef(null);
+
     const { showAlert } = useAlert();
     const router = useRouter();
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const saved = JSON.parse(localStorage.getItem('vendorSearchHistory') || '[]');
+            setPreviousSearches(saved);
+        }
+    }, []);
+
+    const saveSearch = () => {
+        const trimmed = searchQuery.trim();
+        if (!trimmed) return;
+        const updated = [trimmed, ...previousSearches.filter((q) => q !== trimmed)].slice(0, 10);
+        setPreviousSearches(updated);
+        localStorage.setItem('vendorSearchHistory', JSON.stringify(updated));
+    };
+
+    const handleSearchSubmit = (e) => {
+        e?.preventDefault();
+        saveSearch();
+        setShowDropdown(false);
+    };
+
+    // Auto-submit when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(e.target) &&
+                inputRef.current &&
+                !inputRef.current.contains(e.target)
+            ) {
+                saveSearch();
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    });
 
     const approvalHandler = async (id) => {
         try {
@@ -45,54 +88,73 @@ const VendorList = ({ vendorList = [] }) => {
 
     return (
         <div className="flex flex-col animate-fadeIn">
-            <div className="m-2 overflow-x-auto">
-                <div className="p-2 min-w-full inline-block align-middle">
+            <div className="overflow-x-auto">
+                <div className="min-w-full inline-block align-middle">
                     <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-2xl shadow-md overflow-hidden">
                         {/* Header (Title, Search, Button) - RESPONSIVE */}
-                        <div className="px-4 sm:px-6 py-4 flex flex-col gap-2xl md:flex-row md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
+                        <div className="px-3 sm:px-3 py-3 flex flex-col gap-2xl md:flex-row md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                             {/* 1. Title/Description - Takes full width on small screens, fixed width on md+ */}
-                            <div className="w-[20%] md:w-auto">
-                                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Vendor List</h2>
+                            <div
+                                className={`flex items-center text-xl sm:text-2xl font-bold text-gray-800 dark:text-white`}>
+                                {/* SVG icon */}
+                                <span className="material-icons mr-2 text-green-600 dark:text-green-600">store</span>
+
+                                <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Vendor List</h2>
                             </div>
 
-                            {/* 2. Search & Button - MODIFIED FOR CENTER ALIGNMENT on md+ */}
-                            <div className="md:w-[80%] flex flex-col sm:flex-row gap-3 md:justify-between md:items-center">
-                                {/* Search Input - Flex-grow to fill available space */}
-                                <div className="relative flex-grow w-[85%]">
+                            <div className="relative w-full sm:w-[80%]" ref={dropdownRef}>
+                                <form onSubmit={handleSearchSubmit}>
                                     <input
+                                        ref={inputRef}
                                         type="text"
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        placeholder="Search by name"
-                                        className="py-2 px-3 ps-10 block w-full border border-gray-200 rounded-lg text-sm 
-               focus:border-green-500 focus:outline-none focus:ring-0
-               disabled:opacity-50 disabled:pointer-events-none 
-               dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500"
+                                        onFocus={() => setShowDropdown(true)}
+                                        placeholder="Search by name or category..."
+                                        className="py-2 px-3 ps-10 w-full border border-gray-200 rounded-lg text-sm 
+                                        focus:border-green-500 focus:outline-none focus:ring-0
+                                        dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500"
                                     />
+                                </form>
 
-                                    <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
-                                        <svg
-                                            className="w-4 h-4 text-gray-400 dark:text-neutral-500"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round">
-                                            <circle cx="11" cy="11" r="8" />
-                                            <path d="m21 21-4.3-4.3" />
-                                        </svg>
-                                    </div>
+                                <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
+                                    <svg
+                                        className="w-4 h-4 text-gray-400 dark:text-neutral-500"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="2"
+                                        stroke="currentColor">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="m21 21-4.3-4.3" />
+                                    </svg>
                                 </div>
+
+                                {/* Dropdown */}
+                                {showDropdown && previousSearches.length > 0 && (
+                                    <ul className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 dark:bg-neutral-900 dark:border-neutral-700">
+                                        {previousSearches
+                                            .filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase()))
+                                            .map((item, idx) => (
+                                                <li
+                                                    key={idx}
+                                                    onClick={() => {
+                                                        setSearchQuery(item);
+                                                        saveSearch();
+                                                        setShowDropdown(false);
+                                                    }}
+                                                    className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800">
+                                                    {item}
+                                                </li>
+                                            ))}
+                                    </ul>
+                                )}
                             </div>
                         </div>
 
                         {/* Table Container - RESPONSIVE: Added 'overflow-x-auto' on the inner div for table scroll on small screens */}
                         {vendorsToDisplay.length > 0 ? (
-                            <div className="overflow-auto max-h-[calc(100vh-300px)]">
+                            <div className="overflow-auto max-h-[calc(100vh-218px)]">
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700 text-sm">
                                         <thead className="bg-gray-100 dark:bg-neutral-700 border-b border-gray-300 dark:border-neutral-600 sticky top-0 z-10">
@@ -166,7 +228,7 @@ const VendorList = ({ vendorList = [] }) => {
                                                                 <button
                                                                     onClick={() => approvalHandler(vendor.id)}
                                                                     className="material-icons opacity-0 group-hover:opacity-100 bg-sky-500 hover:bg-sky-700 text-white rounded-full w-7 h-7 flex items-center justify-center text-base transition">
-                                                                    approval_delegation
+                                                                    approval
                                                                 </button>
                                                             )}
                                                         </div>
@@ -187,7 +249,6 @@ const VendorList = ({ vendorList = [] }) => {
 
                         {/* Footer - RESPONSIVE */}
                         <div className="px-4 sm:px-6 py-4 flex flex-col gap-3 md:flex-row md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
-                            {/* Result Count */}
                             <div>
                                 <p className="text-sm text-gray-600 dark:text-neutral-400">
                                     <span className="font-semibold text-gray-800 dark:text-white pe-1">
@@ -197,7 +258,7 @@ const VendorList = ({ vendorList = [] }) => {
                                 </p>
                             </div>
 
-                            {/* Pagination Buttons */}
+                            {/*                        
                             <div className="inline-flex gap-2">
                                 <button
                                     type="button"
@@ -225,7 +286,7 @@ const VendorList = ({ vendorList = [] }) => {
                                         <path d="M9 18l6-6-6-6" />
                                     </svg>
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

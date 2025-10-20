@@ -25,7 +25,7 @@ const ProductPageContent = async () => {
 const ProductPage = async () => {
     return (
         <Suspense fallback={<Skeleton />}>
-            <ProductPageContent />;
+            <ProductPageContent />
         </Suspense>
     );
 };

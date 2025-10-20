@@ -19,8 +19,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
         images: [],
         category_id: '',
         brand_id: '',
-        weight_id: '',
-        vat: ''
+        weight_id: ''
     });
     const [previews, setPreviews] = useState([]);
     const [category, setCategory] = useState('');
@@ -41,7 +40,6 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
             description: '',
             images: [],
             stock_qty: '',
-            vat: '',
             weight: '',
             brand: ''
         });
@@ -58,7 +56,6 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                 images: selectedProduct.products?.product_images || [],
                 category_id: selectedProduct.products?.categories?.id || '',
                 stock_qty: selectedProduct.stock_qty || 0,
-                vat: selectedProduct.products?.vat || 0,
                 weight_id: selectedProduct.products?.weights?.id || '',
                 brand_id: selectedProduct.products?.brands?.id || ''
             });
@@ -73,10 +70,10 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
     }, [selectedProduct]);
 
     useEffect(() => {
-        if (productInfo.price && productInfo.vat_pct) {
+        if (productInfo.price) {
             priceWithVat();
         }
-    }, [productInfo.price, productInfo.vat_pct]);
+    }, [productInfo.price]);
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files || []);
@@ -100,10 +97,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'vat' && Number(value) > 100) {
-            showAlert('VAT percentage cannot be greater than 100', 'error');
-            return;
-        }
+
         setProductInfo((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -127,8 +121,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
     };
 
     const priceWithVat = () => {
-        const total =
-            Number(productInfo.price) + (Number(productInfo.price || 0) * Number(productInfo.vat_pct || 0)) / 100;
+        const total = Number(productInfo.price);
         setPriceWithVat(total);
     };
 
@@ -148,7 +141,6 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
         formData.append('price', productInfo.price);
         formData.append('description', productInfo.description);
         formData.append('stock_qty', productInfo.stock_qty);
-        formData.append('vat', productInfo.vat);
         if (selectedProduct.id) {
             formData.append('id', selectedProduct.id);
             formData.append('product_id', selectedProduct.product_id);
@@ -191,8 +183,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                 images: [],
                 category_id: '',
                 brand_id: '',
-                weight_id: '',
-                vat: ''
+                weight_id: ''
             });
             setPreviews([]);
             setCategory('');

@@ -1,35 +1,78 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import InvDetails from './OrderDetails';
 import EmptyState from '@components/EmptyState.jsx';
 
 const OrderPage = ({ orderList }) => {
     const [showInvoice, setShowInvoice] = useState(false);
     const [invInfo, setInvInfo] = useState({});
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [previousSearches, setPreviousSearches] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef(null);
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const saved = JSON.parse(localStorage.getItem('orderSearchHistory') || '[]');
+            setPreviousSearches(saved);
+        }
+    }, []);
+
+    const saveSearch = () => {
+        const trimmed = searchQuery.trim();
+        if (!trimmed) return;
+        const updated = [trimmed, ...previousSearches.filter((q) => q !== trimmed)].slice(0, 10);
+        setPreviousSearches(updated);
+        localStorage.setItem('orderSearchHistory', JSON.stringify(updated));
+    };
+
+    const handleSearchSubmit = (e) => {
+        e?.preventDefault();
+        saveSearch();
+        setShowDropdown(false);
+    };
+
+    // Auto-submit when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(e.target) &&
+                inputRef.current &&
+                !inputRef.current.contains(e.target)
+            ) {
+                saveSearch();
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    });
 
     const viewBtnHandler = (data) => {
         setShowInvoice(true);
         let total = 0;
         let payable = 0;
-        let vat_amount = 0;
-        let discount = 0;
+        //let vat_amount = 0;
+        //let discount = 0;
 
         data.order_items?.forEach((item) => {
             total += Number(item.quantity || 0) * Number(item.unit_price || 0);
-            vat_amount += Number(item.vendor_products?.products?.vat || 0);
-            discount += Number(item.vendor_products?.products?.discount || 0);
+            // vat_amount += Number(item.vendor_products?.products?.vat || 0);
+            //discount += Number(item.vendor_products?.products?.discount || 0);
         });
 
-        payable = total + vat_amount - discount;
+        payable = total;
+        // payable = total + vat_amount - discount;
 
         const invData = {
             ...data,
             total,
-            payable,
-            vat_amount,
-            discount
+            payable
+            //vat_amount,
+            //discount
         };
 
         setInvInfo(invData);
@@ -37,7 +80,7 @@ const OrderPage = ({ orderList }) => {
 
     // Filtering based on order_code or user_name (case-insensitive)
     const filteredOrders = orderList?.filter((order) => {
-        const term = searchTerm.toLowerCase();
+        const term = searchQuery.toLowerCase();
         return order.order_code?.toLowerCase()?.includes(term) || order.users?.user_name?.toLowerCase()?.includes(term);
     });
 
@@ -49,33 +92,53 @@ const OrderPage = ({ orderList }) => {
                     <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Order List</h2>
                 </div>
 
-                <div className="relative w-[60%]">
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search by name or category..."
-                        className="py-2 px-3 ps-10 block w-full border border-gray-200 rounded-lg text-sm 
-                                   focus:border-green-500 focus:ring-0 focus:outline-none
-                                   disabled:opacity-50 disabled:pointer-events-none 
-                                   dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500"
-                    />
+                <div className="relative w-full sm:w-[80%]" ref={dropdownRef}>
+                    <form onSubmit={handleSearchSubmit}>
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onFocus={() => setShowDropdown(true)}
+                            placeholder="Search by name or category..."
+                            className="py-2 px-3 ps-10 w-full border border-gray-200 rounded-lg text-sm 
+                                        focus:border-green-500 focus:outline-none focus:ring-0
+                                        dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500"
+                        />
+                    </form>
+
                     <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
                         <svg
                             className="w-4 h-4 text-gray-400 dark:text-neutral-500"
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
                             fill="none"
-                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                             strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round">
+                            stroke="currentColor">
                             <circle cx="11" cy="11" r="8" />
                             <path d="m21 21-4.3-4.3" />
                         </svg>
                     </div>
+
+                    {/* Dropdown */}
+                    {showDropdown && previousSearches.length > 0 && (
+                        <ul className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 dark:bg-neutral-900 dark:border-neutral-700">
+                            {previousSearches
+                                .filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase()))
+                                .map((item, idx) => (
+                                    <li
+                                        key={idx}
+                                        onClick={() => {
+                                            setSearchQuery(item);
+                                            saveSearch();
+                                            setShowDropdown(false);
+                                        }}
+                                        className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800">
+                                        {item}
+                                    </li>
+                                ))}
+                        </ul>
+                    )}
                 </div>
             </div>
 
@@ -165,7 +228,7 @@ const OrderPage = ({ orderList }) => {
                 <p>
                     Showing <span className="font-bold">{filteredOrders?.length || 0}</span> entries
                 </p>
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                     <button className="flex items-center gap-1 px-3 sm:px-4 py-1 rounded-full bg-green-100 hover:bg-green-200 transition disabled:opacity-50">
                         <span className="material-icons text-sm">chevron_left</span>
                         Prev
@@ -174,7 +237,7 @@ const OrderPage = ({ orderList }) => {
                         Next
                         <span className="material-icons text-sm">chevron_right</span>
                     </button>
-                </div>
+                </div> */}
             </div>
 
             {showInvoice && <InvDetails closeModalHandler={() => setShowInvoice(false)} invInfo={invInfo} />}

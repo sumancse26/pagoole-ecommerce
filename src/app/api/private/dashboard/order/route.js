@@ -67,8 +67,7 @@ export const GET = async (req) => {
                                         prod_name: true,
                                         slug: true,
                                         description: true,
-                                        mrp: true,
-                                        vat: true
+                                        mrp: true
                                     }
                                 }
                             }

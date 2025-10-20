@@ -123,7 +123,7 @@ const InvoiceDetail = ({ closeModalHandler, invInfo = {}, invDtlSkeleton }) => {
                                 {invInfo.payable || 0}
                             </span>
                         </p>
-                        <p className="font-semibold">
+                        {/* <p className="font-semibold">
                             VAT (TK):
                             <span className="font-bold ps-1" id="vat">
                                 {invInfo.vat_amount || 0}
@@ -134,7 +134,7 @@ const InvoiceDetail = ({ closeModalHandler, invInfo = {}, invDtlSkeleton }) => {
                             <span className="font-bold ps-1" id="discount">
                                 {invInfo.discount || 0}
                             </span>
-                        </p>
+                        </p> */}
                     </div>
                 </div>
 

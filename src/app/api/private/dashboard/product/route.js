@@ -56,7 +56,6 @@ export const POST = async (req) => {
         const mrp = formData.get('mrp') || 0;
         const stock_qty = formData.get('stock_qty');
         const description = formData.get('description');
-        const vat = formData.get('vat') || 0;
         const brand_id = formData.get('brand_id');
         const category_id = formData.get('category_id');
         const weight_id = formData.get('weight_id');
@@ -71,7 +70,6 @@ export const POST = async (req) => {
         // Coerce numeric values
         const priceNum = price ? parseFloat(price) : 0;
         const mrpNum = mrp ? parseFloat(mrp) : 0;
-        const vatNum = vat ? parseFloat(vat) : 0;
         const stockQtyNum = stock_qty ? parseInt(stock_qty, 10) : 0;
         const brandIdNum = brand_id ? parseInt(brand_id, 10) : null;
         const categoryIdNum = category_id ? parseInt(category_id, 10) : null;
@@ -220,7 +218,6 @@ export const POST = async (req) => {
                         slug,
                         description,
                         mrp: mrpNum || 0,
-                        vat: vatNum || 0,
                         server_id: fileServer?.id ?? null,
                         category_id: categoryIdNum || null,
                         weight_id: weightIdNum || null,
@@ -361,7 +358,6 @@ export const GET = async (req) => {
                         slug: true,
                         description: true,
                         mrp: true,
-                        vat: true,
                         created_at: true,
                         categories: {
                             select: {
@@ -437,7 +433,6 @@ export const PUT = async (req) => {
         const mrp = parseFloat(formData.get('mrp') || '0');
         const stock_qty = parseInt(formData.get('stock_qty') || '0', 10);
         const description = formData.get('description') || '';
-        const vat = parseFloat(formData.get('vat') || '0');
         const brand_id = parseInt(formData.get('brand_id') || '0', 10);
         const category_id = parseInt(formData.get('category_id') || '0', 10);
         const weight_id = parseInt(formData.get('weight_id') || '0', 10);
@@ -520,7 +515,6 @@ export const PUT = async (req) => {
                 prod_name,
                 description,
                 mrp,
-                vat,
                 brand_id,
                 category_id,
                 weight_id

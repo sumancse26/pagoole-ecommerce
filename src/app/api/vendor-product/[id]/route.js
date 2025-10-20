@@ -44,7 +44,6 @@ export const GET = async (req, { params }) => {
                         slug: true,
                         description: true,
                         mrp: true,
-                        vat: true,
                         prod_name: true,
                         brands: {
                             select: {

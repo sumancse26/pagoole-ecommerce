@@ -23,7 +23,6 @@ export const GET = async (req) => {
                         slug: true,
                         description: true,
                         mrp: true,
-                        vat: true,
                         file_server: {
                             select: {
                                 id: true,

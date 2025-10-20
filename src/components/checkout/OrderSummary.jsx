@@ -41,7 +41,7 @@ const OrderSummary = ({ itemsTotal, deliveryFee, deliveryDiscount, total, addres
                 <p className="text-xl font-semibold text-gray-800">Total:</p>
                 <p className="text-2xl font-bold text-green-700">৳ {total}</p>
             </div>
-            <p className="text-sm text-gray-500 text-start mt-1">VAT included, where applicable</p>
+            {/* <p className="text-sm text-gray-500 text-start mt-1">VAT included, where applicable</p> */}
             <div className="flex gap-4 mt-4">
                 {/* COD */}
                 <label className="flex-1 relative">

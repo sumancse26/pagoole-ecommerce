@@ -14,14 +14,12 @@ export const GET = async (req, { params }) => {
                 slug: true,
                 description: true,
                 mrp: true,
-                vat: true,
                 vendor_Products: {
                     select: {
                         id: true,
                         slug: true,
                         description: true,
-                        mrp: true,
-                        vat: true
+                        mrp: true
                     }
                 }
             }

@@ -57,7 +57,7 @@ const CartListTable = ({ showCart, cartList, closeCart, showCrossIcon }) => {
         closeCart();
     };
 
-    if (showCart && cartItems?.length === 0) {
+    if (isCart && cartItems?.length === 0) {
         return (
             <div className="text-center py-20 bg-white rounded-lg shadow-md w-full">
                 <h2 className="text-2xl font-semibold text-gray-700">Your Cart is Empty</h2>
