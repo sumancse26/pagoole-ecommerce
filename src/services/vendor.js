@@ -33,7 +33,18 @@ export const getVendorListByLocation = async (id) => {
 
 export const getVendorListForDashboard = async () => {
     const res = await fetchApi(`/api/private/dashboard/vendors`, {
-        method: 'GET'
+        method: 'GET',
+        next: {
+            tags: ['dashboardVendorList']
+        }
+    });
+    return res;
+};
+
+export const activeVendor = async (data) => {
+    const res = await fetchApi(`/api/private/dashboard/vendors`, {
+        method: 'PATCH',
+        body: data
     });
     return res;
 };

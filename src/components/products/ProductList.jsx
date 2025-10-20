@@ -112,17 +112,17 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                             {/* Header (Title, Search, Button) - RESPONSIVE */}
                             <div className="px-4 sm:px-6 py-4 flex flex-col gap-2xl md:flex-row md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                                 {/* 1. Title/Description - Takes full width on small screens, fixed width on md+ */}
-                                <div className="w-[20%] md:w-auto">
-                                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Products</h2>
+                                <div className="w-[15%] md:w-auto">
+                                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Product List</h2>
                                     {/* <p className="text-sm text-gray-500 dark:text-neutral-400">
                                         Manage your products here.
                                     </p> */}
                                 </div>
 
                                 {/* 2. Search & Button - MODIFIED FOR CENTER ALIGNMENT on md+ */}
-                                <div className="md:w-[80%] flex flex-col sm:flex-row gap-3 md:justify-between md:items-center">
+                                <div className="md:w-[85%] flex flex-col sm:flex-row gap-3 md:justify-between md:items-center">
                                     {/* Search Input - Flex-grow to fill available space */}
-                                    <div className="relative flex-grow w-[85%]">
+                                    <div className="relative flex-grow w-[80%]">
                                         <input
                                             type="text"
                                             value={searchQuery}
@@ -191,12 +191,6 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                                     <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[80px]">
                                                         Stock
                                                     </th>
-                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-center border-r border-gray-200 dark:border-neutral-600 min-w-[80px]">
-                                                        VAT (%)
-                                                    </th>
-                                                    <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[120px]">
-                                                        Discount (TK)
-                                                    </th>
 
                                                     {/* Last TH: No border-r */}
                                                     <th className="px-1 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-center min-w-[100px]">
@@ -252,16 +246,6 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                                             {product.stock_qty || 0}
                                                         </td>
 
-                                                        {/* VAT Column */}
-                                                        <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-center border-r border-gray-200 dark:border-neutral-700">
-                                                            {product?.products?.vat || 0}
-                                                        </td>
-
-                                                        {/* Discount Column */}
-                                                        <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200 dark:border-neutral-700">
-                                                            {product?.products?.discount || 0}
-                                                        </td>
-
                                                         {/* Action Column - Last TD: No border-r, ensured full height to align buttons */}
                                                         <td className="px-1 py-2 h-full">
                                                             <div className="flex items-center justify-center gap-1 flex-wrap max-w-full overflow-hidden">
@@ -311,7 +295,7 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                 </div>
 
                                 {/* Pagination Buttons */}
-                                <div className="inline-flex gap-2">
+                                {/* <div className="inline-flex gap-2">
                                     <button
                                         type="button"
                                         className="px-3 py-1.5 inline-flex items-center gap-x-1 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-300 dark:hover:bg-neutral-600">
@@ -338,7 +322,7 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                             <path d="M9 18l6-6-6-6" />
                                         </svg>
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { activeVendor } from '@/services/vendor';
 import EmptyState from '@components/EmptyState.jsx';
 import Image from 'next/image';
 import { useEffect, useState, useMemo } from 'react';
@@ -12,17 +13,17 @@ const VendorList = ({ vendorList = [] }) => {
     const router = useRouter();
 
     const approvalHandler = async (id) => {
-        // try {
-        //     const res = await approveProduct(JSON.stringify({ id: id }));
-        //     if (res.success) {
-        //         router.refresh();
-        //         showAlert(res.message, 'success');
-        //     } else {
-        //         showAlert(res.message, 'error');
-        //     }
-        // } catch (err) {
-        //     console.error(err.message);
-        // }
+        try {
+            const res = await activeVendor(JSON.stringify({ vendor_id: id }));
+            if (res.success) {
+                router.refresh();
+                showAlert(res.message, 'success');
+            } else {
+                showAlert(res.message, 'error');
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
     };
 
     const filteredVendors = useMemo(() => {
@@ -133,9 +134,9 @@ const VendorList = ({ vendorList = [] }) => {
 
                                                     {/* Image Column */}
                                                     <td className="px-2 py-2 text-start border-r border-gray-200 dark:border-neutral-700">
-                                                        {/* {product?.products?.product_images?.length ? (
+                                                        {vendor.store_logo?.length ? (
                                                             <Image
-                                                                src={product?.products?.product_images?.[0]?.file_name}
+                                                                src={vendor.store_logo}
                                                                 width={60}
                                                                 height={60}
                                                                 alt="Product"
@@ -143,7 +144,7 @@ const VendorList = ({ vendorList = [] }) => {
                                                             />
                                                         ) : (
                                                             <div className="w-10 h-10 rounded-md bg-gray-200 dark:bg-neutral-600"></div>
-                                                        )} */}
+                                                        )}
                                                     </td>
 
                                                     <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-start border-r border-gray-200 dark:border-neutral-700">
@@ -155,7 +156,7 @@ const VendorList = ({ vendorList = [] }) => {
                                                         {vendor.address || ''}
                                                     </td>
                                                     <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-start border-r border-gray-200 dark:border-neutral-700">
-                                                        {vendor.is_active || ''}
+                                                        {vendor.is_active == 1 ? 'Active' : 'Inactive'}
                                                     </td>
 
                                                     {/* Action Column - Last TD: No border-r, ensured full height to align buttons */}

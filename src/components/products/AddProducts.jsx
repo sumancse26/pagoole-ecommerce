@@ -252,7 +252,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                 />
                             </div>
                             {/* Product Code */}
-                            <div className="mb-4">
+                            {/* <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Product Code
                                 </label>
@@ -264,7 +264,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     placeholder="Enter product code"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
                                 />
-                            </div>
+                            </div> */}
                             {/* Product Name */}
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -296,7 +296,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                 />
                             </div>
                             {/* VAT */}
-                            <div>
+                            {/* <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     VAT (%)
                                 </label>
@@ -308,7 +308,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     placeholder="e.g. 5"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
                                 />
-                            </div>
+                            </div> */}
                             {/* Stock */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -338,7 +338,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                 />
                             </div>
                             {/* Discount */}
-                            <div>
+                            {/* <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Discount
                                 </label>
@@ -350,7 +350,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     placeholder="e.g. 10"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
                                 />
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Image Upload */}
