@@ -66,13 +66,13 @@ const PackageOption = ({ totalItems, totalVendors, deliveryTypeHandler }) => {
                                 </svg>
                                 <span className="text-gray-800 font-semibold">Online Delivery</span>
                             </div>
-                            <p className="text-sm text-gray-600 ml-7">{getDateRange('online')}</p>
+                            <p className="text-sm text-gray-600 ml-4">{getDateRange('online')}</p>
                         </label>
                     </div>
 
                     {/* Shop Delivery */}
                     <div
-                        className={`w-full border rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200
+                        className={`w-full border rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all duration-200
       ${deliveryType === 'shop' ? 'border-green-500 bg-green-50 shadow-md' : 'border-gray-200 hover:border-gray-300'}`}>
                         <input
                             id="shop"

@@ -54,8 +54,8 @@ const OrderSummary = ({ itemsTotal, deliveryFee, deliveryDiscount, total, addres
                         className="peer hidden"
                     />
                     <div className="flex flex-col items-center justify-center h-20 border border-gray-300 rounded-2xl cursor-pointer shadow-sm transition-all duration-300 peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:shadow-md hover:shadow-md">
-                        <span className="text-3xl">💵</span>
-                        <span className="mt-2 text-gray-800 font-semibold text-center">Cash on Delivery</span>
+                        <span className="text-2xl">💵</span>
+                        <span className="mt-1 text-gray-700 font-semibold text-center">Cash on Delivery</span>
                     </div>
                 </label>
 
@@ -70,8 +70,8 @@ const OrderSummary = ({ itemsTotal, deliveryFee, deliveryDiscount, total, addres
                         className="peer hidden"
                     />
                     <div className="flex flex-col items-center justify-center h-20 border border-gray-300 rounded-2xl cursor-pointer shadow-sm transition-all duration-300 peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:shadow-md hover:shadow-md">
-                        <span className="text-3xl">💳</span>
-                        <span className="mt-2 text-gray-800 font-semibold text-center">Online Payment</span>
+                        <span className="text-2xl">💳</span>
+                        <span className="mt-1 text-gray-700 font-semibold text-center">Online Payment</span>
                     </div>
                 </label>
             </div>

@@ -93,7 +93,7 @@ const CartListTable = ({ showWishList, wishList, closeWish }) => {
                             </thead>
 
                             {/* --- Table Body --- */}
-                            <tbody className="divide-y divide-gray-300 h-[600px] overflow-y-auto block">
+                            <tbody className="divide-y divide-gray-300 h-[400px] overflow-y-auto block">
                                 {cartItems?.length > 0 &&
                                     cartItems?.map((item, indx) => (
                                         <tr

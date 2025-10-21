@@ -74,10 +74,19 @@ const Dashboard = ({ dashboardInfo }) => {
                 {
                     label: 'Total Orders',
                     value: dashboardInfo.total_orders || 0,
-                    tooltip: 'All pending orders',
-                    color: 'bg-yellow-500',
+                    tooltip: 'Total orders',
+                    color: 'bg-yellow-300',
                     icon: <InvoiceIcon />
                 },
+
+                {
+                    label: 'Pending Orders',
+                    value: dashboardInfo.total_orders || 0,
+                    tooltip: 'All pending orders',
+                    color: 'bg-yellow-600',
+                    icon: <InvoiceIcon />
+                },
+
                 {
                     label: 'Total Sale',
                     value: dashboardInfo.total_order_amount || 0,

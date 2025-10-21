@@ -189,7 +189,7 @@ const CheckoutPage = () => {
 
                         {/* Right Column */}
                         <div>
-                            <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+                            <div className="bg-white p-3 rounded-lg shadow-md mb-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-xl font-semibold text-gray-800">Promotion</h2>
                                 </div>
@@ -208,7 +208,7 @@ const CheckoutPage = () => {
                             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-xl font-semibold text-gray-800">Invoice and Contact Info</h2>
-                                    <button className="text-green-600 hover:text-green-800 font-medium">Edit</button>
+                                    <button className="text-green-600 hover:text-green-800 font-medium">edit</button>
                                 </div>
                                 <p className="text-gray-600">No invoice details provided in original image.</p>
                             </div>

@@ -45,7 +45,7 @@ const OrderComp = ({ orderInfo }) => {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Total</p>
-                                <p className="font-medium text-gray-900">${orderInfo.total_amount.toFixed(2)}</p>
+                                <p className="font-medium text-gray-900">TK. {orderInfo.total_amount.toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
