@@ -67,7 +67,7 @@ const SearchableDropdown = ({
                 }}
                 onFocus={() => setIsOpen(true)}
                 placeholder={placeholder}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-2 py-1 border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-green-500"
             />
 
             {isOpen && (

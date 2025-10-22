@@ -19,9 +19,15 @@ const SignUp = () => {
         store_description: '',
         address: '',
         location_id: '',
-        store_logo: '',
-        image: ''
+        trade_license_no: '',
+        nid_no: '',
+        store_logo: null,
+        trade_license_image: null,
+        nid_image: null,
+        image: null,
+        isCustomer: false
     });
+
     const [loadingState, setLoadingState] = useState(false);
     const [locations, setLocations] = useState([]);
 
@@ -31,8 +37,6 @@ const SignUp = () => {
 
     useEffect(() => {
         fetchLocations();
-
-        return () => {};
     }, []);
 
     const fetchLocations = async () => {
@@ -40,79 +44,121 @@ const SignUp = () => {
             const res = await getLocationList();
             setLocations(res.location_list || []);
         } catch (err) {
-            throw new Error(err.message);
+            console.error(err);
         }
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleFormSubmit = async (e) => {
-        e.preventDefault();
-
-        setLoadingState(true);
-        start();
-        const result = await register(formData);
-        setLoadingState(false);
-        if (result && result.success) {
-            router.push('/login');
-            showAlert(result.message, 'success');
-            setFormData({
-                email: '',
-                user_name: '',
-                last_name: '',
-                phone: '',
-                password: '',
-                store_name: '',
-                store_description: '',
-                address: '',
-                location_id: '',
-                store_logo: '',
-                image: ''
-            });
-            stop();
-        } else {
-            stop();
-            showAlert(result.message, 'error');
-        }
+    const handleFileChange = (e) => {
+        const { name, files } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: files[0] || null }));
     };
 
     const handleLocation = (val) => {
-        setFormData({
-            ...formData,
+        setFormData((prev) => ({
+            ...prev,
             address: val.full_address,
             location_id: val.id
-        });
+        }));
+    };
+
+    const handleFormSubmit = async (e) => {
+        try {
+            e.preventDefault();
+            setLoadingState(true);
+            start();
+
+            if (
+                formData.location_id == '' ||
+                !formData.location_id ||
+                formData.nid_no == '' ||
+                formData.nid_image == null
+            ) {
+                showAlert('Please fill all required fields', 'error');
+                setLoadingState(false);
+                stop();
+                return;
+            }
+
+            const data = new FormData();
+            Object.keys(formData).forEach((key) => {
+                if (formData[key] !== null && typeof formData[key] !== 'object') {
+                    data.append(key, formData[key]);
+                }
+            });
+
+            if (formData.store_logo) data.append('store_logo', formData.store_logo);
+            if (formData.trade_license_image) data.append('trade_license_image', formData.trade_license_image);
+            if (formData.nid_image) data.append('nid_image', formData.nid_image);
+            if (formData.image) data.append('image', formData.image);
+
+            const result = await register(data);
+
+            if (result?.success) {
+                showAlert(result.message, 'success');
+                router.push('/login');
+                setFormData({
+                    email: '',
+                    user_name: '',
+                    phone: '',
+                    password: '',
+                    store_name: '',
+                    store_description: '',
+                    address: '',
+                    location_id: '',
+                    trade_license_no: '',
+                    nid_no: '',
+                    store_logo: null,
+                    trade_license_image: null,
+                    nid_image: null,
+                    image: null,
+                    isCustomer: false
+                });
+            } else {
+                showAlert(result?.error || 'Registration failed', 'error');
+            }
+        } catch (err) {
+            console.error('Error submitting form:', err);
+            showAlert('An error occurred during registration', 'error');
+        } finally {
+            setLoadingState(false);
+            stop();
+        }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-100 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-100 p-3">
             <form
-                className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-4xl animate-fade-in"
-                onSubmit={handleFormSubmit}>
-                <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-4">Create Your Account</h2>
-                <p className="text-sm text-gray-500 text-center mb-8">Fill in the details below to get started.</p>
+                className="bg-white shadow-xl rounded-2xl p-6 w-full max-w-5xl animate-fade-in"
+                onSubmit={handleFormSubmit}
+                encType="multipart/form-data">
+                <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">Create Your Account</h2>
+                <p className="text-sm text-gray-500 text-center mb-4">Fill in the details below to get started.</p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+                    {/* Email */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
                             Email Address <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="email"
                             name="email"
-                            placeholder="email@gmail.com"
                             required
                             value={formData.email}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                            placeholder="email@gmail.com"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
                     </div>
 
+                    {/* Name */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
                             Name <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -121,13 +167,14 @@ const SignUp = () => {
                             required
                             value={formData.user_name}
                             onChange={handleChange}
-                            placeholder="First Name"
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                            placeholder="Full Name"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
                     </div>
 
+                    {/* Phone */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
                             Mobile Number <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -137,27 +184,29 @@ const SignUp = () => {
                             value={formData.phone}
                             onChange={handleChange}
                             placeholder="Mobile"
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
                     </div>
 
-                    <div className="sm:col-span-2 lg:col-span-1">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    {/* Password */}
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
                             Password <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="password"
                             name="password"
+                            required
                             value={formData.password}
                             onChange={handleChange}
                             placeholder="Password"
-                            required
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
                     </div>
 
+                    {/* Store Name */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
                             Store Name <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -167,47 +216,174 @@ const SignUp = () => {
                             value={formData.store_name}
                             onChange={handleChange}
                             placeholder="Store Name"
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
                     </div>
+
+                    {/* Store Description */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Store Description <span className="text-red-500">*</span>
-                        </label>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">Store Description</label>
                         <input
                             type="text"
                             name="store_description"
-                            required
                             value={formData.store_description}
                             onChange={handleChange}
-                            placeholder="Store Name"
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                            placeholder="Description"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
+                        />
+                    </div>
+
+                    {/* Location */}
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            Location <span className="text-red-500">*</span>
+                        </label>
+                        <SearchableDropdown options={locations} onSelect={handleLocation} labelKey="full_address" />
+                    </div>
+
+                    {/* Trade License No */}
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">Trade License No</label>
+                        <input
+                            type="text"
+                            name="trade_license_no"
+                            value={formData.trade_license_no}
+                            onChange={handleChange}
+                            placeholder="License Number"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
+                        />
+                    </div>
+
+                    {/* NID No */}
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            NID No <span className="text-danger-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="nid_no"
+                            value={formData.nid_no}
+                            onChange={handleChange}
+                            required
+                            placeholder="NID Number"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
+                        />
+                    </div>
+
+                    {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8"> */}
+                    {/* Store Image */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Store Image</label>
+                        <input
+                            type="file"
+                            name="store_logo"
+                            accept="image/*,.pdf"
+                            onChange={handleFileChange}
+                            className="block w-full text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-4 file:rounded-lg file:border-0 
+                       file:text-sm file:font-medium file:bg-emerald-100 file:text-emerald-700 
+                       hover:file:bg-emerald-200 transition-colors duration-200 cursor-pointer"
+                        />
+                        {/* <p className="text-xs text-gray-500 mt-1">Accepted: Images or PDF</p> */}
+                    </div>
+
+                    {/* Trade License */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Trade License Image <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="file"
+                            name="trade_license_image"
+                            accept="image/*,.pdf"
+                            onChange={handleFileChange}
+                            className="block w-full text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-4 file:rounded-lg file:border-0 
+                       file:text-sm file:font-medium file:bg-emerald-100 file:text-emerald-700 
+                       hover:file:bg-emerald-200 transition-colors duration-200 cursor-pointer"
+                        />
+                    </div>
+
+                    {/* NID Image */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            NID Image <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="file"
+                            name="nid_image"
+                            accept="image/*,.pdf"
+                            onChange={handleFileChange}
+                            required
+                            className="block w-full text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-4 file:rounded-lg file:border-0 
+                       file:text-sm file:font-medium file:bg-emerald-100 file:text-emerald-700 
+                       hover:file:bg-emerald-200 transition-colors duration-200 cursor-pointer"
+                        />
+                    </div>
+
+                    {/* User Image */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">User Image</label>
+                        <input
+                            type="file"
+                            name="image"
+                            accept="image/*,.pdf"
+                            onChange={handleFileChange}
+                            className="block w-full text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-4 file:rounded-lg file:border-0 
+                       file:text-sm file:font-medium file:bg-emerald-100 file:text-emerald-700 
+                       hover:file:bg-emerald-200 transition-colors duration-200 cursor-pointer"
+                        />
+                    </div>
+                    {/* </div> */}
+
+                    {/* File Uploads */}
+                    {/* <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">Store Image</label>
+                        <input
+                            type="file"
+                            name="store_logo"
+                            accept="image/*,.pdf"
+                            onChange={handleFileChange}
+                            className="w-full text-xs text-gray-700"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Location <span className="text-red-500">*</span>
-                        </label>
-
-                        <SearchableDropdown options={locations} onSelect={handleLocation} labelKey="full_address" />
-                        {/* <input
-                            type="text"
-                            name="location_id"
-                            required
-                            value={formData.location_id}
-                            onChange={handleChange}
-                            placeholder="Store Name"
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                        /> */}
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">Trade License Image</label>
+                        <input
+                            type="file"
+                            name="trade_license_image"
+                            accept="image/*,.pdf"
+                            onChange={handleFileChange}
+                            className="w-full text-xs text-gray-700"
+                        />
                     </div>
+
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">NID Image</label>
+                        <input
+                            type="file"
+                            name="nid_image"
+                            accept="image/*,.pdf"
+                            onChange={handleFileChange}
+                            className="w-full text-xs text-gray-700"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">User Image</label>
+                        <input
+                            type="file"
+                            name="image"
+                            accept="image/*,.pdf"
+                            onChange={handleFileChange}
+                            className="w-full text-xs text-gray-700"
+                        />
+                    </div> */}
                 </div>
 
                 <div className="flex justify-center w-full">
                     <button
                         disabled={loadingState}
                         type="submit"
-                        className="w-full flex items-center justify-center md:w-auto px-8 py-3 bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-dreen-600 transition-all duration-300 text-white font-semibold rounded-xl shadow-md hover:shadow-lg focus:outline-none">
+                        className="w-full flex items-center justify-center md:w-auto px-6 py-2 bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-white font-semibold text-sm rounded-lg shadow-md hover:shadow-lg focus:outline-none">
                         Complete Registration {loadingState && <Loader />}
                     </button>
                 </div>

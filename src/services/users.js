@@ -10,7 +10,7 @@ export const getUserInfo = async () => {
 export const register = async (data) => {
     const res = await fetchApi('/api/register', {
         method: 'POST',
-        body: JSON.stringify(data)
+        body: data
     });
     return res;
 };

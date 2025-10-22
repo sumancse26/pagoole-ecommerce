@@ -2,12 +2,12 @@ import { AlertProvider } from '@/context/AlertContext';
 import Providers from './provider';
 import { DialogProvider } from '@/context/DialogContext';
 import Alert from '@components/Alert';
-import Header from '@components/header/Header'; // These remain Server Components
-import SidebarSlider from '@components/slider/SidebarSlider'; // These remain Server Components
-import Footer from '@components/footer/Footer'; // These remain Server Components
+import Header from '@components/header/Header';
+import SidebarSlider from '@components/slider/SidebarSlider';
+import Footer from '@components/footer/Footer';
 import { Hind_Siliguri, Geist, Geist_Mono } from 'next/font/google';
 
-import LayoutManager from '@components/LayoutClient'; // Import the new Client Component
+import LayoutManager from '@components/LayoutClient';
 
 import './globals.css';
 
@@ -22,6 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 const hindSiliguri = Hind_Siliguri({
+    variable: '--font-hind-siliguri',
     subsets: ['latin'],
     weight: ['300', '400', '500', '600', '700']
 });

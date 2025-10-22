@@ -51,11 +51,11 @@ const ProductListing = ({ vendorList, locationList }) => {
             <div className="container mx-auto px-4">
                 {/* Header with sorting options */}
                 <div className="flex flex-col md:flex-row justify-end items-center mb-8 gap-5 ">
-                    <div className="p-2 w-full">
+                    <div className="w-full">
                         <input
                             onInput={(e) => searchVendorHandler(e.target.value)}
                             type="text"
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-green-500"
                             placeholder="Search vendors ......"
                         />
                     </div>
@@ -128,7 +128,7 @@ const ProductListing = ({ vendorList, locationList }) => {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex justify-center mt-8">
+                {/* <div className="flex justify-center mt-8">
                     <nav className="flex items-center space-x-1">
                         <button
                             className="px-3 py-1 rounded-md hover:bg-green-50 text-gray-600 hover:text-green-700"
@@ -156,7 +156,7 @@ const ProductListing = ({ vendorList, locationList }) => {
                             Next
                         </button>
                     </nav>
-                </div>
+                </div> */}
             </div>
         </section>
     );

@@ -61,13 +61,17 @@ model Vendors {
   id                     Int                  @id @default(autoincrement())
   user_id                Int
   store_name             String               @db.VarChar(150)
+  trade_license_no       String?              @db.VarChar(16) @default("")
+  nid_no                 String?              @db.VarChar(20) @default("")
   store_description      String?              @db.VarChar(500)
   address                String?              @db.VarChar(300)
   location_id            Int
   is_active              Int                  @default(0)
+  store_logo             String               @db.VarChar(200) @default("")
+  trade_license_image    String               @db.VarChar(200) @default("")
+  nid_image              String               @db.VarChar(200) @default("")
   created_at             DateTime             @default(now())
   updated_at             DateTime             @updatedAt
-  store_logo             String               @default("") @db.Text
   
   users                  Users                @relation(fields: [user_id], references: [id])
   geo_locations          Geo_Locations        @relation(fields: [location_id], references: [id])
@@ -96,7 +100,7 @@ model Brands {
   description           String?       @db.VarChar(500)
   created_at            DateTime      @default(now())
   updated_at            DateTime      @updatedAt
-  brand_logo            String        @default("") @db.Text
+  brand_logo            String        @db.VarChar(200) @default("")
 
   products              Products[]
 }

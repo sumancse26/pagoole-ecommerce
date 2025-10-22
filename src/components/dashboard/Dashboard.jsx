@@ -96,7 +96,7 @@ const Dashboard = ({ dashboardInfo }) => {
                 },
                 {
                     label: 'Total Collections',
-                    value: dashboardInfo.total_order_amount || 0, // if backend provides
+                    value: dashboardInfo.total_order_amount || 0,
                     tooltip: 'Total collected payments',
                     color: 'bg-indigo-500',
                     icon: <CollectionIcon />
