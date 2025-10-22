@@ -132,8 +132,7 @@ model Products {
   prod_name             String                @db.VarChar(150)
   slug                  String                @db.VarChar(150)
   description           String?               @db.VarChar(512)           
-  mrp                   Float           
-  vat                   Float                 @default(0)
+  mrp                   Float
   brand_id              Int?
   category_id           Int?
   server_id             Int?

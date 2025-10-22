@@ -243,12 +243,15 @@ const SignUp = () => {
 
                     {/* Trade License No */}
                     <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1">Trade License No</label>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            Trade License No <span className="text-danger-500">*</span>
+                        </label>
                         <input
                             type="text"
                             name="trade_license_no"
                             value={formData.trade_license_no}
                             onChange={handleChange}
+                            required
                             placeholder="License Number"
                             className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
@@ -292,6 +295,7 @@ const SignUp = () => {
                             Trade License Image <span className="text-red-500">*</span>
                         </label>
                         <input
+                            required
                             type="file"
                             name="trade_license_image"
                             accept="image/*,.pdf"

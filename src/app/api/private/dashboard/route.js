@@ -72,7 +72,9 @@ export const GET = async (req) => {
             });
         }
 
-        const users = await prisma.users.findMany({});
+        const users = await prisma.users.findMany({
+            where: { is_admin: 1 }
+        });
 
         // ✅ Calculate stats
         const totalOrders = orderList.length;

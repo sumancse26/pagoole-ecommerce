@@ -36,6 +36,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
         setProductInfo({
             prod_name: '',
             price: '',
+            mrp: '',
             prod_code: '',
             description: '',
             images: [],
@@ -52,6 +53,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                 prod_name: selectedProduct.products?.prod_name || '',
                 prod_code: selectedProduct.products?.prod_code || '',
                 price: selectedProduct.price || 0,
+                mrp: selectedProduct.mrp || 0,
                 description: selectedProduct.products?.description || '',
                 images: selectedProduct.products?.product_images || [],
                 category_id: selectedProduct.products?.categories?.id || '',
@@ -139,6 +141,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
         formData.append('prod_name', productInfo.prod_name);
         formData.append('prod_code', productInfo.prod_code);
         formData.append('price', productInfo.price);
+        formData.append('mrp', productInfo.mrp);
         formData.append('description', productInfo.description);
         formData.append('stock_qty', productInfo.stock_qty);
         if (selectedProduct.id) {
@@ -179,6 +182,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                 prod_code: '',
                 description: '',
                 price: '',
+                mrp: '',
                 stock_qty: '',
                 images: [],
                 category_id: '',
@@ -194,18 +198,18 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-2">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-            <div className="relative z-10 w-full max-w-2xl bg-white rounded-2xl shadow-xl p-4 md:p-8 transition-all duration-300 ease-in-out dark:bg-neutral-800">
+            <div className="relative z-10 w-full max-w-2xl bg-white rounded-2xl shadow-xl p-3 md:p-3 transition-all duration-300 ease-in-out dark:bg-neutral-800">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 pb-4 dark:text-white border-b border-gray-300">
                     {selectedProduct.id ? 'Update' : 'Create New'} Product
                 </h2>
 
                 <form className="space-y-6" onSubmit={submitForm}>
                     <div className="h-96 overflow-y-auto px-2">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {/* Category */}
-                            <div className="mb-4">
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Category <span className="text-red-500">*</span>
                                 </label>
@@ -219,7 +223,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                 />
                             </div>
                             {/* Brand */}
-                            <div className="mb-4">
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Brand <span className="text-red-500">*</span>
                                 </label>
@@ -231,7 +235,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                 />
                             </div>
                             {/* Unit */}
-                            <div className="mb-4">
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Unit <span className="text-red-500">*</span>
                                 </label>
@@ -257,7 +261,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                 />
                             </div> */}
                             {/* Product Name */}
-                            <div className="mb-4">
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Product Name <span className="text-red-500">*</span>
                                 </label>
@@ -268,13 +272,15 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     onChange={handleInputChange}
                                     required
                                     placeholder="Enter product name"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
+                                    autoComplete="off"
+                                    className="w-full px-3 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
                                 />
                             </div>
                             {/* Price */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Price <span className="text-red-500">({totalPriceWithVat?.toFixed(2) || 0}) *</span>
+                                    Vendor Price
+                                    <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="number"
@@ -283,7 +289,24 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     onChange={handleInputChange}
                                     required
                                     placeholder="0.00"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
+                                    autoComplete="off"
+                                    className="w-full px-3 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Standard Price
+                                    <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    name="mrp"
+                                    value={productInfo.mrp}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="0.00"
+                                    autoComplete="off"
+                                    className="w-full px-3 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
                                 />
                             </div>
                             {/* VAT */}
@@ -312,7 +335,8 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     onChange={handleInputChange}
                                     required
                                     placeholder="1000"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
+                                    autoComplete="off"
+                                    className="w-full px-3 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
                                 />
                             </div>
                             <div>
@@ -325,7 +349,8 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     value={productInfo.description}
                                     onChange={handleInputChange}
                                     placeholder="e.g. 10"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
+                                    autoComplete="off"
+                                    className="w-full px-2 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
                                 />
                             </div>
                             {/* Discount */}
@@ -345,7 +370,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                         </div>
 
                         {/* Image Upload */}
-                        <div>
+                        <div className="mt-2">
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Product Image
                             </label>

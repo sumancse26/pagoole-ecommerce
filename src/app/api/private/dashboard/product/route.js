@@ -473,11 +473,11 @@ export const PUT = async (req) => {
                     });
 
                     if (ext === '.png') {
-                        compressedBuffer = await img.png({ compressionLevel: 9 }).toBuffer();
+                        compressedBuffer = await img.png({ compressionLevel: 8 }).toBuffer();
                     } else if (ext === '.webp') {
-                        compressedBuffer = await img.webp({ quality: 10 }).toBuffer();
+                        compressedBuffer = await img.webp({ quality: 8 }).toBuffer();
                     } else {
-                        compressedBuffer = await img.jpeg({ quality: 10 }).toBuffer();
+                        compressedBuffer = await img.jpeg({ quality: 8 }).toBuffer();
                     }
                 } catch (err) {
                     console.error('Image compression failed:', err);

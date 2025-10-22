@@ -55,7 +55,7 @@ const Dashboard = ({ dashboardInfo }) => {
                 ...(newSession?.user?.role === 0
                     ? [
                           {
-                              label: 'Total Users',
+                              label: 'Total Vendors',
                               value: dashboardInfo.total_users || 0,
                               tooltip: 'The number of daily users',
                               color: 'bg-blue-500',

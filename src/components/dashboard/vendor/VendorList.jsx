@@ -174,7 +174,7 @@ const VendorList = ({ vendorList = [] }) => {
                                                 <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-start border-r border-gray-200 dark:border-neutral-600 min-w-[120px]">
                                                     Address
                                                 </th>
-                                                <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-end border-r border-gray-200 dark:border-neutral-600 min-w-[100px]">
+                                                <th className="px-2 py-3 font-semibold text-xs uppercase tracking-wider text-gray-800 dark:text-neutral-200 text-center border-r border-gray-200 dark:border-neutral-600 min-w-[100px]">
                                                     Status
                                                 </th>
 
@@ -217,7 +217,7 @@ const VendorList = ({ vendorList = [] }) => {
                                                     <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-start border-r border-gray-200 dark:border-neutral-700">
                                                         {vendor.address || ''}
                                                     </td>
-                                                    <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-start border-r border-gray-200 dark:border-neutral-700">
+                                                    <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-center border-r border-gray-200 dark:border-neutral-700">
                                                         {vendor.is_active == 1 ? 'Active' : 'Inactive'}
                                                     </td>
 

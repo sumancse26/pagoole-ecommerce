@@ -66,7 +66,19 @@ export const POST = async (req) => {
         const isCustomerBool = isCustomer === 'true' || isCustomer === true;
 
         if (!isCustomerBool) {
-            if (!(user_name && email && password && store_name && location_id)) {
+            if (
+                !(
+                    user_name &&
+                    email &&
+                    password &&
+                    store_name &&
+                    location_id &&
+                    trade_license_no &&
+                    nid_no &&
+                    trade_license_image &&
+                    nid_image
+                )
+            ) {
                 for (const filePath of uploadedFiles) {
                     try {
                         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);

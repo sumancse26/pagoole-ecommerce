@@ -9,6 +9,11 @@ export const GET = async (req) => {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
         const vendor_list = await prisma.vendors.findMany({
+            where: {
+                users: {
+                    is_admin: 1
+                }
+            },
             select: {
                 id: true,
                 user_id: true,
