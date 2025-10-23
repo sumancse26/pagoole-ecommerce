@@ -208,13 +208,37 @@ model Cart_Items {
   vendor_products        Vendor_Products @relation(fields: [vendor_prod_id], references: [id])
 }
 
+enum orderStatus {
+  Pending
+  Processing
+  Shipped
+  In Transit
+  Delivered
+  Cancelled
+  Returned
+  Completed
+}
+
+/*
+  Completed = Transaction fully completed and closed.
+  Delivered = Order successfully delivered to the customer.
+  Returned = Customer returned the product.
+  Refunded  = Payment refunded to the customer.
+  Shipped = Order handed over to courier/shipping provider.
+  In Transit  = Order currently on the way to the customer.
+  Out for Delivery = Courier is about to deliver the package.
+  Processing = Payment confirmed; preparing the order for shipment.
+  Cancelled = Order cancelled by customer or admin before processing.
+  Pending = Order placed but not yet confirmed or paid.
+*/
+
 model Orders {
   id                    Int             @id @default(autoincrement())
   user_id               Int
   order_code            String?         @default("")
   delivery_address      Int             @default(0)
   total_amount          Float          
-  order_status          String          @default("Pending") @db.VarChar(20)
+  order_status          orderStatus     @default("Pending")
   payment_method        String          @default("cod") @db.VarChar(15)
   payment_status        String          @default("Unpaid") @db.VarChar(20)
   created_at            DateTime        @default(now())

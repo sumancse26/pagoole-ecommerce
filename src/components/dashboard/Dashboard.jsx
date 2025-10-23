@@ -51,7 +51,6 @@ const Dashboard = ({ dashboardInfo }) => {
             const newSession = await getSession();
 
             const cards = [
-                // Add Users card only if role == 0
                 ...(newSession?.user?.role === 0
                     ? [
                           {
@@ -71,11 +70,12 @@ const Dashboard = ({ dashboardInfo }) => {
                     color: 'bg-green-500',
                     icon: <ProductIcon />
                 },
+
                 {
                     label: 'Total Orders',
                     value: dashboardInfo.total_orders || 0,
                     tooltip: 'Total orders',
-                    color: 'bg-yellow-300',
+                    color: 'bg-gray-700',
                     icon: <InvoiceIcon />
                 },
 
@@ -83,7 +83,45 @@ const Dashboard = ({ dashboardInfo }) => {
                     label: 'Pending Orders',
                     value: dashboardInfo.total_orders || 0,
                     tooltip: 'All pending orders',
-                    color: 'bg-yellow-600',
+                    color: 'bg-yellow-500',
+                    icon: <InvoiceIcon />
+                },
+
+                {
+                    label: 'Returned Orders',
+                    value: dashboardInfo.total_orders || 0,
+                    tooltip: 'All Returned orders',
+                    color: 'bg-orange-500',
+                    icon: <InvoiceIcon />
+                },
+
+                {
+                    label: 'Shipped Orders',
+                    value: dashboardInfo.total_orders || 0,
+                    tooltip: 'All Shipped orders',
+                    color: 'bg-purple-500',
+                    icon: <InvoiceIcon />
+                },
+
+                {
+                    label: ' In Transit Orders',
+                    value: dashboardInfo.total_orders || 0,
+                    tooltip: 'All in transit orders',
+                    color: 'bg-cyan-500',
+                    icon: <InvoiceIcon />
+                },
+                {
+                    label: 'Delivered Orders',
+                    value: dashboardInfo.total_orders || 0,
+                    tooltip: 'All delivered orders',
+                    color: 'bg-green-500',
+                    icon: <InvoiceIcon />
+                },
+                {
+                    label: 'Completed Orders',
+                    value: dashboardInfo.total_orders || 0,
+                    tooltip: 'All Completed orders',
+                    color: 'bg-green-700',
                     icon: <InvoiceIcon />
                 },
 
