@@ -154,7 +154,7 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
     };
 
     return (
-        <div className="flex items-center gap-5 text-white" ref={containerRef}>
+        <div className="flex items-center gap-[20px] text-white" ref={containerRef}>
             {/* Wishlist */}
             <div className="relative">
                 <button
@@ -219,7 +219,7 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
             {/* User Icon with Dropdown */}
             <div className="relative">
                 <button
-                    className="p-2 hover:text-lime-200 focus:outline-none"
+                    className="p-0 ms-1 hover:text-lime-200 focus:outline-none"
                     aria-label="Account"
                     onClick={userMenuHandler}
                     title="Account Menu">

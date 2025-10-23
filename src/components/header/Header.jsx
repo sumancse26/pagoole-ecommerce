@@ -34,9 +34,9 @@ const HeaderComp = async () => {
                     </div>
 
                     <div className="hidden md:flex flex-1 justify-center">
-                        <form className="w-full max-w-7xl relative flex items-center gap-3">
+                        <form className="w-full max-w-5xl relative flex items-center gap-3">
                             {/* Search Input */}
-                            <div className="relative flex-1">
+                            <div className="relative flex-1 px-2">
                                 <input
                                     type="search"
                                     placeholder="Search for products..."
@@ -46,7 +46,7 @@ const HeaderComp = async () => {
                                 />
                                 <button
                                     type="submit"
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-600 hover:text-green-800"
+                                    className="absolute right-[35px] top-1/2 transform -translate-y-1/2 text-green-600 hover:text-green-800"
                                     aria-label="Search">
                                     <svg
                                         className="w-5 h-5"

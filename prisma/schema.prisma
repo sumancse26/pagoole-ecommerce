@@ -25,9 +25,10 @@ model Users {
   otp                   Int               @default(0) 
   is_admin              Int               @default(1)
   is_active             Int               @default(0)
+  image                 String            @default("") @db.VarChar(1000)
   created_at            DateTime          @default(now())
   updated_at            DateTime          @updatedAt
-  image                 String            @default("") @db.Text
+  
   
   geo_locations         Geo_Locations[]
   vendors               Vendors[]
@@ -67,9 +68,9 @@ model Vendors {
   address                String?              @db.VarChar(300)
   location_id            Int
   is_active              Int                  @default(0)
-  store_logo             String               @db.VarChar(200) @default("")
-  trade_license_image    String               @db.VarChar(200) @default("")
-  nid_image              String               @db.VarChar(200) @default("")
+  store_logo             String               @db.VarChar(300) @default("")
+  trade_license_image    String               @db.VarChar(300) @default("")
+  nid_image              String               @db.VarChar(300) @default("")
   created_at             DateTime             @default(now())
   updated_at             DateTime             @updatedAt
   
@@ -98,9 +99,9 @@ model Brands {
   id                    Int           @id @default(autoincrement())
   name                  String        @unique @db.VarChar(100)
   description           String?       @db.VarChar(500)
+  brand_logo            String        @db.VarChar(300) @default("")
   created_at            DateTime      @default(now())
   updated_at            DateTime      @updatedAt
-  brand_logo            String        @db.VarChar(200) @default("")
 
   products              Products[]
 }
@@ -155,7 +156,7 @@ model Product_Images {
   vendor_product_id     Int?
   vendor_id             Int
   server_id             Int?
-  file_name             String            @db.VarChar(100)
+  file_name             String            @db.VarChar(200)
   created_at            DateTime          @default(now())
   updated_at            DateTime          @updatedAt
 
@@ -212,7 +213,7 @@ enum orderStatus {
   Pending
   Processing
   Shipped
-  In Transit
+  InTransit
   Delivered
   Cancelled
   Returned
@@ -238,7 +239,7 @@ model Orders {
   order_code            String?         @default("")
   delivery_address      Int             @default(0)
   total_amount          Float          
-  order_status          orderStatus     @default("Pending")
+  order_status          orderStatus     @default(Pending)
   payment_method        String          @default("cod") @db.VarChar(15)
   payment_status        String          @default("Unpaid") @db.VarChar(20)
   created_at            DateTime        @default(now())
