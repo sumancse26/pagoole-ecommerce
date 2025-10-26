@@ -18,6 +18,7 @@ export const POST = async (req) => {
         }
 
         const body = await req.json();
+
         const { full_name, phone, address_line, region, city, area, address_type, country = 'Bangladesh' } = body;
 
         if (!full_name || !phone || !address_line || !region || !city || !area || !address_type) {

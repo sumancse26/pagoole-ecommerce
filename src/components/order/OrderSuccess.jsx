@@ -1,5 +1,5 @@
 'use server';
-
+import moment from 'moment';
 const OrderComp = ({ orderInfo }) => {
     return (
         <>
@@ -33,7 +33,10 @@ const OrderComp = ({ orderInfo }) => {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Date</p>
-                                <p className="font-medium text-gray-900">{orderInfo.updated_at || ''}</p>
+                                <p className="font-medium text-gray-900">
+                                    {' '}
+                                    {moment(orderInfo.updated_at)?.format('DD MMM, YYYY')}
+                                </p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Payment Method</p>

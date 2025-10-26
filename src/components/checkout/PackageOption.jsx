@@ -46,6 +46,7 @@ const PackageOption = ({ totalItems, totalVendors, deliveryTypeHandler }) => {
                             type="radio"
                             className="mt-1 form-radio text-green-600 focus:ring-green-500"
                             checked={deliveryType === 'online'}
+                            autoComplete="off"
                             onChange={() => changeDeliveryTypeHandler('online')}
                         />
                         <label htmlFor="online" className="flex flex-col cursor-pointer">
@@ -79,6 +80,7 @@ const PackageOption = ({ totalItems, totalVendors, deliveryTypeHandler }) => {
                             type="radio"
                             className="mt-1 form-radio text-green-600 focus:ring-green-500"
                             checked={deliveryType === 'shop'}
+                            autoComplete="off"
                             onChange={() => changeDeliveryTypeHandler('shop')}
                         />
                         <label htmlFor="shop" className="flex flex-col cursor-pointer">

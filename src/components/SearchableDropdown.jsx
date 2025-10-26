@@ -67,6 +67,12 @@ const SearchableDropdown = ({
                 }}
                 onFocus={() => setIsOpen(true)}
                 placeholder={placeholder}
+                autoComplete="new-password"
+                name="searchable-dropdown"
+                id="searchable-dropdown"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
                 className="w-full px-2 py-1 border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-green-500"
             />
 

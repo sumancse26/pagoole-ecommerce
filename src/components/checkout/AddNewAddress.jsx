@@ -1,5 +1,6 @@
 'use client';
 
+import { REGION_ID } from '@/constants/info';
 import { useEffect, useState } from 'react';
 import { getRegionList } from '@/services/location';
 import { createDeliveryAddress } from '@/services/deliveryAddress';
@@ -26,20 +27,22 @@ const AddNewAddress = ({ onClose }) => {
 
     useEffect(() => {
         setIsOpen(true);
-        locationListHandler({
-            id: null,
-            type: 'region'
-        });
+        locationListHandler(
+            {
+                id: REGION_ID
+            },
+            'region'
+        );
 
         return () => {};
     }, []);
 
-    const locationListHandler = async (data) => {
+    const locationListHandler = async (data, type) => {
         try {
-            if (data.type == 'region') {
+            if (type == 'region') {
                 const res = await getRegionList(data);
                 setRegionList(res.list_data || []);
-            } else if (data.type == 'city') {
+            } else if (type == 'city') {
                 const res = await getRegionList(data);
 
                 setCitiList(res.list_data || []);
@@ -58,11 +61,12 @@ const AddNewAddress = ({ onClose }) => {
             ...prev,
             region: val.name
         }));
-
-        locationListHandler({
-            id: val.id,
-            type: 'city'
-        });
+        locationListHandler(
+            {
+                id: val.id
+            },
+            'city'
+        );
     };
 
     const handleCityChange = (val) => {
@@ -71,10 +75,12 @@ const AddNewAddress = ({ onClose }) => {
             city: val.name
         }));
 
-        locationListHandler({
-            id: val.id,
-            type: 'area'
-        });
+        locationListHandler(
+            {
+                id: val.id
+            },
+            'area'
+        );
     };
 
     const handleAreaChange = (val) => {
@@ -170,6 +176,7 @@ const AddNewAddress = ({ onClose }) => {
                                 name="full_name"
                                 value={values.full_name}
                                 onChange={handleChange}
+                                autoComplete="off"
                                 placeholder="Enter your first and last name"
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                             />
@@ -195,6 +202,7 @@ const AddNewAddress = ({ onClose }) => {
                                 name="phone"
                                 value={values.phone}
                                 onChange={handleChange}
+                                autoComplete="off"
                                 placeholder="Please enter your phone number"
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                             />
@@ -210,7 +218,7 @@ const AddNewAddress = ({ onClose }) => {
                                 placeholder={'Search or select city .....'}
                             />
                         </div>
-                        <div>
+                        {/* <div>
                             <label htmlFor="building" className="block text-sm font-medium text-gray-700">
                                 Building / House No / Floor / Street
                             </label>
@@ -221,9 +229,10 @@ const AddNewAddress = ({ onClose }) => {
                                 value={values.building}
                                 onChange={handleChange}
                                 placeholder="Please enter"
+                                autoComplete="off"
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                             />
-                        </div>
+                        </div> */}
                         <div>
                             <label htmlFor="area" className="block text-sm font-medium text-gray-700">
                                 Area <span className="text-red-500">*</span>
@@ -235,7 +244,7 @@ const AddNewAddress = ({ onClose }) => {
                                 placeholder={'Search or select area .....'}
                             />
                         </div>
-                        <div>
+                        {/* <div>
                             <label htmlFor="colony" className="block text-sm font-medium text-gray-700">
                                 Colony / Suburb / Locality / Landmark
                             </label>
@@ -246,9 +255,10 @@ const AddNewAddress = ({ onClose }) => {
                                 value={values.colony}
                                 onChange={handleChange}
                                 placeholder="Please enter"
+                                autoComplete="off"
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                             />
-                        </div>
+                        </div> */}
                         <div>
                             <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                                 Address <span className="text-red-500">*</span>
@@ -259,6 +269,7 @@ const AddNewAddress = ({ onClose }) => {
                                 name="address_line"
                                 value={values.address_line}
                                 onChange={handleChange}
+                                autoComplete="off"
                                 placeholder="For Example: House# 123, Street# 123, ABC Road"
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                             />

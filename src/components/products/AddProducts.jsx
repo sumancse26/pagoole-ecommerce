@@ -19,6 +19,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
         images: [],
         category_id: '',
         brand_id: '',
+        mrp: '',
         weight_id: ''
     });
     const [previews, setPreviews] = useState([]);
@@ -53,7 +54,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                 prod_name: selectedProduct.products?.prod_name || '',
                 prod_code: selectedProduct.products?.prod_code || '',
                 price: selectedProduct.price || 0,
-                mrp: selectedProduct.mrp || 0,
+                mrp: selectedProduct.products?.mrp || 0,
                 description: selectedProduct.products?.description || '',
                 images: selectedProduct.products?.product_images || [],
                 category_id: selectedProduct.products?.categories?.id || '',
@@ -131,7 +132,15 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
         e.preventDefault();
         setLoadingState(true);
 
-        if (!productInfo.prod_name || !productInfo.price || !category || !brand || !weight || !productInfo.stock_qty) {
+        if (
+            !productInfo.prod_name ||
+            !productInfo.price ||
+            !productInfo.mrp ||
+            !category ||
+            !brand ||
+            !weight ||
+            !productInfo.stock_qty
+        ) {
             showAlert('Fill all the fields', 'error');
             setLoadingState(false);
             return;
@@ -231,6 +240,8 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                     options={brands}
                                     onSelect={brandSelectHandler}
                                     labelKey="name"
+                                    valueKey="id"
+                                    placeholder="Select"
                                     selected={brand}
                                 />
                             </div>

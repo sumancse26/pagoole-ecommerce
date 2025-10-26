@@ -41,6 +41,7 @@ export const GET = async (req) => {
             });
         }
 
+        // 🧮 Vendor (userRole == 1)
         if (userRole === 1 && vendorInfo) {
             totalProducts = await prisma.vendor_Products.count({
                 where: { vendor_id: vendorInfo.id }
@@ -52,6 +53,19 @@ export const GET = async (req) => {
                         some: {
                             vendor_products: { vendor_id: vendorInfo.id }
                         }
+                    },
+                    order_status: {
+                        in: [
+                            'Pending',
+                            'Processing',
+                            'Shipped',
+                            'InTransit',
+                            'OutForDelivery',
+                            'Delivered',
+                            'Completed',
+                            'Returned',
+                            'Cancelled'
+                        ]
                     }
                 },
                 orderBy: { id: 'desc' },
@@ -80,28 +94,49 @@ export const GET = async (req) => {
                     total_orders: 0,
                     total_order_amount: 0,
                     total_users: users?.length || 0,
-                    order_counts: {}
+                    order_counts: {
+                        Pending: 0,
+                        Processing: 0,
+                        Shipped: 0,
+                        InTransit: 0,
+                        OutForDelivery: 0,
+                        Delivered: 0,
+                        Completed: 0,
+                        Returned: 0,
+                        Cancelled: 0
+                    }
                 }
             });
         }
 
-        // ✅ Group orders by status
-        const groupedOrders = allOrders.reduce((acc, order) => {
+        // ✅ Initialize order status map
+        const validStatuses = [
+            'Pending',
+            'Processing',
+            'Shipped',
+            'InTransit',
+            'OutForDelivery',
+            'Delivered',
+            'Completed',
+            'Returned',
+            'Cancelled'
+        ];
+
+        const statusCounts = Object.fromEntries(validStatuses.map((s) => [s, 0]));
+        const statusAmounts = Object.fromEntries(validStatuses.map((s) => [s, 0]));
+
+        // ✅ Compute counts and totals
+        for (const order of allOrders) {
             const status = order.order_status || 'Unknown';
-            if (!acc[status]) acc[status] = [];
-            acc[status].push(order);
-            return acc;
-        }, {});
+            if (validStatuses.includes(status)) {
+                statusCounts[status]++;
+                statusAmounts[status] += Number(order.total_amount || 0);
+            }
+        }
 
-        // ✅ Compute count per status
-        const statusCounts = Object.fromEntries(
-            Object.entries(groupedOrders).map(([status, orders]) => [status, orders.length])
-        );
-
-        // ✅ Calculate totals for Pending orders only
-        const pendingOrders = groupedOrders.Pending || [];
-        const totalOrders = pendingOrders.length;
-        const totalOrderAmount = pendingOrders.reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
+        // ✅ Compute overall totals
+        const totalOrders = allOrders.length;
+        const totalOrderAmount = allOrders.reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
 
         // ✅ Get total users (admins)
         const users = await prisma.users.findMany({ where: { is_admin: 1 } });
@@ -112,7 +147,8 @@ export const GET = async (req) => {
             total_orders: totalOrders,
             total_order_amount: totalOrderAmount,
             total_users: users?.length || 0,
-            order_counts: statusCounts
+            order_counts: statusCounts,
+            order_amounts: statusAmounts
         };
 
         // ✅ Return structured response

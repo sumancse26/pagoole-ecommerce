@@ -244,7 +244,7 @@ const SignUp = () => {
                     {/* Trade License No */}
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-1">
-                            Trade License No <span className="text-danger-500">*</span>
+                            Trade License No <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -260,7 +260,7 @@ const SignUp = () => {
                     {/* NID No */}
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-1">
-                            NID No <span className="text-danger-500">*</span>
+                            NID No <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"

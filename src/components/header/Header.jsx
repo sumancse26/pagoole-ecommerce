@@ -23,7 +23,7 @@ const HeaderComp = async () => {
         <header className="bg-white shadow sticky top-0 z-45">
             {/* Green Top Bar */}
             <div className="bg-green-600">
-                <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between">
+                <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between gap-[85px]">
                     {/* Logo */}
                     <div className="flex">
                         <Link href="/">
@@ -34,7 +34,7 @@ const HeaderComp = async () => {
                     </div>
 
                     <div className="hidden md:flex flex-1 justify-center">
-                        <form className="w-full max-w-5xl relative flex items-center gap-3">
+                        <form className="w-full relative flex items-center gap-3">
                             {/* Search Input */}
                             <div className="relative flex-1 px-2">
                                 <input

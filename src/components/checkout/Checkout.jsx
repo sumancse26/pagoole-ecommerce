@@ -61,7 +61,7 @@ const CheckoutPage = () => {
     const fetchDelAddressHandler = async () => {
         try {
             const res = await getDeliveryAddresstList();
-
+            console.log('address list', res);
             if (res.success) {
                 setSelectedAddress(() => {
                     const defaultAddr = res.address_list.find((addr) => addr.default_address === '1');
@@ -157,6 +157,7 @@ const CheckoutPage = () => {
         fetchDelAddressHandler();
 
         setOpenNewAddrModal(false);
+        setOpenModal(false);
     };
 
     const deliveryTypeHandler = (val) => {
@@ -197,6 +198,7 @@ const CheckoutPage = () => {
                                     <input
                                         type="text"
                                         placeholder="Enter Store/Daraz Code"
+                                        autoComplete="off"
                                         className="flex-grow border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                                     />
                                     <button className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200">

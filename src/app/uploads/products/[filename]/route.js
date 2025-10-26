@@ -27,7 +27,7 @@ function getContentType(filename) {
     }
 }
 
-export async function GET(request, { params }) {
+export const GET = async (request, { params }) => {
     try {
         const filename = await params?.filename;
         if (!filename || filename !== path.basename(filename)) {
@@ -55,4 +55,4 @@ export async function GET(request, { params }) {
         console.error('File serve error:', err);
         return new Response('Internal Server Error', { status: 500 });
     }
-}
+};

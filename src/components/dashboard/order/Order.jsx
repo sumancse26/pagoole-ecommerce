@@ -1,8 +1,14 @@
 'use client';
 
+import { useDialog } from '@/context/DialogContext';
+import { useApiLoader } from '@/lib/useApiLoader';
+import { useAlert } from '@/context/AlertContext';
 import { useEffect, useState, useRef } from 'react';
 import InvDetails from './OrderDetails';
 import EmptyState from '@components/EmptyState.jsx';
+import { updateOrderStatus } from '@/services/order.js';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const OrderPage = ({ orderList }) => {
     const [showInvoice, setShowInvoice] = useState(false);
@@ -12,6 +18,12 @@ const OrderPage = ({ orderList }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef(null);
     const inputRef = useRef(null);
+
+    const { showAlert } = useAlert();
+    const router = useRouter();
+    const { openDialog } = useDialog();
+    const { start, stop } = useApiLoader();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -78,11 +90,33 @@ const OrderPage = ({ orderList }) => {
         setInvInfo(invData);
     };
 
-    // Filtering based on order_code or user_name (case-insensitive)
     const filteredOrders = orderList?.filter((order) => {
         const term = searchQuery.toLowerCase();
         return order.order_code?.toLowerCase()?.includes(term) || order.users?.user_name?.toLowerCase()?.includes(term);
     });
+
+    const approvalOrderHandler = async (data, action, type) => {
+        try {
+            await openDialog('You want to update ?', { type: 'confirm' });
+            start();
+            const params = {
+                id: data.id,
+                action,
+                type
+            };
+            const res = await updateOrderStatus(params);
+            // showAlert(res.message, 'success');
+            if (res.success) {
+                await openDialog(res.message, { type: 'success' });
+                router.refresh();
+            } else {
+                await openDialog(res.message, { type: 'error' });
+            }
+            stop();
+        } catch (err) {
+            showAlert('Somethind went wrong', 'error');
+        }
+    };
 
     return (
         <div className="p-4 sm:p-6 bg-white rounded-2xl shadow-lg">
@@ -181,36 +215,76 @@ const OrderPage = ({ orderList }) => {
                                     <td className="px-4 sm:px-5 py-3 border-r border-gray-200">
                                         <span
                                             className={`px-2 py-1 text-xs font-medium rounded-full ${
-                                                order.payment_status === 'unpaid'
-                                                    ? 'bg-red-100 text-red-700'
-                                                    : order.payment_status === 'paid'
+                                                order.order_status === 'Pending'
+                                                    ? 'bg-amber-100 text-amber-700'
+                                                    : order.order_status === 'Processing'
+                                                    ? 'bg-blue-100 text-blue-700'
+                                                    : order.order_status === 'Shipped'
+                                                    ? 'bg-indigo-100 text-indigo-700'
+                                                    : order.order_status === 'InTransit'
+                                                    ? 'bg-cyan-100 text-cyan-700'
+                                                    : order.order_status === 'OutForDelivery'
+                                                    ? 'bg-sky-100 text-sky-700'
+                                                    : order.order_status === 'Delivered'
                                                     ? 'bg-green-100 text-green-700'
-                                                    : 'bg-yellow-100 text-yellow-700'
+                                                    : order.order_status === 'Cancelled'
+                                                    ? 'bg-red-100 text-red-700'
+                                                    : order.order_status === 'Returned'
+                                                    ? 'bg-rose-100 text-rose-700'
+                                                    : order.order_status === 'Completed'
+                                                    ? 'bg-emerald-100 text-emerald-700'
+                                                    : 'bg-gray-100 text-gray-700'
+                                            }
                                             }`}>
-                                            {order.payment_status || ''}
+                                            {order.order_status || ''}
                                         </span>
                                     </td>
                                     <td className="px-4 sm:px-5 py-3 flex items-center justify-end gap-2 sm:gap-3">
-                                        <button
-                                            className="opacity-0 group-hover:opacity-100 bg-blue-500 hover:bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
-                                            title="Approve Order">
-                                            <span className="material-icons">edit</span>
-                                        </button>
-                                        <button
+                                        {/* <button
                                             className="opacity-0 group-hover:opacity-100 bg-green-600 hover:bg-green-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
                                             title="collection">
                                             <span className="material-icons">money</span>
-                                        </button>
+                                        </button> */}
+
+                                        {session?.user.role === 0 && (
+                                            <>
+                                                {order.order_status?.toLowerCase() != 'completed' &&
+                                                    order.order_status?.toLowerCase() != 'returned' &&
+                                                    order.order_status?.toLowerCase() != 'cancelled' && (
+                                                        <button
+                                                            onClick={() => approvalOrderHandler(order, 2, '')}
+                                                            className="opacity-0 group-hover:opacity-100 bg-blue-500 hover:bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
+                                                            title="Update Status">
+                                                            <span className="material-icons">done</span>
+                                                        </button>
+                                                    )}
+                                                {order.order_status?.toLowerCase() !== 'returned' &&
+                                                    order.order_status?.toLowerCase() !== 'cancelled' && (
+                                                        <button
+                                                            onClick={() => approvalOrderHandler(order, 1, 'Returned')}
+                                                            className="opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
+                                                            title="Return">
+                                                            <span className="material-icons">u_turn_left</span>
+                                                        </button>
+                                                    )}
+
+                                                {order.order_status?.toLowerCase() !== 'cancelled' &&
+                                                    order.order_status?.toLowerCase() !== 'returned' && (
+                                                        <button
+                                                            onClick={() => approvalOrderHandler(order, 1, 'Cancelled')}
+                                                            className="opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
+                                                            title="Cancel">
+                                                            <span className="material-icons">cancel</span>
+                                                        </button>
+                                                    )}
+                                            </>
+                                        )}
+
                                         <button
                                             onClick={() => viewBtnHandler(order)}
                                             className="opacity-0 group-hover:opacity-100 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
                                             title="View Order Details">
                                             <span className="material-icons text-sm">visibility</span>
-                                        </button>
-                                        <button
-                                            className="opacity-0 group-hover:opacity-100 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
-                                            title="Delete Order">
-                                            <span className="material-icons text-sm">delete</span>
                                         </button>
                                     </td>
                                 </tr>

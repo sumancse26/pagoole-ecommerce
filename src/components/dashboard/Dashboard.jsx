@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import DashboardSkeleton from './DashboardSkeleton';
 import { getSession } from 'next-auth/react';
 
+// === 🧩 ICONS === //
 const UserIcon = () => (
     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path d="M17 21v-2a4 4 0 0 0-3-3.87" />
@@ -25,6 +26,34 @@ const InvoiceIcon = () => (
     </svg>
 );
 
+const TruckIcon = () => (
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path d="M3 3h13v13H3z" />
+        <path d="M16 8h5l-2-3h-3z" />
+        <circle cx="7.5" cy="16.5" r="1.5" />
+        <circle cx="17.5" cy="16.5" r="1.5" />
+    </svg>
+);
+
+const CheckIcon = () => (
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+        <path d="M5 13l4 4L19 7" />
+    </svg>
+);
+
+const ReturnIcon = () => (
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path d="M3 7v6h6" />
+        <path d="M21 17A9 9 0 1 1 9 3" />
+    </svg>
+);
+
+const CancelIcon = () => (
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+        <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
+);
+
 const SaleIcon = () => (
     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path d="M12 8c-1.333 0-4 1-4 4s2.667 4 4 4 4-1 4-4-2.667-4-4-4z" />
@@ -32,10 +61,26 @@ const SaleIcon = () => (
     </svg>
 );
 
-const CollectionIcon = () => (
+const RefundIcon = () => (
     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path d="M12 8c-2.21 0-4 1.343-4 3s1.79 3 4 3 4-1.343 4-3-1.79-3-4-3z" />
-        <path d="M4 8v8h4v-8H4zm12 0v8h4v-8h-4z" />
+        <path d="M12 8v8M8 12h8" />
+        <path d="M21 12a9 9 0 1 1-9-9v3l4-4-4-4v3a12 12 0 1 0 12 12h-3z" />
+    </svg>
+);
+
+const DeliveryIcon = () => (
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path d="M3 3h13v8H3z" />
+        <path d="M16 8h5l-2-3h-3z" />
+        <circle cx="7.5" cy="16.5" r="1.5" />
+        <circle cx="17.5" cy="16.5" r="1.5" />
+    </svg>
+);
+
+const MoneyIcon = () => (
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <path d="M12 8v8M8 12h8" />
     </svg>
 );
 
@@ -56,8 +101,8 @@ const Dashboard = ({ dashboardInfo }) => {
                           {
                               label: 'Total Vendors',
                               value: dashboardInfo.total_users || 0,
-                              tooltip: 'The number of daily users',
-                              color: 'bg-blue-500',
+                              tooltip: 'Number of all vendors',
+                              color: 'bg-blue-600',
                               icon: <UserIcon />
                           }
                       ]
@@ -67,77 +112,112 @@ const Dashboard = ({ dashboardInfo }) => {
                     label: 'Products',
                     value: dashboardInfo.total_products || 0,
                     tooltip: 'Total vendor products',
-                    color: 'bg-green-500',
+                    color: 'bg-green-600',
                     icon: <ProductIcon />
                 },
 
                 {
-                    label: 'Total Orders',
-                    value: dashboardInfo.total_orders || 0,
-                    tooltip: 'Total orders',
-                    color: 'bg-gray-700',
+                    label: 'Pending Orders',
+                    value: dashboardInfo.order_counts?.Pending || 0,
+                    tooltip: 'Orders placed but not confirmed or paid yet',
+                    color: 'bg-gray-500',
                     icon: <InvoiceIcon />
                 },
 
                 {
-                    label: 'Pending Orders',
-                    value: dashboardInfo.total_orders || 0,
-                    tooltip: 'All pending orders',
+                    label: 'Processing Orders',
+                    value: dashboardInfo.order_counts?.Processing || 0,
+                    tooltip: 'Payment confirmed; preparing for shipment',
                     color: 'bg-yellow-500',
                     icon: <InvoiceIcon />
                 },
 
                 {
-                    label: 'Returned Orders',
-                    value: dashboardInfo.total_orders || 0,
-                    tooltip: 'All Returned orders',
-                    color: 'bg-orange-500',
-                    icon: <InvoiceIcon />
-                },
-
-                {
                     label: 'Shipped Orders',
-                    value: dashboardInfo.total_orders || 0,
-                    tooltip: 'All Shipped orders',
-                    color: 'bg-purple-500',
-                    icon: <InvoiceIcon />
+                    value: dashboardInfo.order_counts?.Shipped || 0,
+                    tooltip: 'Orders handed over to courier',
+                    color: 'bg-blue-500',
+                    icon: <TruckIcon />
                 },
 
                 {
-                    label: ' In Transit Orders',
-                    value: dashboardInfo.total_orders || 0,
-                    tooltip: 'All in transit orders',
-                    color: 'bg-cyan-500',
-                    icon: <InvoiceIcon />
+                    label: 'In Transit Orders',
+                    value: dashboardInfo.order_counts?.['In Transit'] || 0,
+                    tooltip: 'Orders currently on the way',
+                    color: 'bg-sky-500',
+                    icon: <TruckIcon />
                 },
+
+                {
+                    label: 'Out for Delivery',
+                    value: dashboardInfo.order_counts?.['Out for Delivery'] || 0,
+                    tooltip: 'Courier is about to deliver the package',
+                    color: 'bg-cyan-500',
+                    icon: <DeliveryIcon />
+                },
+
                 {
                     label: 'Delivered Orders',
-                    value: dashboardInfo.total_orders || 0,
-                    tooltip: 'All delivered orders',
+                    value: dashboardInfo.order_counts?.Delivered || 0,
+                    tooltip: 'Orders successfully delivered',
                     color: 'bg-green-500',
-                    icon: <InvoiceIcon />
+                    icon: <CheckIcon />
                 },
+
                 {
                     label: 'Completed Orders',
-                    value: dashboardInfo.total_orders || 0,
-                    tooltip: 'All Completed orders',
-                    color: 'bg-green-700',
-                    icon: <InvoiceIcon />
+                    value: dashboardInfo.order_counts?.Completed || 0,
+                    tooltip: 'Transactions fully completed and closed',
+                    color: 'bg-emerald-600',
+                    icon: <CheckIcon />
+                },
+
+                {
+                    label: 'Returned Orders',
+                    value: dashboardInfo.order_counts?.Returned || 0,
+                    tooltip: 'Orders returned by customers',
+                    color: 'bg-orange-500',
+                    icon: <ReturnIcon />
+                },
+
+                {
+                    label: 'Refunded Orders',
+                    value: dashboardInfo.order_counts?.Refunded || 0,
+                    tooltip: 'Payments refunded to customers',
+                    color: 'bg-indigo-500',
+                    icon: <RefundIcon />
+                },
+
+                {
+                    label: 'Cancelled Orders',
+                    value: dashboardInfo.order_counts?.Cancelled || 0,
+                    tooltip: 'Orders cancelled by admin or user',
+                    color: 'bg-red-600',
+                    icon: <CancelIcon />
                 },
 
                 {
                     label: 'Total Sale',
                     value: dashboardInfo.total_order_amount || 0,
-                    tooltip: 'Sum of order amounts',
-                    color: 'bg-red-500',
+                    tooltip: 'Total revenue generated from all orders',
+                    color: 'bg-teal-600',
                     icon: <SaleIcon />
                 },
+
                 {
-                    label: 'Total Collections',
-                    value: dashboardInfo.total_order_amount || 0,
-                    tooltip: 'Total collected payments',
-                    color: 'bg-indigo-500',
-                    icon: <CollectionIcon />
+                    label: 'Total Returned Amount',
+                    value: dashboardInfo.order_amounts?.Returned || 0,
+                    tooltip: 'Sum of all returned orders amount',
+                    color: 'bg-orange-600',
+                    icon: <ReturnIcon />
+                },
+
+                {
+                    label: 'Total Completed Amount',
+                    value: dashboardInfo.order_amounts?.Completed || 0,
+                    tooltip: 'Sum of all completed orders amount',
+                    color: 'bg-emerald-700',
+                    icon: <MoneyIcon />
                 }
             ];
 
@@ -146,6 +226,8 @@ const Dashboard = ({ dashboardInfo }) => {
             console.log(err.message);
         }
     };
+
+    if (!dashboardInfo) return <DashboardSkeleton />;
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

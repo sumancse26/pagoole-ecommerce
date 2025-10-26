@@ -40,7 +40,18 @@ export const getOrderDtlById = async (id) => {
 
 export const vendorOrderList = async () => {
     const res = await fetchApi(`/api/private/dashboard/order`, {
-        method: 'GET'
+        method: 'GET',
+        next: {
+            tags: ['vendorOrderList']
+        }
+    });
+    return res;
+};
+
+export const updateOrderStatus = async (data) => {
+    const res = await fetchApi(`/api/private/dashboard/order`, {
+        method: 'PATCH',
+        body: JSON.stringify(data)
     });
     return res;
 };

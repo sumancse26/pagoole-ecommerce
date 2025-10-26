@@ -66,6 +66,7 @@ const OrderSummary = ({ itemsTotal, deliveryFee, deliveryDiscount, total, addres
                         name="payment"
                         value="online"
                         checked={paymentMethod === 'online'}
+                        autoComplete="off"
                         onChange={() => changePayMethodHandler('online')}
                         className="peer hidden"
                     />

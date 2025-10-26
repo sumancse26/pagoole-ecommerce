@@ -4,22 +4,16 @@ import prisma from '@/config/prisma';
 export const GET = async (req) => {
     try {
         const { searchParams } = req.nextUrl;
-        const type = searchParams.get('type');
+        // const type = searchParams.get('type');
         const parent_id = searchParams.get('parent_id');
-
-        if (!type) {
-            return NextResponse.json({ error: "Missing 'type' parameter" }, { status: 400 });
-        }
 
         const list = await prisma.geo_Locations.findMany({
             where: {
-                loc_type: type,
                 parent_id: Number(parent_id) || undefined
             },
             select: {
                 id: true,
                 name: true,
-                loc_type: true,
                 full_address: true,
                 is_active: true,
                 parent_id: true

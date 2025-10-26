@@ -149,7 +149,7 @@ export const DialogProvider = ({ children }) => {
                                 className={`px-4 py-2 text-sm text-white rounded ${
                                     dialog.type === 'error'
                                         ? 'bg-gradient-to-r from-red-600 to-red-400'
-                                        : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded hover:from-blue-600 hover:to-purple-700 focus:outline-none'
+                                        : 'bg-gradient-to-r from-green-500 to-green-600 text-white rounded hover:from-green-600 hover:to-green-700 focus:outline-none'
                                 }`}>
                                 {dialog.okText}
                             </button>
