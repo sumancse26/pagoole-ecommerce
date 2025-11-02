@@ -1,38 +1,39 @@
 'use client';
 
-// import { submitOtpAction } from '@/app/actions/authAction';
 import { useAlert } from '@/context/AlertContext';
 import { useApiLoader } from '@/lib/useApiLoader';
 import Loader from '@components/Loader';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-const ForgotPassword = () => {
+const SubmitOtp = () => {
     const [otp, setOtp] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [loadingState, setLoadingState] = useState(false);
 
     const router = useRouter();
     const { showAlert } = useAlert();
-    const searchParams = useSearchParams();
+    // const searchParams = useSearchParams();
     const { start, stop } = useApiLoader();
 
-    const email = searchParams.get('email');
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const email = 'test@gmail.com';
+    // const email = searchParams.get('email');
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setLoadingState(true);
 
-        const formData = {
-            otp: otp,
-            password: newPassword,
-            email
-        };
+        const formData = { otp, password: newPassword, email };
+
         start();
         // const res = await submitOtpAction(null, formData);
         stop();
         setLoadingState(false);
+
+        // Mock success
+        const res = { success: true, message: 'OTP Verified!' };
+
         if (res.success) {
             showAlert(res.message, 'success');
             router.push('/dashboard');
@@ -52,7 +53,6 @@ const ForgotPassword = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">Enter OTP</label>
                         <input
                             type="text"
-                            name="otp"
                             value={otp}
                             onChange={(e) => setOtp(e.target.value)}
                             required
@@ -60,11 +60,11 @@ const ForgotPassword = () => {
                             className="w-full px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                         />
                     </div>
+
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Enter New Password</label>
                         <input
-                            type="text"
-                            name="new password"
+                            type="password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             required
@@ -84,7 +84,7 @@ const ForgotPassword = () => {
                 <div className="text-center mt-6">
                     <Link
                         href="/reset-password"
-                        className="text-sm text-purple-600 hover:text-purple-800 transition-colors duration-200 hover:underline">
+                        className="text-sm text-purple-600 hover:text-purple-800 hover:underline">
                         ← Back to Forgot Password
                     </Link>
                 </div>
@@ -93,4 +93,4 @@ const ForgotPassword = () => {
     );
 };
 
-export default ForgotPassword;
+export default SubmitOtp;
