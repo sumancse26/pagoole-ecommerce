@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/config/prisma';
 import { revalidateTag } from 'next/cache';
 import fs from 'fs';
-import sharp from 'sharp';
+//import sharp from 'sharp';
 import path from 'path';
 
 export const runtime = 'nodejs';
@@ -120,26 +120,26 @@ export const POST = async (req) => {
 
                 const filePath = path.join(uploadDir, fileName);
 
-                let compressedBuffer;
+                //let compressedBuffer;
                 try {
-                    const img = sharp(buffer).resize({
-                        width: 1200,
-                        withoutEnlargement: true
-                    });
-
-                    if (ext === '.png') {
-                        compressedBuffer = await img.png({ compressionLevel: 9 }).toBuffer();
-                    } else if (ext === '.webp') {
-                        compressedBuffer = await img.webp({ quality: 10 }).toBuffer();
-                    } else {
-                        compressedBuffer = await img.jpeg({ quality: 10 }).toBuffer();
-                    }
+                    // const img = sharp(buffer).resize({
+                    //     width: 1200,
+                    //     withoutEnlargement: true
+                    // });
+                    // if (ext === '.png') {
+                    //     compressedBuffer = await img.png({ compressionLevel: 9 }).toBuffer();
+                    // } else if (ext === '.webp') {
+                    //     compressedBuffer = await img.webp({ quality: 10 }).toBuffer();
+                    // } else {
+                    //     compressedBuffer = await img.jpeg({ quality: 10 }).toBuffer();
+                    // }
                 } catch (err) {
                     console.error('Image compression error:', err);
-                    compressedBuffer = buffer;
+                    //compressedBuffer = buffer;
                 }
 
-                fs.writeFileSync(filePath, compressedBuffer);
+                fs.writeFileSync(filePath, buffer);
+                // fs.writeFileSync(filePath, compressedBuffer);
                 savedFilePaths.push(filePath);
 
                 const url = `${UPLOADS_URL_PREFIX}/${fileName}`;
@@ -465,26 +465,25 @@ export const PUT = async (req) => {
 
                 const filePath = path.join(UPLOADS_DIR, fileName);
 
-                let compressedBuffer;
+                // let compressedBuffer;
                 try {
-                    const img = sharp(buffer).resize({
-                        width: 1200,
-                        withoutEnlargement: true
-                    });
-
-                    if (ext === '.png') {
-                        compressedBuffer = await img.png({ compressionLevel: 8 }).toBuffer();
-                    } else if (ext === '.webp') {
-                        compressedBuffer = await img.webp({ quality: 8 }).toBuffer();
-                    } else {
-                        compressedBuffer = await img.jpeg({ quality: 8 }).toBuffer();
-                    }
+                    // const img = sharp(buffer).resize({
+                    //     width: 1200,
+                    //     withoutEnlargement: true
+                    // });
+                    // if (ext === '.png') {
+                    //     compressedBuffer = await img.png({ compressionLevel: 8 }).toBuffer();
+                    // } else if (ext === '.webp') {
+                    //     compressedBuffer = await img.webp({ quality: 8 }).toBuffer();
+                    // } else {
+                    //     compressedBuffer = await img.jpeg({ quality: 8 }).toBuffer();
+                    // }
                 } catch (err) {
                     console.error('Image compression failed:', err);
-                    compressedBuffer = buffer;
+                    // compressedBuffer = buffer;
                 }
 
-                fs.writeFileSync(filePath, compressedBuffer);
+                fs.writeFileSync(filePath, buffer);
                 savedFilePaths.push(filePath);
 
                 const url = `${UPLOADS_URL_PREFIX}/${fileName}`;
