@@ -22,7 +22,7 @@ export const POST = async (req) => {
         const trade_license_no = formData.get('trade_license_no');
         const nid_no = formData.get('nid_no');
         const isCustomer = formData.get('isCustomer');
-        const name = formData.get('name') || '';
+        //const name = formData.get('name') || '';
 
         const store_logo = formData.get('store_logo');
         const trade_license_image = formData.get('trade_license_image');

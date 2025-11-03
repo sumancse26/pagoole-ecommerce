@@ -1,5 +1,5 @@
 import prisma from '@/config/prisma';
-import { decryptPassword, jwtEncode } from '@/utils';
+import { decryptJSPassword, jwtEncode } from '@/utils';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -20,7 +20,7 @@ export const POST = async (req) => {
             return NextResponse.json({ message: 'User not found' }, { status: 400 });
         }
 
-        const decryptedPassword = await decryptPassword(data.password?.toString(), selectedUser.password?.toString());
+        const decryptedPassword = await decryptJSPassword(data.password?.toString(), selectedUser.password?.toString());
 
         if (!decryptedPassword) {
             return NextResponse.json({ message: 'Incorrect password' }, { status: 400 });
