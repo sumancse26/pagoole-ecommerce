@@ -8,13 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Configurations{
-  id                    Int               @id @default(autoincrement())
-  config_key            String            @unique @db.VarChar(100)
-  config_value          String            @db.VarChar(500)
-  created_at            DateTime          @default(now())
-  updated_at            DateTime          @updatedAt
-}
 
 model Users {
   id                    Int               @id @default(autoincrement())
@@ -131,7 +124,7 @@ model Products {
   id                    Int                   @id @default(autoincrement())
   prod_name             String                @db.VarChar(150)
   slug                  String                @db.VarChar(150)
-  description           String?               @db.VarChar(512)           
+  description           String?               @db.VarChar(1000)           
   mrp                   Float
   brand_id              Int?
   category_id           Int?
@@ -170,7 +163,8 @@ model Vendor_Products {
   vendor_id              Int
   product_location       Int             @default(0)
   category_id            Int?            
-  price                  Float           
+  price                  Float
+  description            String?         @db.VarChar(1000)           
   stock_qty              Int             @default(0)
   is_active              Int             @default(1)
   created_at             DateTime        @default(now())
@@ -185,6 +179,7 @@ model Vendor_Products {
   product_images         Product_Images[]
   wish_lists             Wishlists[]
 }
+
 
 model Carts {
   id                     Int             @id @default(autoincrement())

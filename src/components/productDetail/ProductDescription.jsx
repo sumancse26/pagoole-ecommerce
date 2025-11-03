@@ -3,7 +3,7 @@ const Description = async () => {
         <div className="mt-6 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
             <div className="border-b border-gray-100">
                 <nav className="flex flex-wrap -mb-px">
-                    {['Description', 'Additional Info', 'Reviews (21)', 'Shipping'].map((tab, index) => (
+                    {['Description', 'Reviews (21)'].map((tab, index) => (
                         <button
                             key={tab}
                             className={`py-3 px-4 sm:py-4 sm:px-6 font-medium text-sm text-center ${
