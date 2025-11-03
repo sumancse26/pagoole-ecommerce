@@ -1,4 +1,4 @@
-import ProductList from '@components/Products/ProductList';
+import ProductList from '@components/products/ProductList';
 import { getVendorProducts } from '@/services/product';
 import { getCategoryList } from '@/services/categories';
 import { getBrandList } from '@/services/brand';
