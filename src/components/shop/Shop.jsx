@@ -39,7 +39,9 @@ const ProductListing = ({ vendorList, locationList }) => {
 
     const getSelectedLocation = async (val) => {
         try {
-            const res = await vendorListByLocationAction(val.id);
+            let id = null;
+            id = val.parent_id ? val.parent_id : val.id;
+            const res = await vendorListByLocationAction(id);
             setFilteredVendors(res.vendor_list || []);
         } catch (err) {
             throw new Error(err);

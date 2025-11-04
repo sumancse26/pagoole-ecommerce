@@ -5,6 +5,7 @@ export const GET = async (req) => {
         const location_list = await prisma.geo_Locations.findMany({
             select: {
                 id: true,
+                parent_id: true,
                 name: true,
                 loc_type: true,
                 full_address: true,
