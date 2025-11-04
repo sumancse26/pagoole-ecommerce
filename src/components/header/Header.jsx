@@ -63,8 +63,6 @@ const HeaderComp = async () => {
                                     </svg>
                                 </button>
                             </div>
-
-                            {/* Shop Order Button */}
                             <Link href="/shop">
                                 <button
                                     type="button"
@@ -75,9 +73,19 @@ const HeaderComp = async () => {
                             </Link>
                         </form>
                     </div>
+                    <div className="flex gap-5">
+                        <Link className="block md:hidden" href="/shop">
+                            <button
+                                type="button"
+                                className="px-4 py-2 bg-[#ff686e] text-white rounded-lg font-medium tracking-[2px] whitespace-nowrap"
+                                aria-label="Go to Shop Order homepage">
+                                Shop Order
+                            </button>
+                        </Link>
 
-                    {/* Icons */}
-                    <HeaderIcons cartItemList={cartList} wishItemList={wishList} />
+                        {/* Icons */}
+                        <HeaderIcons cartItemList={cartList} wishItemList={wishList} />
+                    </div>
                 </div>
             </div>
         </header>

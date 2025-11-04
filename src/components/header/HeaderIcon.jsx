@@ -154,7 +154,7 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
     };
 
     return (
-        <div className="flex items-center gap-[20px] text-white" ref={containerRef}>
+        <div className="flex items-center gap-[20px] text-white mt-3" ref={containerRef}>
             {/* Wishlist */}
             <div className="relative">
                 <button

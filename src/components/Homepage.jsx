@@ -6,9 +6,9 @@ import { Suspense } from 'react';
 import ProductSkeleton from './products/ProductSkeleton.jsx';
 
 export const metadata = {
-    title: 'Pagoole Discount Shop',
+    title: 'Discount Shop',
     description:
-        'Pagoole Discount Shop offers the latest fashion trends with premium quality products. Free shipping on orders over $250.'
+        'Discount Shop offers the latest fashion trends with premium quality products. Free shipping on orders over $250.'
 };
 
 const HomeContent = async () => {
