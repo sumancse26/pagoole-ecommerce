@@ -9,6 +9,7 @@ import { getAddToCartList } from '@/services/addToCart';
 import CartList from '@components/addToCart/CartList';
 import { getWishList } from '@/services/wishList';
 import EmptyState from '../EmptyState';
+import { getSharedData } from '@/hooks/useSharedData';
 
 const Product = ({ prodType, fromWhere, productList, searchParams }) => {
     const [sidebar, setSidebar] = useState(false);
@@ -17,10 +18,10 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
 
     const { data: session, status } = useSession();
     const activeTab = searchParams?.tab || 'arrival';
+    const { searchProd, search } = getSharedData() || {};
 
     useEffect(() => {
         wishListHandler();
-
         return () => {};
     }, [productList]);
 
@@ -28,20 +29,34 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
         try {
             if (session) {
                 const res = await getWishList();
-
+                let updatedProd = [];
                 const wishLists = Array.isArray(res.wish_lists) ? res.wish_lists : [];
 
-                const updatedProd = productList.map((prod) => {
-                    const isInWishList = wishLists.find((wish) => wish.vendor_prod_id == prod.id);
-                    return {
-                        ...prod,
-                        disable_wish: Boolean(isInWishList)
-                    };
-                });
+                if (search) {
+                    updatedProd = searchProd?.map((prod) => {
+                        const isInWishList = wishLists.find((wish) => wish.vendor_prod_id == prod.id);
+                        return {
+                            ...prod,
+                            disable_wish: Boolean(isInWishList)
+                        };
+                    });
+                } else {
+                    updatedProd = productList?.map((prod) => {
+                        const isInWishList = wishLists.find((wish) => wish.vendor_prod_id == prod.id);
+                        return {
+                            ...prod,
+                            disable_wish: Boolean(isInWishList)
+                        };
+                    });
+                }
 
                 setproducts(updatedProd);
             } else {
-                setproducts(productList);
+                if (search) {
+                    setproducts(searchProd);
+                } else {
+                    setproducts(productList);
+                }
             }
         } catch (err) {
             console.error(err.message);

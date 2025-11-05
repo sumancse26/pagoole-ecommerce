@@ -14,13 +14,12 @@ export const metadata = {
 const HomeContent = async () => {
     const result = await doProductList();
     const productList = result.product_list || [];
-
     const brandResult = await brandListAction();
     const brands = brandResult.brands;
 
     return (
         <div className="bg-gray-50">
-            <Products prodType="all" from="" productList={productList} />
+            <Products prodType="all" from="" productList={productList} searchParams="" />
 
             <Brands brandList={brands} />
         </div>

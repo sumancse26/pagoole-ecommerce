@@ -1,23 +1,64 @@
+'use client';
+
 import Link from 'next/link';
 import { getAddToCartList } from '@/services/addToCart';
 import { getWishList } from '@/services/wishList';
 import HeaderIcons from './HeaderIcon';
-import { auth } from '@/auth';
+// import { auth } from '@/auth';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { setSharedData } from '@/hooks/useSharedData';
+import { getSearchedProducts } from '@/services/product.js';
+import { useState } from 'react';
 
-const HeaderComp = async () => {
-    const session = await auth();
+const HeaderComp = () => {
+    const [searchStringData, setSearchStringData] = useState('');
+    // const session = await auth();
+    const router = useRouter();
+    const { data: session, status } = useSession();
 
     let cartList = [];
     let wishList = [];
 
     if (session?.user) {
-        const res = await getAddToCartList();
-        const cartListData = res?.cart_items || 0;
-        cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
-
-        const wish = await getWishList();
-        wishList = wish.wish_lists || [];
+        fetchData();
     }
+
+    const fetchData = async () => {
+        try {
+            const res = await getAddToCartList();
+            const cartListData = res?.cart_items || 0;
+            cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+
+            const wish = await getWishList();
+            wishList = wish.wish_lists || [];
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const fetchSearchProductHandler = async () => {
+        try {
+            const res = await getSearchedProducts(searchStringData);
+
+            setSharedData({ isSearch: true, list: res.product_list });
+
+            router.push('/');
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const homeBtnHandler = () => {
+        setSharedData({ isSearch: false, list: [] });
+        setSearchStringData(' ');
+        router.push('/');
+    };
+
+    const searchProduct = (e) => {
+        e.preventDefault();
+        fetchSearchProductHandler();
+    };
 
     return (
         <header className="bg-white shadow sticky top-0 z-45">
@@ -26,15 +67,15 @@ const HeaderComp = async () => {
                 <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between gap-[85px]">
                     {/* Logo */}
                     <div className="flex">
-                        <Link href="/">
-                            <span className="ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
-                                Pagoole Shop
-                            </span>
-                        </Link>
+                        <span
+                            onClick={homeBtnHandler}
+                            className="cursor-pointer ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
+                            Pagoole Shop
+                        </span>
                     </div>
 
                     <div className="hidden md:flex flex-1 justify-center">
-                        <form className="w-full relative flex items-center gap-3">
+                        <form className="w-full relative flex items-center gap-3" onSubmit={searchProduct}>
                             {/* Search Input */}
                             <div className="relative flex-1 px-2">
                                 <input
@@ -43,6 +84,7 @@ const HeaderComp = async () => {
                                     className="w-full h-12 pl-5 pr-12 rounded-full text-gray-800 placeholder-gray-500 bg-white border border-green-500 shadow focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                                     aria-label="Search products"
                                     required
+                                    onChange={(e) => setSearchStringData(e.target.value)}
                                 />
                                 <button
                                     type="submit"

@@ -57,6 +57,13 @@ export const getVendorProducts = async () => {
     return res;
 };
 
+export const getSearchedProducts = async (prod_name) => {
+    const res = await fetchApi(`/api/search-products?q=${prod_name}`, {
+        method: 'GET'
+    });
+    return res;
+};
+
 export const addVendorProducts = async (data) => {
     const res = await fetchApi(`/api/private/dashboard/product`, {
         method: 'POST',
