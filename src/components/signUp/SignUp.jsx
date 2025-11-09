@@ -108,7 +108,7 @@ const SignUp = () => {
                 lastName = nameParts[1];
             } else if (nameParts.length > 2) {
                 firstName = nameParts[0];
-                lastName = nameParts.slice(1).join(' '); // join all remaining parts as last name
+                lastName = nameParts.slice(1).join(' '); 
             }
             const authResult = await authRegister({
                 firstName: firstName,
@@ -117,6 +117,7 @@ const SignUp = () => {
                 password: formData.password
             });
 
+            console.log(await authResult.json())
             // await getAuthData();
             let result= {};
             if(authResult.status == 201){
@@ -162,7 +163,7 @@ const SignUp = () => {
                 className="bg-white shadow-xl rounded-2xl p-6 w-full max-w-5xl animate-fade-in"
                 onSubmit={handleFormSubmit}
                 encType="multipart/form-data">
-                <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">Create Your Account</h2>
+                <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">Open a New Shop In Pagoole Discount Shop</h2>
                 <p className="text-sm text-gray-500 text-center mb-4">Fill in the details below to get started.</p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">

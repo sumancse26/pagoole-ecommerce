@@ -1,0 +1,82 @@
+cd D:/Shafiq_Pagoole/Projects/pagoole_discount_shop/Git
+/
+
+git clone https://github.com/shafiqdacca/pagoole-discount-shop.git
+/
+
+D:\Shafiq_Pagoole\Projects\pagoole_discount_shop\Git\pagoole-discount-shop
+
+
+
+.env.local
+
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ecommerce?schema=public"
+#postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public
+
+EMAIL=suman.iu32@gmail.com
+EMAIL_PASSWORD=pvnrtwnjpnpjvurt
+
+NEXT_PUBLIC_API_URL="http://localhost:3000"
+AUTH_SECRET="84jJsfXlySSTuY3HtAwTaI2ZEdqYeuELT3FnwET4JtE="
+GOOGLE_CLIENT_ID="228786545110-8l937oc1u06o47tsv60sgd4p9l0j26bp.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="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"
+
+JWT_SIGNING_SECRET="jwtOEMDYS45#)!$jff45195fmKHDoldKeyh"
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------Pagoole-Discount-Shop : 20251017. Started----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+---------Pagoole-Discount-Shop : 20251017. Ended----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+---------Pagoole-Discount-Shop : 20251017. Started----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+---------Pagoole-Discount-Shop : 20251017. Ended----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------Pagoole-Discount-Shop : 20251017. Started----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Insert Data : Brand, Categories, Geo_Locations, Weights 
+
+---------Pagoole-Discount-Shop : 20251017. Ended----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+

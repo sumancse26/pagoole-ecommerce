@@ -84,7 +84,7 @@ const Login = () => {
 
                 {/* Right Side - Login Form */}
                 <div className="md:w-1/2 p-8">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login as Vendor</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login</h2>
                     <form className="space-y-6" onSubmit={handleFormSubmit}>
                         <div>
                             <label className="block text-sm font-medium text-gray-600 mb-1">Email Address</label>
