@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { setSharedData } from '@/hooks/useSharedData';
 import { getSearchedProducts } from '@/services/product.js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const HeaderComp = () => {
     const [searchStringData, setSearchStringData] = useState('');
@@ -20,9 +20,11 @@ const HeaderComp = () => {
     let cartList = [];
     let wishList = [];
 
-    if (session?.user) {
+    useEffect(()=> {
+        if (session?.user) {
         fetchData();
     }
+    }, [])
 
     const fetchData = async () => {
         try {

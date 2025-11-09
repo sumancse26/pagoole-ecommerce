@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import SearchableDropdown from '../SearchableDropdown';
 import { getLocationList } from '@/services/vendor';
 import { register } from '@/services/users';
+import { authRegister, getAuthData } from '@/services/auth.js';
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
@@ -95,8 +96,33 @@ const SignUp = () => {
             if (formData.trade_license_image) data.append('trade_license_image', formData.trade_license_image);
             if (formData.nid_image) data.append('nid_image', formData.nid_image);
             if (formData.image) data.append('image', formData.image);
+            let firstName = '';
+            let lastName = '';
+            const nameParts = formData.user_name.trim().split(/\s+/); // split by one or more spaces
 
-            const result = await register(data);
+            if (nameParts.length === 1) {
+                firstName = nameParts[0];
+                lastName = '';
+            } else if (nameParts.length === 2) {
+                firstName = nameParts[0];
+                lastName = nameParts[1];
+            } else if (nameParts.length > 2) {
+                firstName = nameParts[0];
+                lastName = nameParts.slice(1).join(' '); // join all remaining parts as last name
+            }
+            const authResult = await authRegister({
+                firstName: firstName,
+                lastName: lastName,
+                emailOrMobile: formData.email || formData.phone,
+                password: formData.password
+            });
+
+            // await getAuthData();
+            let result= {};
+            if(authResult.status == 201){
+                result = await register(data);
+            }
+             
 
             if (result?.success) {
                 showAlert(result.message, 'success');

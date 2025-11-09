@@ -135,6 +135,7 @@ export const {
 
             if (account?.provider === 'credentials' && user?.email) {
                 try {
+                    
                     let dbUser = await getUserByEmail(user.email);
                     user.id = dbUser.id;
                     user.role = dbUser.is_admin;

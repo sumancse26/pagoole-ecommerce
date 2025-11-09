@@ -8,7 +8,6 @@ export const GET = async (req) => {
                 id: true,
                 parent_id: true,
                 name: true,
-                loc_type: true,
                 full_address: true,
                 is_active: true
             }

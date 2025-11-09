@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { signIn, getSession, useSession } from 'next-auth/react';
+import { authLogIn } from '@/services/auth.js';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -30,11 +31,20 @@ const Login = () => {
         setLoadingState(true);
         start();
 
-        const result = await signIn('credentials', {
-            redirect: false,
-            email: formData.email,
+        let result = {}
+        const authResult = await authLogIn({
+            user_name: formData.email,
             password: formData.password
         });
+
+        if(authResult.status == 201){
+            result = await signIn('credentials', {
+                redirect: false,
+                email: formData.email,
+                password: formData.password
+            });
+        }
+        
 
         stop();
         setLoadingState(false);
