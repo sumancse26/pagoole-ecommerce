@@ -58,7 +58,7 @@ const AddToCart = ({ vendorProdId, hideQty = false, cartListHandler = () => {} }
                         {/* Decrement Button */}
                         <button
                             onClick={() => qtyHandler('decrement')}
-                            className="w-14 flex justify-center items-center text-gray-500 hover:text-emerald-600 hover:bg-gray-50 transition-colors"
+                            className="w-14 h-full flex justify-center items-center text-gray-500 hover:text-emerald-600 hover:bg-gray-50 transition-colors"
                             aria-label="Decrease quantity">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
@@ -76,7 +76,7 @@ const AddToCart = ({ vendorProdId, hideQty = false, cartListHandler = () => {} }
                         {/* Increment Button */}
                         <button
                             onClick={() => qtyHandler('increment')}
-                            className="w-14 flex justify-center items-center text-gray-500 hover:text-emerald-600 hover:bg-gray-50 transition-colors"
+                            className="w-14 h-full flex justify-center items-center text-gray-500 hover:text-emerald-600 hover:bg-gray-50 transition-colors"
                             aria-label="Increase quantity">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />

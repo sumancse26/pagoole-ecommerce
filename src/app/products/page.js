@@ -6,10 +6,18 @@ import RelatedProducts from '@components/productDetail/RelatedProduct';
 import ProductDtlSkeleton from '@components/productDetail/ProductDtlSkeleton';
 
 const ProductContent = async ({ searchParams }) => {
-    const { product_id: prodId } = await searchParams;
+    const { product_id: prodId, vendor_product } = await searchParams;
 
     const result = await productByIdAction(prodId);
-    const prodInfo = result.product_details || [];
+    const prodInfo = result.product_details?.map(sp=>{
+        if(sp.id == vendor_product){
+            sp.activeProd = true;
+        }else{
+            sp.activeProd=false
+        }
+
+        return sp;
+    }) || [];
 
     let relatedProducts = [];
     if (prodInfo?.length) {

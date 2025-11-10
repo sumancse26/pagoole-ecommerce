@@ -14,7 +14,7 @@ import { getSharedData } from '@/hooks/useSharedData';
 const Product = ({ prodType, fromWhere, productList, searchParams }) => {
     const [sidebar, setSidebar] = useState(false);
     const [cartList, setCartList] = useState([]);
-    const [products, setproducts] = useState([]);
+    const [products, setProducts] = useState([]);
 
     const { data: session, status } = useSession();
     const activeTab = searchParams?.tab || 'arrival';
@@ -50,12 +50,12 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                     });
                 }
 
-                setproducts(updatedProd);
+                setProducts(updatedProd);
             } else {
                 if (search) {
-                    setproducts(searchProd);
+                    setProducts(searchProd);
                 } else {
-                    setproducts(productList);
+                    setProducts(productList);
                 }
             }
         } catch (err) {
@@ -161,7 +161,7 @@ const Product = ({ prodType, fromWhere, productList, searchParams }) => {
                                         <Link
                                             href={{
                                                 pathname: '/products',
-                                                query: { product_id: product.products?.id }
+                                                query: { product_id: product.products?.id, vendor_product: product.id }
                                             }}>
                                             <div className="relative h-64 w-full overflow-hidden rounded-lg">
                                                 <img

@@ -68,7 +68,7 @@ const HeaderComp = () => {
             <div className="bg-green-600">
                 <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between gap-[85px]">
                     {/* Logo */}
-                    <div className="flex items-center gap-3 justify-center cursor-pointer ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
+                    <div onClick={homeBtnHandler} className="flex items-center gap-3 justify-center cursor-pointer ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
                                 <div className="text-3xl font-bold mb-4">
                                     <span className="text-red-600">P</span>
                                     <span className="text-blue-600">a</span>
@@ -119,7 +119,7 @@ const HeaderComp = () => {
                             <Link href="/shop">
                                 <button
                                     type="button"
-                                    className="px-3 bg-[#ff686e] text-white px-4 py-2 rounded-lg font-medium tracking-[2px] whitespace-nowrap"
+                                    className="cursor-pointer px-3 bg-[#ff686e] text-white py-2 rounded-lg font-medium tracking-[2px] whitespace-nowrap"
                                     aria-label="Go to Shop Order homepage">
                                     Shop Order
                                 </button>
@@ -130,7 +130,7 @@ const HeaderComp = () => {
                         <Link className="block md:hidden" href="/shop">
                             <button
                                 type="button"
-                                className="px-4 py-2 bg-[#ff686e] text-white rounded-lg font-medium tracking-[2px] whitespace-nowrap"
+                                className="cursor-pointer px-4 py-2 bg-[#ff686e] text-white rounded-lg font-medium tracking-[2px] whitespace-nowrap"
                                 aria-label="Go to Shop Order homepage">
                                 Shop Order
                             </button>

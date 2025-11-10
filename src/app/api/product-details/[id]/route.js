@@ -20,7 +20,14 @@ export const GET = async (req, { params }) => {
                         id: true,
                         store_name: true,
                         store_description: true,
-                        address: true
+                        address: true,
+                        users: {
+                            select: {
+                                id: true,
+                                phone: true,
+                                email: true,
+                            }
+                        }
                     }
                 },
                 products: {

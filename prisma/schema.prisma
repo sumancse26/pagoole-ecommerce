@@ -54,6 +54,7 @@ model Vendors {
   id                     Int                  @id @default(autoincrement())
   user_id                Int
   store_name             String               @db.VarChar(150)
+  apply_store_name       String               @db.VarChar(150) @db.default("")
   trade_license_no       String?              @db.VarChar(16) @default("")
   nid_no                 String?              @db.VarChar(20) @default("")
   store_description      String?              @db.VarChar(500)
@@ -164,6 +165,7 @@ model Vendor_Products {
   product_location       Int             @default(0)
   category_id            Int?            
   price                  Float
+  purchase_price         Float           @default(0)
   description            String?         @db.VarChar(1000)           
   stock_qty              Int             @default(0)
   is_active              Int             @default(1)

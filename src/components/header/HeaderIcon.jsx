@@ -158,7 +158,7 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
             {/* Wishlist */}
             <div className="relative">
                 <button
-                    className="p-0 hover:text-lime-200"
+                    className="cursor-pointer p-0 hover:text-lime-200"
                     aria-label="Wishlist"
                     onClick={wishListHandler}
                     title="Wish List">
@@ -191,7 +191,7 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
             {/* Cart */}
             <div className="relative">
                 <button
-                    className="p-0 hover:text-lime-200"
+                    className="cursor-pointer p-0 hover:text-lime-200"
                     aria-label="Cart"
                     onClick={cartIconHandler}
                     title="Cart List">
@@ -219,7 +219,7 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
             {/* User Icon with Dropdown */}
             <div className="relative">
                 <button
-                    className="p-0 ms-1 hover:text-lime-200 focus:outline-none"
+                    className="cursor-pointer p-0 ms-1 hover:text-lime-200 focus:outline-none"
                     aria-label="Account"
                     onClick={userMenuHandler}
                     title="Account Menu">
