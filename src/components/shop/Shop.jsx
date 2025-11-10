@@ -39,8 +39,7 @@ const ProductListing = ({ vendorList, locationList }) => {
 
     const getSelectedLocation = async (val) => {
         try {
-            let id = null;
-            id = val.parent_id ? val.parent_id : val.id;
+            let id = val.parent_id ? val.parent_id : val.id;
             const res = await vendorListByLocationAction(id);
             setFilteredVendors(res.vendor_list || []);
         } catch (err) {
@@ -49,71 +48,104 @@ const ProductListing = ({ vendorList, locationList }) => {
     };
 
     return (
-        <section className="py-8">
-            <div className="container mx-auto px-4">
+        <section className="py-8 px-4 sm:px-6 lg:px-8">
+            <div className="container mx-auto">
                 {/* Header with sorting options */}
-                <div className="flex flex-col md:flex-row justify-end items-center mb-8 gap-5 ">
-                    <div className="w-full">
+                <div className="flex flex-col md:flex-row justify-end items-center mb-6 gap-4 md:gap-5">
+                    <div className="w-full md:w-1/3">
                         <input
                             onInput={(e) => searchVendorHandler(e.target.value)}
                             type="text"
-                            className="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-green-500"
-                            placeholder="Search vendors ......"
+                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
+                            placeholder="Search vendors..."
                         />
                     </div>
 
-                    <div className="mb-4 md:mb-0 w-full">
+                    <div className="w-full md:w-1/3">
                         <Dropdown
                             options={locationList}
                             onSelect={getSelectedLocation}
                             labelKey={'full_address'}
-                            placeholder={'Search or select location .....'}
+                            placeholder={'Search or select location...'}
                         />
                     </div>
 
-                    <div className="flex items-center space-x-4">
-                        <div className="flex space-x-2">
+                    <div className="flex items-center space-x-2 md:space-x-4 mt-2 md:mt-0">
+                        {/* Add new item button with tooltip */}
+                        <Link
+                         href="/register" className="relative group inline-block">
                             <button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-2 rounded ${
-                                    viewMode === 'grid' ? 'bg-green-100 text-green-700' : 'text-gray-500'
-                                }`}
-                                aria-label="Grid view">
+                                
+                                className="p-2 rounded bg-green-100 text-green-700 hover:bg-green-200 transition"
+                                aria-label="Add item"
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-5 w-5"
                                     fill="none"
                                     viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                    stroke="currentColor"
+                                >
                                     <path
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         strokeWidth={2}
-                                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                                        d="M12 4v16m8-8H4"
                                     />
                                 </svg>
                             </button>
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`p-2 rounded ${
-                                    viewMode === 'list' ? 'bg-green-100 text-green-700' : 'text-gray-500'
-                                }`}
-                                aria-label="List view">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
+
+                            {/* Tooltip */}
+                            <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 
+                                hidden group-hover:block whitespace-nowrap 
+                                bg-gray-800 text-white text-xs font-medium 
+                                px-2 py-1 rounded-lg shadow-md transition-all duration-200">
+                                Open a Shop
+                                <span className="absolute left-1/2 top-full -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></span>
+                            </span>
+                        </Link>
+
+                        {/* Grid/List toggle buttons */}
+                        <button
+                            onClick={() => setViewMode('grid')}
+                            className={`p-2 rounded ${viewMode === 'grid' ? 'bg-green-100 text-green-700' : 'text-gray-500'}`}
+                            aria-label="Grid view"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                                />
+                            </svg>
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={`p-2 rounded ${viewMode === 'list' ? 'bg-green-100 text-green-700' : 'text-gray-500'}`}
+                            aria-label="List view"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M4 6h16M4 12h16M4 18h16"
+                                />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
@@ -121,44 +153,39 @@ const ProductListing = ({ vendorList, locationList }) => {
                 <div
                     className={`${
                         viewMode === 'grid'
-                            ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-                            : 'space-y-6'
-                    }`}>
+                            ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
+                            : 'flex flex-col space-y-6'
+                    }`}
+                >
                     {filteredVendors.map((vn) => (
                         <ProductCard key={vn.id} vendor={vn} viewMode={viewMode} />
                     ))}
                 </div>
 
-                {/* Pagination */}
-                {/* <div className="flex justify-center mt-8">
-                    <nav className="flex items-center space-x-1">
-                        <button
-                            className="px-3 py-1 rounded-md hover:bg-green-50 text-gray-600 hover:text-green-700"
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage(currentPage - 1)}>
-                            Previous
-                        </button>
-
-                        {[1, 2, 3].map((page) => (
-                            <button
-                                key={page}
-                                className={`px-3 py-1 rounded-md ${
-                                    currentPage === page
-                                        ? 'bg-green-600 text-white'
-                                        : 'hover:bg-green-50 text-gray-600 hover:text-green-700'
-                                }`}
-                                onClick={() => setCurrentPage(page)}>
-                                {page}
-                            </button>
-                        ))}
-
-                        <button
-                            className="px-3 py-1 rounded-md hover:bg-green-50 text-gray-600 hover:text-green-700"
-                            onClick={() => setCurrentPage(currentPage + 1)}>
-                            Next
-                        </button>
-                    </nav>
-                </div> */}
+                {/* Open a Shop Button at bottom */}
+                <div className="relative flex justify-end mt-12 md:mt-16">
+                    <Link href='/register'
+                        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4
+                                   bg-green-600 hover:bg-green-700 text-white font-semibold py-3 
+                                   shadow-lg rounded-tl-xl transition duration-200 flex items-center justify-center gap-2"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 4v16m8-8H4"
+                            />
+                        </svg>
+                        Open a Shop
+                    </Link>
+                </div>
             </div>
         </section>
     );
@@ -169,11 +196,13 @@ const ProductCard = ({ vendor, viewMode }) => {
         <div
             className={`bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow ${
                 viewMode === 'list' ? 'flex flex-col md:flex-row' : ''
-            }`}>
+            }`}
+        >
             <div
                 className={`relative h-32 w-full m-1 overflow-hidden rounded-lg  ${
                     viewMode === 'list' ? 'md:w-1/3 border-r border-gray-200' : 'border-b border-gray-200'
-                }`}>
+                }`}
+            >
                 {vendor.store_logo && (
                     <Link href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }}>
                         <img
@@ -188,9 +217,7 @@ const ProductCard = ({ vendor, viewMode }) => {
             <div className={`p-4 flex-col flex-1  ${viewMode === 'list' ? 'md:w-2/3' : ''}`}>
                 <Link href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }} className="flex-grow">
                     <h3 className="font-semibold text-lg mb-1 hover:text-green-600 transition-colors">
-                        {/* <Link href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }}> */}
                         {vendor.store_name || ''}
-                        {/* </Link> */}
                     </h3>
 
                     <p className="text-gray-600 text-sm mb-4">{vendor.store_description}</p>
@@ -205,7 +232,8 @@ const ProductCard = ({ vendor, viewMode }) => {
                                             star * 20 <= vendor.rating ? 'text-yellow-400' : 'text-gray-300'
                                         }`}
                                         fill="currentColor"
-                                        viewBox="0 0 20 20">
+                                        viewBox="0 0 20 20"
+                                    >
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                     </svg>
                                 ))}
@@ -215,17 +243,19 @@ const ProductCard = ({ vendor, viewMode }) => {
                     </div>
                 </Link>
 
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="flex flex-wrap gap-2 mt-2 ">
                     <Link
                         href={{ pathname: '/shop-wise-product', query: { vendor_id: vendor.id } }}
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center">
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center"
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-4 w-4 mr-1"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
-                            strokeWidth={2}>
+                            strokeWidth={2}
+                        >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path
                                 strokeLinecap="round"

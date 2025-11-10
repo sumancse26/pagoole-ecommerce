@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { setSharedData } from '@/hooks/useSharedData';
 import { getSearchedProducts } from '@/services/product.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'; 
 
 const HeaderComp = () => {
     const [searchStringData, setSearchStringData] = useState('');
@@ -68,12 +68,21 @@ const HeaderComp = () => {
             <div className="bg-green-600">
                 <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between gap-[85px]">
                     {/* Logo */}
-                    <div className="flex">
-                        <span
+                    <div className="flex items-center gap-3 justify-center cursor-pointer ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
+                                <div className="text-3xl font-bold mb-4">
+                                    <span className="text-red-600">P</span>
+                                    <span className="text-blue-600">a</span>
+                                    <span className="text-green-500">g</span>
+                                    <span className="text-yellow-500">o</span>
+                                    <span className="text-green-500">o</span>
+                                    <span className="text-blue-600">l</span>
+                                    <span className="text-red-600">e</span>
+                                </div> 
+                        {/* <span
                             onClick={homeBtnHandler}
                             className="cursor-pointer ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
                             Pagoole Shop
-                        </span>
+                        </span> */}
                     </div>
 
                     <div className="hidden md:flex flex-1 justify-center">

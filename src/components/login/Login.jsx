@@ -3,10 +3,11 @@ import { useAlert } from '@/context/AlertContext';
 import { useApiLoader } from '@/lib/useApiLoader';
 import Loader from '@components/Loader';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter,useSearchParams,  usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { signIn, getSession, useSession } from 'next-auth/react';
 import { authLogIn } from '@/services/auth.js';
+import { doSocialLogin } from '@/app/actions/authAction';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -18,6 +19,8 @@ const Login = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
     const { showAlert } = useAlert();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
     const { start, stop } = useApiLoader();
 
     const handleChange = (e) => {
@@ -64,15 +67,42 @@ const Login = () => {
         }
     };
 
+    const handleSocialLogin = async ()=> {
+         const fullPath = searchParams.toString() ? `${pathname}?${searchParams.toString()}` : pathname;
+
+            const result = await doSocialLogin('google', fullPath);
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-            <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl w-full">
+            <div className="flex flex-col md:flex-row bg-white  rounded-lg overflow-hidden max-w-4xl w-full">
                 {/* Left Side - Intro Text */}
-                <div className="md:w-1/2 p-8 flex flex-col justify-center bg-gradient-to-r from-emerald-400 to-green-500 text-white">
-                    <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
-                    <p className="text-lg mb-6">
-                        Enter your details to access your account and continue where you left off.
-                    </p>
+                <div className="md:w-1/2 p-8 flex flex-col justify-center bg-gray-100 border-0">
+                    <div className="text-3xl font-bold mb-4">
+                        <span className="text-red-600">P</span>
+                        <span className="text-blue-600">a</span>
+                        <span className="text-green-500">g</span>
+                        <span className="text-yellow-500">o</span>
+                        <span className="text-green-500">o</span>
+                        <span className="text-blue-600">l</span>
+                        <span className="text-red-600">e</span>
+                    </div> 
+
+                    <div>
+                    <div className='flex items-center gap-2'>
+                        <div className="text-normal font-bold mb-4">
+                            <span className="text-red-600">P</span>
+                            <span className="text-blue-600">a</span>
+                            <span className="text-green-500">g</span>
+                            <span className="text-yellow-500">o</span>
+                            <span className="text-green-500">o</span>
+                            <span className="text-blue-600">l</span>
+                            <span className="text-red-600">e</span>
+                            <span className='m-0 ps-2 font-normal'>Lost and Found world wide.</span>
+                        </div> 
+                        
+                    </div>
+                    </div>
                     <p className="text-sm">
                         Not a member?
                         <Link href="/register" className="underline px-2 text-red-600">
@@ -127,10 +157,22 @@ const Login = () => {
                         <button
                             disabled={loadingState}
                             type="submit"
-                            className="w-full flex items-center justify-center py-3 mt-4 bg-gradient-to-r from-emerald-400 to-green-500 text-white font-semibold rounded hover:from-green-600 hover:to-emerald-400 focus:outline-none">
+                            className="w-full flex items-center justify-center py-2 mt-4 bg-gradient-to-r from-emerald-400 to-green-500 text-white font-semibold rounded hover:from-green-600 hover:to-emerald-400 focus:outline-none">
                             LOGIN {loadingState && <Loader />}
                         </button>
                     </form>
+                    <span className='w-full flex justify-center py-2'>Or</span>
+                    <button
+                        onClick={handleSocialLogin}
+                            type="button"
+                            className="w-full flex items-center justify-center py-2 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold rounded hover:from-orange-600 hover:to-orange-400 focus:outline-none">
+                            LOGIN WITH GOOGLE
+                        </button>
+                    <button
+                            type="submit"
+                            className="w-full flex items-center justify-center py-2 mt-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white font-semibold rounded hover:from-blue-600 hover:to-blue-400 focus:outline-none">
+                            LOGIN WITH OTP
+                        </button>
                 </div>
             </div>
         </div>
