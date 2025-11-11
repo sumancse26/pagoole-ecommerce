@@ -23,11 +23,8 @@ const SidebarSlider = () => {
 
     const router = useRouter(); 
     useEffect(() => { 
-    const mobileBreakpoint = 768; 
-     
-    if (window.innerWidth < mobileBreakpoint) { 
-        setIsOpen(false);
-    }
+    
+        
      
     fetchCategory(); 
 }, []);
@@ -136,63 +133,75 @@ const SidebarSlider = () => {
 
     return (
         <>
-       <div className="relative"> 
-            <button
-                onClick={() => setIsOpen((prev) => !prev)}
-                className="fixed top-[15px] left-34 z-50 p-1 bg-green-500 text-white rounded-lg cursor-pointer"
-            >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 6h16M4 12h16M4 18h16"
-                    />
-                </svg>
-            </button> 
-            <div
-                className={`
-                    fixed top-0 left-0 h-full overflow-y-auto shadow-lg z-40 bg-white 
-                    transition-transform duration-300 w-80 
-                    
-                   
-                    md:sticky md:top-[58px] md:h-[calc(100vh-58px)] md:translate-x-0
+       <div className="relative">
+    {/* 1. Menu Icon Button (Visible on ALL screens) */}
+    <button
+        onClick={() => setIsOpen((prev) => !prev)}
+        // Button remains fixed on ALL screens. Removed unnecessary sm:block and md:block.
+        className="fixed top-[7px] left-35 z-50 p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg cursor-pointer transition-colors"
+    >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+            />
+        </svg>
+    </button>
 
-                    ${!isOpen ? '-translate-x-full' : 'translate-x-0'}
-                `}
-            > 
-                <div
-                    className={`
-                        pt-[58px] md:pt-5 transition-opacity duration-300  
-                        ${isOpen ? 'opacity-100' : 'opacity-0 md:opacity-100'} 
-                        px-4
-                    `}
-                >
-                    <div className="px-4 pb-2 font-normal text-lg border-b border-gray-200">All Categories</div>
-
-                    <div className="p-2">
-                        <input
-                            onInput={(e) => searchCategoryHandler(e.target.value)}
-                            type="text"
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                            placeholder="Search categories"
-                        />
-                    </div>
-
-                    <div className="divide-y divide-gray-100 max-h-[calc(100vh-150px)] overflow-y-auto scrollbar-thin scrollbar-thumb-green-400 scrollbar-track-gray-200">
-                        {renderCategories(filteredCategories)}
-                    </div>
-                </div>
-            </div>
+    {/* 2. Sidebar/Category List */}
+    <div
+        className={`
+            /* Fixed position on mobile, Sticky on desktop/tablet */
+            fixed md:sticky top-0 md:top-[58px] left-0 h-screen md:h-[calc(100vh-58px)] 
+            overflow-y-auto shadow-lg z-50 bg-white 
+            transition-all duration-300 ease-in-out
             
-            {/* 4. Optional: Backdrop for mobile view */}
-            {isOpen && (
-                <div 
-                    onClick={() => setIsOpen(false)} 
-                    className="md:hidden fixed inset-0 bg-black opacity-50 z-30"
+            /* Toggle Logic: Sets width for hide/show */
+            ${isOpen ? 'w-80' : 'w-0'}
+            
+            /* Hide the initial fixed position unless it's mobile */
+            md:static
+        `}
+    >
+        {/* 3. Sidebar Content: Hides content using opacity when width is 0 */}
+        <div
+            className={`
+                pt-[58px] md:pt-5 transition-opacity duration-300 ease-in-out h-full
+                
+                /* Opacity controls content visibility when width collapses */
+                ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'} 
+                px-4 w-80 
+            `}>
+            {/* The inner content needs w-80 to ensure it doesn't try to flow when the outer div has w-0 */}
+            
+            <div className="px-4 pb-2 font-normal text-lg border-b border-gray-200">All Categories</div>
+
+            <div className="p-2">
+                <input
+                    onInput={(e) => searchCategoryHandler(e.target.value)}
+                    type="text"
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Search categories"
                 />
-            )}
+            </div>
+
+            <div className="divide-y divide-gray-100 max-h-[calc(100vh-150px)] overflow-y-auto scrollbar-thin scrollbar-thumb-green-400 scrollbar-track-gray-200">
+                {/* Ensure renderCategories is a function that returns JSX */}
+                {renderCategories(filteredCategories)}
+            </div>
         </div>
+    </div>
+    
+    {/* 4. Optional: Backdrop for Mobile View (Covers content when open on mobile) */}
+    {isOpen && (
+        <div 
+            onClick={() => setIsOpen(false)} 
+            className="md:hidden fixed inset-0 bg-black opacity-50 z-30"
+        />
+    )}
+</div>
 
             {/* <div className="md:block">
                 <button

@@ -11,9 +11,9 @@ export default function LayoutManager({ header, sidebar, footer, children }) {
     return (
         <>
             {shouldShowLayoutComponents && header}
-            <div className="flex min-h-screen">
+            <div className="flex min-h-screen ">
                 {shouldShowLayoutComponents && sidebar}
-                <main className="flex-1 transition-all duration-300 overflow-x-hidden">{children}</main>
+                <main className="flex-1 transition-all duration-300 overflow-x-hidden ">{children}</main>
             </div>
             {shouldShowLayoutComponents && footer}
         </>
