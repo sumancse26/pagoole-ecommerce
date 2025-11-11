@@ -66,10 +66,10 @@ const HeaderComp = () => {
         <header className="bg-white shadow sticky top-0 z-45">
             {/* Green Top Bar */}
             <div className="bg-green-600">
-                <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between gap-[85px]">
+                <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between md:gap-[85px]">
                     {/* Logo */}
-                    <div onClick={homeBtnHandler} className="flex items-center gap-3 justify-center cursor-pointer ml-14 text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
-                                <div className="text-3xl font-bold mb-4">
+                    <div onClick={homeBtnHandler} className="flex items-center gap-3 justify-center cursor-pointer text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
+                                <div className="text-3xl font-bold mb-2">
                                     <span className="text-red-600">P</span>
                                     <span className="text-blue-600">a</span>
                                     <span className="text-green-500">g</span>
@@ -92,7 +92,7 @@ const HeaderComp = () => {
                                 <input
                                     type="search"
                                     placeholder="Search for products..."
-                                    className="w-full h-12 pl-5 pr-12 rounded-full text-gray-800 placeholder-gray-500 bg-white border border-green-500 shadow focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                                    className="w-full h-10 pl-5 pr-12 rounded-full text-gray-800 placeholder-gray-500 bg-white border border-green-500 shadow focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                                     aria-label="Search products"
                                     required
                                     onChange={(e) => setSearchStringData(e.target.value)}
@@ -119,7 +119,7 @@ const HeaderComp = () => {
                             <Link href="/shop">
                                 <button
                                     type="button"
-                                    className="cursor-pointer px-3 bg-[#ff686e] text-white py-2 rounded-lg font-medium tracking-[2px] whitespace-nowrap"
+                                    className="cursor-pointer px-3 bg-[#ff686e] text-white py-[5px] rounded-lg font-medium tracking-[2px] whitespace-nowrap"
                                     aria-label="Go to Shop Order homepage">
                                     Shop Order
                                 </button>
@@ -130,7 +130,7 @@ const HeaderComp = () => {
                         <Link className="block md:hidden" href="/shop">
                             <button
                                 type="button"
-                                className="cursor-pointer px-4 py-2 bg-[#ff686e] text-white rounded-lg font-medium tracking-[2px] whitespace-nowrap"
+                                className="cursor-pointer px-4 py-[5px] bg-[#ff686e] text-white rounded-lg font-medium tracking-[2px] whitespace-nowrap"
                                 aria-label="Go to Shop Order homepage">
                                 Shop Order
                             </button>
