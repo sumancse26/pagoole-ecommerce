@@ -20,13 +20,3 @@ export const authRegister = async (data) => {
     return res;
 };
 
-export const getAuthData = async (data) => {
-    const res = await fetch('http://103.125.255.208:8080/auth/me', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-
-    return res;
-};

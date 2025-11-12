@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import SearchableDropdown from '../SearchableDropdown';
 import { getLocationList } from '@/services/vendor';
 import { register } from '@/services/users';
-import { authRegister, getAuthData } from '@/services/auth.js';
+import { authRegister } from '@/services/auth.js';
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
@@ -117,10 +117,26 @@ const SignUp = () => {
                 password: formData.password
             });
 
-            console.log(await authResult.json())
-            // await getAuthData();
-            let result= {};
-            if(authResult.status == 201){
+            
+            
+            const response = await authResult.json() 
+            let result= {}; 
+            const parts = response.data?.accessToken?.split('.');
+            if (parts.length !== 3) throw new Error('Invalid JWT format');
+
+            const [ ,payloadB64,] = parts;
+
+            const buf = (b64) => {
+                // add padding for base64url
+                const s = b64.replace(/-/g, '+').replace(/_/g, '/');
+                return Buffer.from(s + '='.repeat((4 - s.length % 4) % 4), 'base64').toString('utf8');
+            };
+
+            
+            const payloadJson = JSON.parse(buf(payloadB64));
+
+            if(authResult.status == 201 && payloadJson.id){
+                data.append('id', payloadJson.id)
                 result = await register(data);
             }
              

@@ -11,6 +11,7 @@ export const POST = async (req) => {
     try {
         const formData = await req.formData();
 
+        const id = formData.get('id');
         const user_name = formData.get('user_name');
         const email = formData.get('email');
         const password = formData.get('password');
@@ -93,6 +94,7 @@ export const POST = async (req) => {
                 await prisma.$transaction(async (tx) => {
                     const savedUser = await tx.users.create({
                         data: {
+                            id: Number(id),
                             user_name,
                             email,
                             phone: phone || '',
