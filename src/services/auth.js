@@ -20,3 +20,4 @@ export const authRegister = async (data) => {
     return res;
 };
 
+             

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { signIn, getSession, useSession } from 'next-auth/react';
 import { authLogIn } from '@/services/auth.js';
 import { doSocialLogin } from '@/app/actions/authAction';
+import Logo from '@components/Logo'
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -39,14 +40,15 @@ const Login = () => {
             user_name: formData.email,
             password: formData.password
         });
-
-        if(authResult.status == 201){
+        const token = await authResult.json();
+        console.log(token.accessToken)
+         if(token.accessToken){
             result = await signIn('credentials', {
                 redirect: false,
                 email: formData.email,
                 password: formData.password
             });
-        }
+         }
         
 
         stop();
@@ -78,7 +80,7 @@ const Login = () => {
             <div className="flex flex-col md:flex-row bg-white  rounded-lg overflow-hidden max-w-4xl w-full">
                 {/* Left Side - Intro Text */}
                 <div className="md:w-1/2 p-8 flex flex-col justify-center bg-gray-100 border-0">
-                    <div className="text-3xl font-bold mb-4">
+                    {/* <div className="text-3xl font-bold mb-4">
                         <span className="text-red-600">P</span>
                         <span className="text-blue-600">a</span>
                         <span className="text-green-500">g</span>
@@ -86,23 +88,17 @@ const Login = () => {
                         <span className="text-green-500">o</span>
                         <span className="text-blue-600">l</span>
                         <span className="text-red-600">e</span>
-                    </div> 
-
-                    <div>
+                    </div>  */}
+                     <div className="text-xl font-semibold mb-4">
+                        <Logo /> 
+                     </div>
                     <div className='flex items-center gap-2'>
                         <div className="text-normal font-bold mb-4">
-                            <span className="text-red-600">P</span>
-                            <span className="text-blue-600">a</span>
-                            <span className="text-green-500">g</span>
-                            <span className="text-yellow-500">o</span>
-                            <span className="text-green-500">o</span>
-                            <span className="text-blue-600">l</span>
-                            <span className="text-red-600">e</span>
+                             <Logo /> 
                             <span className='m-0 ps-2 font-normal'>Lost and Found world wide.</span>
                         </div> 
                         
-                    </div>
-                    </div>
+                    </div> 
                     <p className="text-sm">
                         Not a member?
                         <Link href="/register" className="underline px-2 text-red-600">
@@ -119,7 +115,7 @@ const Login = () => {
                         <div>
                             <label className="block text-sm font-medium text-gray-600 mb-1">Email Address</label>
                             <input
-                                type="email"
+                                type="text"
                                 placeholder="you@example.com"
                                 name="email"
                                 value={formData.email}

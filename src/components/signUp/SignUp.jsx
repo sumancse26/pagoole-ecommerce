@@ -98,7 +98,7 @@ const SignUp = () => {
             if (formData.image) data.append('image', formData.image);
             let firstName = '';
             let lastName = '';
-            const nameParts = formData.user_name.trim().split(/\s+/); // split by one or more spaces
+            const nameParts = formData.user_name.trim().split(/\s+/); 
 
             if (nameParts.length === 1) {
                 firstName = nameParts[0];
@@ -113,8 +113,9 @@ const SignUp = () => {
             const authResult = await authRegister({
                 firstName: firstName,
                 lastName: lastName,
-                emailOrMobile: formData.email || formData.phone,
-                password: formData.password
+                emailOrMobile:  formData.email || formData.phone,
+                password: formData.password,
+                dateOfBirth: formData.dateOfBirth
             });
 
             
@@ -162,11 +163,11 @@ const SignUp = () => {
                     isCustomer: false
                 });
             } else {
-                showAlert(result?.error || 'Registration failed', 'error');
+                showAlert(response?.message || 'Registration failed', 'error');
             }
         } catch (err) {
             console.error('Error submitting form:', err);
-            showAlert('An error occurred during registration', 'error');
+            showAlert('Registration failed', 'error');
         } finally {
             setLoadingState(false);
             stop();
@@ -243,6 +244,19 @@ const SignUp = () => {
                             value={formData.password}
                             onChange={handleChange}
                             placeholder="Password"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
+                        />
+                    </div><div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            DOB <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="date"
+                            name="dateOfBirth"
+                            required
+                            value={formData.dateOfBirth}
+                            onChange={handleChange}
+                            placeholder="Date of Birth"
                             className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
                     </div>
