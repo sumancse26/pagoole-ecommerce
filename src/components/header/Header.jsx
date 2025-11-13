@@ -68,20 +68,7 @@ const HeaderComp = () => {
             {/* Green Top Bar */}
             <div className="bg-green-600">
                 <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between md:gap-[85px]">
-                    {/* Logo */}
-
-                    {/* <div onClick={homeBtnHandler} className="flex items-center gap-3 justify-center cursor-pointer text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
-                                <div className="text-3xl font-bold mb-2">
-                                    <span className="text-red-600">P</span>
-                                    <span className="text-blue-600">a</span>
-                                    <span className="text-green-500">g</span>
-                                    <span className="text-yellow-500">o</span>
-                                    <span className="text-green-500">o</span>
-                                    <span className="text-blue-600">l</span>
-                                    <span className="text-red-600">e</span>
-                                </div> 
-                        
-                    </div> */}
+                    
                     <div onClick={homeBtnHandler} className="flex items-center gap-3 justify-center cursor-pointer text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
                         <Logo />
                     </div>
@@ -126,22 +113,51 @@ const HeaderComp = () => {
                                 </button>
                             </Link>
                         </form>
-                    </div>
-                    <div className="flex gap-5">
-                        <Link className="block md:hidden" href="/shop">
-                            <button
-                                type="button"
-                                className="cursor-pointer px-4 py-[5px] bg-[#ff686e] text-white rounded-lg font-medium tracking-[2px] whitespace-nowrap"
-                                aria-label="Go to Shop Order homepage">
-                                Shop Order
-                            </button>
-                        </Link>
-
-                        {/* Icons */}
-                        <HeaderIcons cartItemList={cartList} wishItemList={wishList} />
-                    </div>
+                    </div> 
+                    <HeaderIcons cartItemList={cartList} wishItemList={wishList} /> 
                 </div>
             </div>
+            <div className="md:hidden flex flex-1 justify-center mx-2 mt-2 pb-3">
+                <form className="w-full relative flex items-center gap-3" onSubmit={searchProduct}>
+                    {/* Search Input */}
+                    <div className="relative flex-1 px-2">
+                        <input
+                            type="search"
+                            placeholder="Search for products..."
+                            className="w-full h-10 pl-5 pr-12 rounded-full text-gray-800 placeholder-gray-500 bg-white border border-green-500 shadow focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                            aria-label="Search products"
+                            required
+                            onChange={(e) => setSearchStringData(e.target.value)}
+                        />
+                        <button
+                            type="submit"
+                            className="absolute right-[35px] top-1/2 transform -translate-y-1/2 text-green-600 hover:text-green-800"
+                            aria-label="Search">
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                    <Link href="/shop">
+                        <button
+                            type="button"
+                            className="cursor-pointer px-3 bg-[#ff686e] text-white py-[5px] rounded-lg font-medium tracking-[2px] whitespace-nowrap"
+                            aria-label="Go to Shop Order homepage">
+                            Shop Order
+                        </button>
+                    </Link>
+                </form>
+            </div> 
         </header>
     );
 };

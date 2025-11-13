@@ -26,6 +26,7 @@ const SidebarSlider = () => {
     
         
      
+    setIsOpen(false); 
     fetchCategory(); 
 }, []);
 

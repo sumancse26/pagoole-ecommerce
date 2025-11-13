@@ -151,7 +151,7 @@ const ProductListing = ({ vendorList, locationList }) => {
 
                 {/* Product List */}
                 <div
-                    className={`${
+                    className={`max-h-[650px] overflow-y-auto ${
                         viewMode === 'grid'
                             ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
                             : 'flex flex-col space-y-6'
@@ -194,7 +194,7 @@ const ProductListing = ({ vendorList, locationList }) => {
 const ProductCard = ({ vendor, viewMode }) => {
     return (
         <div
-            className={`bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow ${
+            className={`bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow md:h-[300px] ${
                 viewMode === 'list' ? 'flex flex-col md:flex-row' : ''
             }`}
         >
