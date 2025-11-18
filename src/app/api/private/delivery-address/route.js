@@ -8,7 +8,7 @@ export const POST = async (req) => {
         const headersList = await headers();
         const userIdString = headersList.get('user_id');
 
-        if (!userIdString) {
+        if (Number(userIdString) < 0 || userIdString == null || userIdString =='undefine') {
             return NextResponse.json({ message: 'Unauthorized User', success: false }, { status: 401 });
         }
 
@@ -86,7 +86,7 @@ export const GET = async (req) => {
         const headersList = await headers();
         const userIdString = headersList.get('user_id');
 
-        if (!userIdString) {
+        if (Number(userIdString) < 0 || userIdString == null || userIdString =='undefine') {
             return NextResponse.json({ message: 'Unauthorized User', success: false }, { status: 401 });
         }
 
@@ -124,7 +124,7 @@ export const PUT = async (req) => {
         const headersList = await headers();
         const userIdString = headersList.get('user_id');
 
-        if (!userIdString) {
+        if (Number(userIdString) < 0 || userIdString == null || userIdString =='undefine'){
             return NextResponse.json({ message: 'Unauthorized User', success: false }, { status: 401 });
         }
 

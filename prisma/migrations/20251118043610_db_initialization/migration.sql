@@ -1,16 +1,19 @@
+-- CreateEnum
+CREATE TYPE "orderStatus" AS ENUM ('Pending', 'Processing', 'Shipped', 'InTransit', 'OutForDelivery', 'Delivered', 'Cancelled', 'Returned', 'Completed');
+
 -- CreateTable
 CREATE TABLE "Users" (
     "id" SERIAL NOT NULL,
-    "user_name" VARCHAR(100) NOT NULL,
-    "email" VARCHAR(150) NOT NULL,
-    "phone" VARCHAR(20),
+    "user_name" VARCHAR(32) NOT NULL,
+    "email" VARCHAR(64) NOT NULL,
+    "phone" VARCHAR(16),
     "password" TEXT,
     "otp" INTEGER NOT NULL DEFAULT 0,
     "is_admin" INTEGER NOT NULL DEFAULT 1,
     "is_active" INTEGER NOT NULL DEFAULT 0,
+    "image" VARCHAR(1000) NOT NULL DEFAULT '',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "image" TEXT NOT NULL DEFAULT '',
 
     CONSTRAINT "Users_pkey" PRIMARY KEY ("id")
 );
@@ -19,7 +22,6 @@ CREATE TABLE "Users" (
 CREATE TABLE "Geo_Locations" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(128) NOT NULL,
-    "loc_type" VARCHAR(30) DEFAULT '',
     "full_address" VARCHAR(255),
     "parent_id" INTEGER,
     "is_active" INTEGER NOT NULL DEFAULT 1,
@@ -36,17 +38,17 @@ CREATE TABLE "Vendors" (
     "id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
     "store_name" VARCHAR(150) NOT NULL,
+    "trade_license_no" VARCHAR(16) DEFAULT '',
+    "nid_no" VARCHAR(20) DEFAULT '',
     "store_description" VARCHAR(500),
     "address" VARCHAR(300),
     "location_id" INTEGER NOT NULL,
-    "parent_location_id" INTEGER NOT NULL DEFAULT 24,
-    "password" TEXT,
-    "otp" INTEGER NOT NULL DEFAULT 0,
-    "is_admin" INTEGER NOT NULL DEFAULT 0,
     "is_active" INTEGER NOT NULL DEFAULT 0,
+    "store_logo" VARCHAR(300) NOT NULL DEFAULT '',
+    "trade_license_image" VARCHAR(300) NOT NULL DEFAULT '',
+    "nid_image" VARCHAR(300) NOT NULL DEFAULT '',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "store_logo" TEXT NOT NULL DEFAULT '',
 
     CONSTRAINT "Vendors_pkey" PRIMARY KEY ("id")
 );
@@ -69,9 +71,9 @@ CREATE TABLE "Brands" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
     "description" VARCHAR(500),
+    "brand_logo" VARCHAR(300) NOT NULL DEFAULT '',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "brand_logo" TEXT NOT NULL DEFAULT '',
 
     CONSTRAINT "Brands_pkey" PRIMARY KEY ("id")
 );
@@ -92,7 +94,7 @@ CREATE TABLE "Weights" (
 CREATE TABLE "File_Server" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(64) NOT NULL,
-    "base_url" TEXT NOT NULL DEFAULT '',
+    "base_url" VARCHAR(1000) NOT NULL DEFAULT '',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -104,9 +106,8 @@ CREATE TABLE "Products" (
     "id" SERIAL NOT NULL,
     "prod_name" VARCHAR(150) NOT NULL,
     "slug" VARCHAR(150) NOT NULL,
-    "description" VARCHAR(512),
+    "description" VARCHAR(1000),
     "mrp" DOUBLE PRECISION NOT NULL,
-    "vat" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "brand_id" INTEGER,
     "category_id" INTEGER,
     "server_id" INTEGER,
@@ -124,7 +125,7 @@ CREATE TABLE "Product_Images" (
     "vendor_product_id" INTEGER,
     "vendor_id" INTEGER NOT NULL,
     "server_id" INTEGER,
-    "file_name" VARCHAR(64) NOT NULL,
+    "file_name" VARCHAR(200) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -136,9 +137,11 @@ CREATE TABLE "Vendor_Products" (
     "id" SERIAL NOT NULL,
     "product_id" INTEGER NOT NULL,
     "vendor_id" INTEGER NOT NULL,
-    "product_location" INTEGER,
+    "product_location" INTEGER NOT NULL DEFAULT 0,
     "category_id" INTEGER,
     "price" DOUBLE PRECISION NOT NULL,
+    "purchase_price" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "description" VARCHAR(1000),
     "stock_qty" INTEGER NOT NULL DEFAULT 0,
     "is_active" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -176,7 +179,7 @@ CREATE TABLE "Orders" (
     "order_code" TEXT DEFAULT '',
     "delivery_address" INTEGER NOT NULL DEFAULT 0,
     "total_amount" DOUBLE PRECISION NOT NULL,
-    "order_status" VARCHAR(20) NOT NULL DEFAULT 'Pending',
+    "order_status" "orderStatus" NOT NULL DEFAULT 'Pending',
     "payment_method" VARCHAR(15) NOT NULL DEFAULT 'cod',
     "payment_status" VARCHAR(20) NOT NULL DEFAULT 'Unpaid',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -271,6 +274,9 @@ CREATE TABLE "Wishlists" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Vendors_store_name_key" ON "Vendors"("store_name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Brands_name_key" ON "Brands"("name");

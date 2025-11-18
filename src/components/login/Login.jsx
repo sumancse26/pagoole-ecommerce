@@ -36,19 +36,25 @@ const Login = () => {
         start();
 
         let result = {}
-        const authResult = await authLogIn({
-            user_name: formData.email,
-            password: formData.password
-        });
-        const token = await authResult.json();
-        console.log(token.accessToken)
-         if(token.accessToken){
-            result = await signIn('credentials', {
+        // const authResult = await authLogIn({
+        //     user_name: formData.email,
+        //     password: formData.password
+        // });
+        // const token = await authResult.json();
+        // console.log(token.accessToken)
+        //  if(token.accessToken){
+        //     result = await signIn('credentials', {
+        //         redirect: false,
+        //         email: formData.email,
+        //         password: formData.password
+        //     });
+        //  }
+
+        result = await signIn('credentials', {
                 redirect: false,
                 email: formData.email,
                 password: formData.password
             });
-         }
         
 
         stop();

@@ -223,15 +223,32 @@ const VendorList = ({ vendorList = [] }) => {
 
                                                     {/* Action Column - Last TD: No border-r, ensured full height to align buttons */}
                                                     <td className="px-1 py-2 h-full">
-                                                        <div className="flex items-center justify-center gap-1 flex-wrap max-w-full overflow-hidden">
+                                                        <div className="flex items-center justify-center gap-2 flex-wrap max-w-full">
                                                             {vendor.is_active == 0 && (
-                                                                <button
-                                                                    onClick={() => approvalHandler(vendor.id)}
-                                                                    className="material-icons opacity-0 group-hover:opacity-100 bg-sky-500 hover:bg-sky-700 text-white rounded-full w-7 h-7 flex items-center justify-center text-base transition">
-                                                                    approval
-                                                                </button>
+                                                                <div className="relative group">
+                                                                    <button
+                                                                        onClick={() => approvalHandler(vendor.id)}
+                                                                        className="cursor-pointer material-icons bg-sky-500 hover:bg-sky-700 
+                                                                                text-white rounded-full w-8 h-8 
+                                                                                flex items-center justify-center text-base transition"
+                                                                    >
+                                                                        approval
+                                                                    </button>
+
+                                                                    {/* Tooltip */}
+                                                                    <span
+                                                                        className="absolute -top-2 -left-13 -translate-x-1/2 
+                                                                                bg-gray-900 text-white text-xs px-2 py-1 
+                                                                                rounded shadow-md opacity-0 
+                                                                                group-hover:opacity-100 pointer-events-none 
+                                                                                transition duration-200 whitespace-nowrap"
+                                                                    >
+                                                                        Approve Vendor
+                                                                    </span>
+                                                                </div>
                                                             )}
                                                         </div>
+
                                                     </td>
                                                 </tr>
                                             ))}

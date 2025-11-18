@@ -96,50 +96,52 @@ const SignUp = () => {
             if (formData.trade_license_image) data.append('trade_license_image', formData.trade_license_image);
             if (formData.nid_image) data.append('nid_image', formData.nid_image);
             if (formData.image) data.append('image', formData.image);
-            let firstName = '';
-            let lastName = '';
-            const nameParts = formData.user_name.trim().split(/\s+/); 
+            // let firstName = '';
+            // let lastName = '';
+            // const nameParts = formData.user_name.trim().split(/\s+/); 
 
-            if (nameParts.length === 1) {
-                firstName = nameParts[0];
-                lastName = '';
-            } else if (nameParts.length === 2) {
-                firstName = nameParts[0];
-                lastName = nameParts[1];
-            } else if (nameParts.length > 2) {
-                firstName = nameParts[0];
-                lastName = nameParts.slice(1).join(' '); 
-            }
-            const authResult = await authRegister({
-                firstName: firstName,
-                lastName: lastName,
-                emailOrMobile:  formData.email || formData.phone,
-                password: formData.password,
-                dateOfBirth: formData.dateOfBirth
-            });
-
-            
-            
-            const response = await authResult.json() 
-            let result= {}; 
-            const parts = response.data?.accessToken?.split('.');
-            if (parts.length !== 3) throw new Error('Invalid JWT format');
-
-            const [ ,payloadB64,] = parts;
-
-            const buf = (b64) => {
-                // add padding for base64url
-                const s = b64.replace(/-/g, '+').replace(/_/g, '/');
-                return Buffer.from(s + '='.repeat((4 - s.length % 4) % 4), 'base64').toString('utf8');
-            };
+            // if (nameParts.length === 1) {
+            //     firstName = nameParts[0];
+            //     lastName = '';
+            // } else if (nameParts.length === 2) {
+            //     firstName = nameParts[0];
+            //     lastName = nameParts[1];
+            // } else if (nameParts.length > 2) {
+            //     firstName = nameParts[0];
+            //     lastName = nameParts.slice(1).join(' '); 
+            // }
+            // const authResult = await authRegister({
+            //     firstName: firstName,
+            //     lastName: lastName,
+            //     emailOrMobile:  formData.email || formData.phone,
+            //     password: formData.password,
+            //     dateOfBirth: formData.dateOfBirth
+            // });
 
             
-            const payloadJson = JSON.parse(buf(payloadB64));
+            
+            // const response = await authResult.json() 
+             let result= {}; 
+            // const parts = response.data?.accessToken?.split('.');
+            // if (parts.length !== 3) throw new Error('Invalid JWT format');
 
-            if(authResult.status == 201 && payloadJson.id){
-                data.append('id', payloadJson.id)
-                result = await register(data);
-            }
+            // const [ ,payloadB64,] = parts;
+
+            // const buf = (b64) => {
+            //     // add padding for base64url
+            //     const s = b64.replace(/-/g, '+').replace(/_/g, '/');
+            //     return Buffer.from(s + '='.repeat((4 - s.length % 4) % 4), 'base64').toString('utf8');
+            // };
+
+            
+            // const payloadJson = JSON.parse(buf(payloadB64));
+
+            // if(authResult.status == 201 && payloadJson.id){
+            //     data.append('id', payloadJson.id)
+            //     result = await register(data);
+            // }
+
+            result = await register(data);
              
 
             if (result?.success) {
@@ -246,7 +248,8 @@ const SignUp = () => {
                             placeholder="Password"
                             className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
-                    </div><div>
+                    </div>
+                    {/* <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-1">
                             DOB <span className="text-red-500">*</span>
                         </label>
@@ -259,7 +262,7 @@ const SignUp = () => {
                             placeholder="Date of Birth"
                             className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
                         />
-                    </div>
+                    </div> */}
 
                     {/* Store Name */}
                     <div>

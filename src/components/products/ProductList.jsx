@@ -202,8 +202,8 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                         {/* Add Product Button */}
                         <button
                             onClick={openProductModal}
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-1 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-green-400 to-green-600 hover:from-green-700 hover:to-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 transition">
-                            <span className="material-icons text-base">add</span>
+                            className="cursor-pointer w-full sm:w-auto inline-flex items-center justify-center gap-1 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-green-400 to-green-600 hover:from-green-700 hover:to-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 transition">
+                            <span className="cursor-pointer material-icons text-base">add</span>
                             Add Product
                         </button>
                     </div>
@@ -290,18 +290,18 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                                     {product.is_active == 0 && session?.user?.role == 0 && (
                                                         <span
                                                             onClick={() => approvalHandler(product.id)}
-                                                            className="material-icons opacity-0 group-hover:opacity-100 rounded-full bg-blue-500 hover:bg-blue-600 text-white w-[30px] h-[30px] leading-[30px] !text-center flex items-center justify-center !text-base">
+                                                            className="cursor-pointer material-icons opacity-0 group-hover:opacity-100 rounded-full bg-blue-500 hover:bg-blue-600 text-white w-[30px] h-[30px] leading-[30px] !text-center flex items-center justify-center !text-base">
                                                             approval
                                                         </span>
                                                     )}
                                                     <span
                                                         onClick={() => updateProductHandler(product)}
-                                                        className="material-icons opacity-0 group-hover:opacity-100 rounded-full bg-green-500 hover:bg-green-600 text-white w-[30px] h-[30px] leading-[30px] text-center flex items-center justify-center !text-base">
+                                                        className="cursor-pointer material-icons opacity-0 group-hover:opacity-100 rounded-full bg-green-500 hover:bg-green-600 text-white w-[30px] h-[30px] leading-[30px] text-center flex items-center justify-center !text-base">
                                                         edit
                                                     </span>
                                                     <span
                                                         onClick={() => deleteProductHandler(product.id)}
-                                                        className="material-icons opacity-0 group-hover:opacity-100 rounded-full bg-red-500 hover:bg-red-600 text-white w-[30px] h-[30px] leading-[30px] text-center flex items-center justify-center !text-base">
+                                                        className="cursor-pointer material-icons opacity-0 group-hover:opacity-100 rounded-full bg-red-500 hover:bg-red-600 text-white w-[30px] h-[30px] leading-[30px] text-center flex items-center justify-center !text-base">
                                                         delete
                                                     </span>
                                                 </div>

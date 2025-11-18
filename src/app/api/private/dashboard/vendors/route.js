@@ -5,7 +5,8 @@ import { revalidateTag } from 'next/cache';
 export const GET = async (req) => {
     try {
         const userId = Number(req.headers.get('user_id'));
-        if (!Number.isInteger(userId) || userId <= 0) {
+           
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
         const vendor_list = await prisma.vendors.findMany({
@@ -38,11 +39,24 @@ export const GET = async (req) => {
 export const PATCH = async (req) => {
     try {
         const userId = Number(req.headers.get('user_id'));
-        if (!Number.isInteger(userId) || userId <= 0) {
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 
+       
+
         const data = await req.json();
+
+         const userInfo = await prisma.vendors.findUnique({
+            where: {
+                id: Number(data.vendor_id) 
+            }
+        })
+
+        await prisma.users.update({
+            where: { id: Number(userInfo.user_id) },
+            data: { is_active: 1 }
+        });
         await prisma.vendors.update({
             where: { id: Number(data.vendor_id) },
             data: { is_active: 1 }

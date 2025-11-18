@@ -10,6 +10,7 @@ const UPLOADS_URL_PREFIX = '/uploads/users';
 export const POST = async (req) => {
     try {
         const formData = await req.formData();
+        const origin = process.env.NEXT_PUBLIC_VENDOR_IMAGE_API_URL;
 
         const id = formData.get('id');
         const user_name = formData.get('user_name');
@@ -92,9 +93,18 @@ export const POST = async (req) => {
 
             try {
                 await prisma.$transaction(async (tx) => {
+                    const fsName = 'VENDOR_IMAGE';
+                    // const fsName = origin.slice(0, 64);
+                    const fileServer = await tx.file_Server.upsert({
+                        where: { name: fsName },
+                        create: { name: fsName, base_url: origin },
+                        update: { base_url: origin }
+                    });
+
                     const savedUser = await tx.users.create({
+                        //id: Number(id), need in future
                         data: {
-                            id: Number(id),
+                            
                             user_name,
                             email,
                             phone: phone || '',

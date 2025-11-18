@@ -53,7 +53,7 @@ model Geo_Locations {
 model Vendors {
   id                     Int                  @id @default(autoincrement())
   user_id                Int
-  store_name             String               @db.VarChar(150) @db.unique()
+  store_name             String               @unique @db.VarChar(150) 
   trade_license_no       String?              @db.VarChar(16) @default("")
   nid_no                 String?              @db.VarChar(20) @default("")
   store_description      String?              @db.VarChar(500)

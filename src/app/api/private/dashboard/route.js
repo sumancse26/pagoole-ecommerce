@@ -7,7 +7,7 @@ export const GET = async (req) => {
         const userRole = Number(req.headers.get('user_role'));
 
         // 🧩 Validate user ID
-        if (!Number.isInteger(userId) || userId <= 0) {
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 

@@ -94,8 +94,7 @@ export const POST = async (req) => {
 
 export const GET = async (req) => {
     try {
-        const userId = req.headers.get('user_id');
-        console.log('userId', userId);
+        const userId = req.headers.get('user_id'); 
         if (!userId) {
             return NextResponse.json({ success: false, message: 'Unauthorized user' }, { status: 401 });
         }

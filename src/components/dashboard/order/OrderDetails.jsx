@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import Image from 'next/image';
+import Logo from '@components/Logo.jsx';
 
 const InvoiceDetail = ({ closeModalHandler, invInfo = {}, invDtlSkeleton }) => {
     const closeBtnHandler = () => {
@@ -55,15 +56,7 @@ const InvoiceDetail = ({ closeModalHandler, invInfo = {}, invDtlSkeleton }) => {
 
                         {/* RIGHT SECTION */}
                         <div className="md:w-auto text-right">
-                            <Image
-                                src="/uploads/logo.png"
-                                alt="Logo"
-                                width={80}
-                                height={40}
-                                priority
-                                className="ml-auto print:ml-auto print:mr-0"
-                            />
-                            <p className="text-sm font-semibold text-gray-800 dark:text-white mt-2">Invoice</p>
+                            <Logo /> <span className="text-sm font-semibold text-gray-800 dark:text-white mt-2">Invoice</span>
                             <p className="text-sm text-gray-600 dark:text-gray-300">
                                 Date:
                                 <span className="font-bold">
@@ -140,13 +133,13 @@ const InvoiceDetail = ({ closeModalHandler, invInfo = {}, invDtlSkeleton }) => {
 
                 <div className="flex justify-center gap-2 px-6 py-4 border-t border-gray-300 dark:border-gray-700 print:hidden">
                     <button
-                        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                        className="cursor-pointer px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600"
                         onClick={closeBtnHandler}>
                         Close
                     </button>
                     <button
                         onClick={printBtnHandler}
-                        className="inline-flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded hover:from-green-600 hover:to-green-700 focus:outline-none">
+                        className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded hover:from-green-600 hover:to-green-700 focus:outline-none">
                         Print
                     </button>
                 </div>

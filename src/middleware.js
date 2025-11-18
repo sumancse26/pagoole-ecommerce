@@ -12,10 +12,12 @@ export default auth((req) => {
         return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    if (session && session?.user?.id) {
+
+    if (session && Number(session?.user?.id) >=0) {
         const requestHeaders = new Headers(req.headers);
-        requestHeaders.set('user_id', String(session?.user.id));
-        requestHeaders.set('user_role', String(session?.user?.role));
+
+        requestHeaders.set('user_id', Number(session?.user.id));
+        requestHeaders.set('user_role', Number(session?.user?.role));
         if (session.email) {
             requestHeaders.set('user_email', session?.user.email);
         }

@@ -11,16 +11,17 @@ const SearchableDropdown = ({
     const [query, setQuery] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [internalSelected, setInternalSelected] = useState(null);
+    const [hadUserTyped, setHadUserTyped] = useState(false); // NEW: track whether user typed
     const containerRef = useRef(null);
 
-    // ✅ Format the display text consistently
+    // Format label
     const formatLabel = (item) => {
         if (!item) return '';
         const label = item[labelKey] ?? '';
         return label;
     };
 
-    // ✅ Sync when parent provides a selected item
+    // Sync selected from parent
     useEffect(() => {
         if (selected) {
             setInternalSelected(selected);
@@ -29,9 +30,10 @@ const SearchableDropdown = ({
             setInternalSelected(null);
             setQuery('');
         }
+        setHadUserTyped(false); // reset typing flag when external selection changes
     }, [selected]);
 
-    // ✅ Close dropdown when clicking outside
+    // Close on outside click
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -42,38 +44,64 @@ const SearchableDropdown = ({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // ✅ Handle selection
+    // Handle selected
     const handleSelect = (item) => {
         setInternalSelected(item);
         setQuery(formatLabel(item));
         setIsOpen(false);
+        setHadUserTyped(false); // reset typing flag after selection
         onSelect?.(item);
     };
 
-    // ✅ Filter options
-    const filteredOptions = options.filter((item) => {
+    // Filter options
+    let filteredOptions = options.filter((item) => {
         const text = `${item[labelKey]} ${item[valueKey]}`.toLowerCase();
         return text.includes(query.toLowerCase());
     });
 
+    // If the user hasn't typed (i.e. they just opened it), hide the previously selected item
+    if (!hadUserTyped && internalSelected) {
+        filteredOptions = filteredOptions.filter(
+            (item) => item[valueKey] !== internalSelected[valueKey]
+        );
+    }
+
     return (
         <div ref={containerRef} className="relative">
-            <input
+            {/* <input
                 type="text"
                 value={query}
+                // open/close on click as before
+                onClick={() => setIsOpen(!isOpen)}
                 onChange={(e) => {
                     setQuery(e.target.value);
-                    setIsOpen(true);
+                    setHadUserTyped(true); // mark that the user typed
+                    // keep dropdown open if it already is (search functionality)
+                    if (isOpen) setIsOpen(true);
                 }}
-                onFocus={() => setIsOpen(true)}
                 placeholder={placeholder}
-                autoComplete="new-password"
                 name="searchable-dropdown"
                 id="searchable-dropdown"
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck="false"
                 className="w-full px-2 py-1 border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-green-500"
+            /> */}
+
+            <input
+                type="text"
+                placeholder={placeholder}
+                name="searchable-dropdown"
+                id="searchable-dropdown"
+                value={query}
+                onClick={() => setIsOpen(!isOpen)}
+                onChange={(e) => {
+                    setQuery(e.target.value);
+                    setHadUserTyped(true);
+                    if (isOpen) setIsOpen(true);
+                }}
+                autoComplete="off"
+                className="w-full px-3 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
             />
 
             {isOpen && (
@@ -82,12 +110,12 @@ const SearchableDropdown = ({
                         filteredOptions.map((item, index) => (
                             <li
                                 key={index}
-                                onMouseDown={() => handleSelect(item)} // 🧠 prevents blur clearing input
-                                className={`px-4 py-2 cursor-pointer hover:bg-green-200 text-sm ${
-                                    internalSelected?.[valueKey] === item[valueKey]
-                                        ? 'bg-green-100 font-medium'
-                                        : 'text-gray-700'
-                                }`}>
+                                onMouseDown={() => handleSelect(item)} // prevents blur
+                                className={`px-4 py-2 cursor-pointer hover:bg-green-200 text-sm ${internalSelected?.[valueKey] === item[valueKey]
+                                    ? 'bg-green-100 font-medium'
+                                    : 'text-gray-700'
+                                    }`}
+                            >
                                 {formatLabel(item)}
                             </li>
                         ))

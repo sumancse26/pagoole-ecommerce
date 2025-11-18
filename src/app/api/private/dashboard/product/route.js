@@ -44,12 +44,13 @@ export const POST = async (req) => {
 
     try {
         const userId = Number(req.headers.get('user_id'));
-        if (!Number.isInteger(userId) || userId <= 0) {
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 
         const formData = await req.formData();
-        const origin = new URL(req.url).origin;
+        const origin = process.env.NEXT_PUBLIC_PRODUCT_IMAGE_API_URL;
+        // const origin = new URL(req.url).origin;
 
         const prod_name = formData.get('prod_name');
         const price = formData.get('price');
@@ -204,7 +205,8 @@ export const POST = async (req) => {
                 if (serverIdNum) {
                     fileServer = await tx.file_Server.findUnique({ where: { id: serverIdNum } });
                 } else if (savedFiles.length > 0) {
-                    const fsName = origin.slice(0, 64);
+                    const fsName = 'PRODUCT_IMAGE';
+                    // const fsName = origin.slice(0, 64);
                     fileServer = await tx.file_Server.upsert({
                         where: { name: fsName },
                         create: { name: fsName, base_url: origin },
@@ -268,7 +270,8 @@ export const POST = async (req) => {
             if (serverIdNum) {
                 fileServer = await prisma.file_Server.findUnique({ where: { id: serverIdNum } });
             } else if (savedFiles.length > 0) {
-                const fsName = origin.slice(0, 64);
+                 const fsName = 'PRODUCT_IMAGE';
+                // const fsName = origin.slice(0, 64);
                 fileServer = await prisma.file_Server.upsert({
                     where: { name: fsName },
                     create: { name: fsName, base_url: origin },
@@ -327,7 +330,7 @@ export const GET = async (req) => {
         const userId = Number(req.headers.get('user_id'));
         const userRole = Number(req.headers.get('user_role'));
 
-        if (!Number.isInteger(userId) || userId <= 0) {
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 
@@ -413,12 +416,13 @@ export const PUT = async (req) => {
     try {
         // --- Validate user ---
         const userId = Number(req.headers.get('user_id'));
-        if (!Number.isInteger(userId) || userId <= 0) {
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 
         const formData = await req.formData();
-        const origin = new URL(req.url).origin;
+        const origin =  process.env.NEXT_PUBLIC_PRODUCT_IMAGE_API_URL;
+        // const origin = new URL(req.url).origin;
 
         const vendorProductId = Number(formData.get('id'));
         const productId = Number(formData.get('product_id'));
@@ -561,7 +565,8 @@ export const PUT = async (req) => {
                     where: { id: Number(server_id) }
                 });
             } else {
-                const fsName = origin.slice(0, 64);
+                 const fsName = 'PRODUCT_IMAGE';
+                // const fsName = origin.slice(0, 64);
                 fileServer = await prisma.file_Server.upsert({
                     where: { name: fsName },
                     create: { name: fsName, base_url: origin },
@@ -609,7 +614,7 @@ export const PUT = async (req) => {
 export const PATCH = async (req) => {
     try {
         const userId = Number(req.headers.get('user_id'));
-        if (!Number.isInteger(userId) || userId <= 0) {
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'Unauthorized: invalid user' }, { status: 401 });
         }
 

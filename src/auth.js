@@ -52,6 +52,7 @@ export const {
                     name: dbUser.user_name,
                     email: dbUser.email,
                     role: dbUser.is_admin,
+                    is_active: dbUser.is_active,
                     image: dbUser.image
                 };
             }
@@ -98,7 +99,8 @@ export const {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
-                token.role = user.role;
+                token.role = user.role; 
+                token.is_active = user.is_active; 
             }
             return token;
         },
@@ -107,6 +109,7 @@ export const {
             if (token && session.user) {
                 session.user.id = token.id;
                 session.user.role = token.role;
+                session.user.is_active = token.is_active;
             }
             return session;
         },
@@ -119,13 +122,15 @@ export const {
                         dbUser = await registerUser({
                             email: profile.email,
                             name: profile.name,
-                            image: profile.picture
+                            image: profile.picture,
+                            is_active: dbUser.is_active,
                         });
                     }
                     if (!dbUser) return false;
 
                     user.id = dbUser.id;
                     user.role = dbUser.is_admin;
+                    user.is_active = dbUser.is_active;
                     return true;
                 } catch (error) {
                     console.error('Error in signIn callback:', error);
@@ -139,6 +144,7 @@ export const {
                     let dbUser = await getUserByEmail(user.email);
                     user.id = dbUser.id;
                     user.role = dbUser.is_admin;
+                    user.is_active= dbUser.is_active;
                     return true;
                 } catch (error) {
                     console.error('Error in signIn callback:', error);

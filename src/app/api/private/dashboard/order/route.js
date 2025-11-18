@@ -5,8 +5,8 @@ import { revalidateTag } from 'next/cache';
 export const GET = async (req) => {
     try {
         const userId = req.headers.get('user_id');
-
-        if (!Number(userId)) {
+        const userRole = req.headers.get('user_role')
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
         }
 
@@ -31,7 +31,7 @@ export const GET = async (req) => {
                 id: true,
                 order_code: true,
                 delivery_address: true,
-                total_amount: true, // full customer order total
+                total_amount: true, 
                 order_status: true,
                 payment_method: true,
                 payment_status: true,
@@ -100,7 +100,7 @@ export const PATCH = async (req) => {
         const userId = req.headers.get('user_id');
         const { id, action, type } = await req.json();
 
-        if (!Number(userId)) {
+        if (Number(userId) < 0 || userId == null || userId =='undefine') {
             return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
         }
 

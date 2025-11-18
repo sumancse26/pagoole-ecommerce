@@ -114,7 +114,7 @@ const OrderPage = ({ orderList }) => {
             }
             stop();
         } catch (err) {
-            showAlert('Somethind went wrong', 'error');
+            showAlert('Something went wrong', 'error');
         }
     };
 
@@ -214,27 +214,26 @@ const OrderPage = ({ orderList }) => {
                                     </td>
                                     <td className="px-4 sm:px-5 py-3 border-r border-gray-200">
                                         <span
-                                            className={`px-2 py-1 text-xs font-medium rounded-full ${
-                                                order.order_status === 'Pending'
-                                                    ? 'bg-amber-100 text-amber-700'
-                                                    : order.order_status === 'Processing'
+                                            className={`px-2 py-1 text-xs font-medium rounded-full ${order.order_status === 'Pending'
+                                                ? 'bg-amber-100 text-amber-700'
+                                                : order.order_status === 'Processing'
                                                     ? 'bg-blue-100 text-blue-700'
                                                     : order.order_status === 'Shipped'
-                                                    ? 'bg-indigo-100 text-indigo-700'
-                                                    : order.order_status === 'InTransit'
-                                                    ? 'bg-cyan-100 text-cyan-700'
-                                                    : order.order_status === 'OutForDelivery'
-                                                    ? 'bg-sky-100 text-sky-700'
-                                                    : order.order_status === 'Delivered'
-                                                    ? 'bg-green-100 text-green-700'
-                                                    : order.order_status === 'Cancelled'
-                                                    ? 'bg-red-100 text-red-700'
-                                                    : order.order_status === 'Returned'
-                                                    ? 'bg-rose-100 text-rose-700'
-                                                    : order.order_status === 'Completed'
-                                                    ? 'bg-emerald-100 text-emerald-700'
-                                                    : 'bg-gray-100 text-gray-700'
-                                            }
+                                                        ? 'bg-indigo-100 text-indigo-700'
+                                                        : order.order_status === 'InTransit'
+                                                            ? 'bg-cyan-100 text-cyan-700'
+                                                            : order.order_status === 'OutForDelivery'
+                                                                ? 'bg-sky-100 text-sky-700'
+                                                                : order.order_status === 'Delivered'
+                                                                    ? 'bg-green-100 text-green-700'
+                                                                    : order.order_status === 'Cancelled'
+                                                                        ? 'bg-red-100 text-red-700'
+                                                                        : order.order_status === 'Returned'
+                                                                            ? 'bg-rose-100 text-rose-700'
+                                                                            : order.order_status === 'Completed'
+                                                                                ? 'bg-emerald-100 text-emerald-700'
+                                                                                : 'bg-gray-100 text-gray-700'
+                                                }
                                             }`}>
                                             {order.order_status || ''}
                                         </span>
@@ -253,7 +252,7 @@ const OrderPage = ({ orderList }) => {
                                                     order.order_status?.toLowerCase() != 'cancelled' && (
                                                         <button
                                                             onClick={() => approvalOrderHandler(order, 2, '')}
-                                                            className="opacity-0 group-hover:opacity-100 bg-blue-500 hover:bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
+                                                            className="cursor-pointer opacity-0 group-hover:opacity-100 bg-blue-500 hover:bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
                                                             title="Update Status">
                                                             <span className="material-icons">done</span>
                                                         </button>
@@ -262,7 +261,7 @@ const OrderPage = ({ orderList }) => {
                                                     order.order_status?.toLowerCase() !== 'cancelled' && (
                                                         <button
                                                             onClick={() => approvalOrderHandler(order, 1, 'Returned')}
-                                                            className="opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
+                                                            className="cursor-pointer opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
                                                             title="Return">
                                                             <span className="material-icons">u_turn_left</span>
                                                         </button>
@@ -272,7 +271,7 @@ const OrderPage = ({ orderList }) => {
                                                     order.order_status?.toLowerCase() !== 'returned' && (
                                                         <button
                                                             onClick={() => approvalOrderHandler(order, 1, 'Cancelled')}
-                                                            className="opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
+                                                            className="cursor-pointer opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
                                                             title="Cancel">
                                                             <span className="material-icons">cancel</span>
                                                         </button>
@@ -282,7 +281,7 @@ const OrderPage = ({ orderList }) => {
 
                                         <button
                                             onClick={() => viewBtnHandler(order)}
-                                            className="opacity-0 group-hover:opacity-100 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
+                                            className="cursor-pointer opacity-0 group-hover:opacity-100 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition"
                                             title="View Order Details">
                                             <span className="material-icons text-sm">visibility</span>
                                         </button>
