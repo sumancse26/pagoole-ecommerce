@@ -105,7 +105,18 @@ export const GET = async (req) => {
                             id: true,
                             user_name: true,
                             email: true,
-                            phone: true
+                            phone: true,
+                            shipping_addresses: {
+                                select: {
+                                    id: true,
+                                    address_line: true,
+                                    city: true,
+                                    region: true,
+                                    phone: true,
+                                    address_type: true,
+                                    default_address: true
+                                }
+                            }
                         }
                     },
                     order_items: {
@@ -143,8 +154,15 @@ export const GET = async (req) => {
                     id: 'desc'
                 }
             });
-            order_list;
         }
+
+        order_list = order_list.map(order => ({
+            ...order,
+            shipping_address: order.users.shipping_addresses.find(
+                addr => addr.id === order.delivery_address
+            )
+        }));
+
 
       
 

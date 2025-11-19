@@ -242,8 +242,13 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                         </th>
                                         <th
                                             scope="col"
+                                            className="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200">
+                                           Stock
+                                        </th>
+                                        <th
+                                            scope="col"
                                             className="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider w-24 border-r border-gray-200">
-                                            Stock
+                                            Status
                                         </th>
                                         <th
                                             scope="col"
@@ -284,6 +289,10 @@ const ProductList = ({ prodList, categoryList, brandList, uomList }) => {
                                             <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200">
                                                 {product.stock_qty || 0}
                                             </td>
+                                            <td className="px-2 py-2 text-gray-600 dark:text-neutral-300 text-center border-r border-gray-200 text-center ">
+                                                <span className={`${product.is_active == 1 ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'}`}>{product.is_active == 1 ? 'Active' : 'Inactive' }</span>
+                                            </td>
+
 
                                             <td className="px-1 py-2 text-gray-600 dark:text-neutral-300 text-end border-r border-gray-200 overflow-hidden">
                                                 <div className="flex items-center justify-center gap-1">

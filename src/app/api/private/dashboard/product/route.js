@@ -340,17 +340,15 @@ export const GET = async (req) => {
             }
         });
 
-        let whereClause = {};
+        let products = [];
 
         if (userRole == 1) {
-            whereClause.vendor_id = vendor.id;
-            whereClause.is_active = 1;
-        }
-        if (userRole == 0) {
-            whereClause.is_active = 1;
-        }
-        const products = await prisma.vendor_Products.findMany({
-            where: whereClause,
+           
+             products = await prisma.vendor_Products.findMany({
+            where: {
+                vendor_id: Number(vendor.id),
+                is_active: 1
+            },
             select: {
                 id: true,
                 price: true,
@@ -401,6 +399,61 @@ export const GET = async (req) => {
             },
             take: 50
         });
+        }
+        if (userRole == 0) {
+             products = await prisma.vendor_Products.findMany({
+            select: {
+                id: true,
+                price: true,
+                stock_qty: true,
+                is_active: true,
+                product_id: true,
+                products: {
+                    select: {
+                        id: true,
+                        prod_name: true,
+                        slug: true,
+                        description: true,
+                        mrp: true,
+                        created_at: true,
+                        categories: {
+                            select: {
+                                id: true,
+                                category_name: true
+                            }
+                        },
+                        brands: {
+                            select: {
+                                id: true,
+                                name: true,
+                                brand_logo: true
+                            }
+                        },
+                        product_images: {
+                            select: {
+                                id: true,
+                                product_id: true,
+                                file_name: true,
+                                file_server: true
+                            }
+                        },
+
+                        weights: {
+                            select: {
+                                id: true,
+                                unit: true
+                            }
+                        }
+                    }
+                }
+            },
+            orderBy: {
+                id: 'desc'
+            },
+            take: 50
+        });
+        }
+        
 
         return NextResponse.json({
             success: true,

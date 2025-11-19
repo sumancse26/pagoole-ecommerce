@@ -26,6 +26,7 @@ const OrderPage = ({ orderList }) => {
     const { data: session, status } = useSession();
 
     useEffect(() => {
+        console.log('orderList', orderList)
         if (typeof window !== 'undefined') {
             const saved = JSON.parse(localStorage.getItem('orderSearchHistory') || '[]');
             setPreviousSearches(saved);
@@ -88,6 +89,8 @@ const OrderPage = ({ orderList }) => {
             //vat_amount,
             //discount
         };
+
+        console.log('invData', invData.shipping_address)
 
         setInvInfo(invData);
     };
