@@ -49,7 +49,13 @@ const InvoiceDetail = ({ closeModalHandler, invInfo = {}, invDtlSkeleton }) => {
                             <p className="text-sm text-gray-600 dark:text-gray-300">
                                 Phone:
                                 <span id="CId" className="font-bold">
-                                    {invInfo?.users?.phone || ''}
+                                    {invInfo?.users?.shipping_addresses?.phone || invInfo?.users?.phone || ''}
+                                </span>
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                                Address:
+                                <span id="CId" className="font-bold">
+                                    {invInfo?.users?.shipping_addresses?.address_line || ''}
                                 </span>
                             </p>
                         </div>

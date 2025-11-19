@@ -94,8 +94,8 @@ export const POST = async (req) => {
 
 export const GET = async (req) => {
     try {
-        const userId = req.headers.get('user_id'); 
-        if (!userId) {
+        const userId = req.headers.get('user_id');
+        if (Number(userId) < 0 || userId == null || userId == 'undefine') {
             return NextResponse.json({ success: false, message: 'Unauthorized user' }, { status: 401 });
         }
 

@@ -64,9 +64,11 @@ const OrderPage = ({ orderList }) => {
     });
 
     const viewBtnHandler = (data) => {
+
         setShowInvoice(true);
         let total = 0;
         let payable = 0;
+
         //let vat_amount = 0;
         //let discount = 0;
 

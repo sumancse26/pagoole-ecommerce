@@ -25,7 +25,7 @@ const OrdersPage = async () => {
                                         {moment(order.updated_at).fromNow()})
                                     </p>
                                     <p className="text-gray-500 text-sm">
-                                        Items: {order.order_items?.length || 0} • Total: $
+                                        Items: {order.order_items?.length || 0} • Total: TK.
                                         {order.total_amount.toFixed(2)}
                                     </p>
                                 </div>

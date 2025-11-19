@@ -6,8 +6,8 @@ export const GET = async (req, { params }) => {
         const id = req.headers.get('user_id');
         const userId = Number(id);
 
-        if (!userId) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        if (Number(userId) < 0 || userId == null || userId == 'undefine') {
+            return NextResponse.json({ success: false, message: 'Unauthorized user' }, { status: 401 });
         }
 
         const { searchParams } = new URL(req.url);

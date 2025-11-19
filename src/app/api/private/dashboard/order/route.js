@@ -35,15 +35,21 @@ export const GET = async (req) => {
                             id: true,
                             user_name: true,
                             email: true,
-                            phone: true
+                            phone: true,
+                            shipping_addresses: {
+                                select: {
+                                    id: true,
+                                    address_line: true,
+                                    city: true,
+                                    region: true,
+                                    phone: true,
+                                    address_type: true,
+                                    default_address: true
+                                }
+                            }
                         }
                     },
                     order_items: {
-                        where: {
-                            vendor_products: {
-                                vendor_id: vendors.id
-                            }
-                        },
                         select: {
                             id: true,
                             quantity: true,
@@ -137,7 +143,10 @@ export const GET = async (req) => {
                     id: 'desc'
                 }
             });
+            order_list;
         }
+
+        console.log('order_list', order_list);
 
         return NextResponse.json(
             {
