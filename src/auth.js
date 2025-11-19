@@ -99,8 +99,8 @@ export const {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
-                token.role = user.role; 
-                token.is_active = user.is_active; 
+                token.role = user.role;
+                token.is_active = user.is_active;
             }
             return token;
         },
@@ -123,7 +123,7 @@ export const {
                             email: profile.email,
                             name: profile.name,
                             image: profile.picture,
-                            is_active: dbUser.is_active,
+                            is_active: 1
                         });
                     }
                     if (!dbUser) return false;
@@ -140,11 +140,10 @@ export const {
 
             if (account?.provider === 'credentials' && user?.email) {
                 try {
-                    
                     let dbUser = await getUserByEmail(user.email);
                     user.id = dbUser.id;
                     user.role = dbUser.is_admin;
-                    user.is_active= dbUser.is_active;
+                    user.is_active = dbUser.is_active;
                     return true;
                 } catch (error) {
                     console.error('Error in signIn callback:', error);

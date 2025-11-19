@@ -239,7 +239,7 @@ const AddProduct = ({ isOpen, onClose, categoryList, handleSubmit, selectedProdu
                                 <Dropdown
                                     options={brands}
                                     onSelect={brandSelectHandler}
-                                    labelKey="name"
+                                    labelKey={'name'}
                                     valueKey="id"
                                     placeholder="Select"
                                     selected={brand}

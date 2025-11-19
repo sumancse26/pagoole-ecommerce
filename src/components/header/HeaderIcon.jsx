@@ -92,6 +92,7 @@ const HeaderIcon = ({ cartItemList = [], wishItemList = [] }) => {
     }, [cartItemList]);
 
     useEffect(() => {
+
         setWishList(wishItemList);
     }, [wishItemList]);
 

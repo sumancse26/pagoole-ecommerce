@@ -3,12 +3,12 @@ import { useAlert } from '@/context/AlertContext';
 import { useApiLoader } from '@/lib/useApiLoader';
 import Loader from '@components/Loader';
 import Link from 'next/link';
-import { useRouter,useSearchParams,  usePathname } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { signIn, getSession, useSession } from 'next-auth/react';
 import { authLogIn } from '@/services/auth.js';
 import { doSocialLogin } from '@/app/actions/authAction';
-import Logo from '@components/Logo'
+import Logo from '@components/Logo';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -35,7 +35,7 @@ const Login = () => {
         setLoadingState(true);
         start();
 
-        let result = {}
+        let result = {};
         // const authResult = await authLogIn({
         //     user_name: formData.email,
         //     password: formData.password
@@ -51,11 +51,11 @@ const Login = () => {
         //  }
 
         result = await signIn('credentials', {
-                redirect: false,
-                email: formData.email,
-                password: formData.password
-            });
-        
+            redirect: false,
+            email: formData.email,
+            password: formData.password
+        });
+
 
         stop();
         setLoadingState(false);
@@ -75,11 +75,11 @@ const Login = () => {
         }
     };
 
-    const handleSocialLogin = async ()=> {
-         const fullPath = searchParams.toString() ? `${pathname}?${searchParams.toString()}` : pathname;
+    const handleSocialLogin = async () => {
+        const fullPath = searchParams.toString() ? `${pathname}?${searchParams.toString()}` : pathname;
 
-            const result = await doSocialLogin('google', fullPath);
-    }
+        const result = await doSocialLogin('google', fullPath);
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
@@ -95,16 +95,16 @@ const Login = () => {
                         <span className="text-blue-600">l</span>
                         <span className="text-red-600">e</span>
                     </div>  */}
-                     <div className="text-xl font-semibold mb-4">
-                        <Logo /> 
-                     </div>
+                    <div className="text-xl font-semibold mb-4">
+                        <Logo />
+                    </div>
                     <div className='flex items-center gap-2'>
                         <div className="text-normal font-bold mb-4">
-                             <Logo /> 
+                            <Logo />
                             <span className='m-0 ps-2 font-normal'>Lost and Found world wide.</span>
-                        </div> 
-                        
-                    </div> 
+                        </div>
+
+                    </div>
                     <p className="text-sm">
                         Not a member?
                         <Link href="/register" className="underline px-2 text-red-600">
@@ -166,15 +166,15 @@ const Login = () => {
                     <span className='w-full flex justify-center py-2'>Or</span>
                     <button
                         onClick={handleSocialLogin}
-                            type="button"
-                            className="w-full flex items-center justify-center py-2 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold rounded hover:from-orange-600 hover:to-orange-400 focus:outline-none">
-                            LOGIN WITH GOOGLE
-                        </button>
+                        type="button"
+                        className="w-full flex items-center justify-center py-2 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold rounded hover:from-orange-600 hover:to-orange-400 focus:outline-none">
+                        LOGIN WITH GOOGLE
+                    </button>
                     <button
-                            type="submit"
-                            className="w-full flex items-center justify-center py-2 mt-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white font-semibold rounded hover:from-blue-600 hover:to-blue-400 focus:outline-none">
-                            LOGIN WITH OTP
-                        </button>
+                        type="submit"
+                        className="w-full flex items-center justify-center py-2 mt-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white font-semibold rounded hover:from-blue-600 hover:to-blue-400 focus:outline-none">
+                        LOGIN WITH OTP
+                    </button>
                 </div>
             </div>
         </div>

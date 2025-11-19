@@ -5,8 +5,8 @@ import { revalidateTag } from 'next/cache';
 export const GET = async (req) => {
     try {
         const userId = req.headers.get('user_id');
-        const userRole = req.headers.get('user_role')
-        if (Number(userId) < 0 || userId == null || userId =='undefine') {
+        const userRole = req.headers.get('user_role');
+        if (Number(userId) < 0 || userId == null || userId == 'undefine') {
             return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
         }
 
@@ -16,70 +16,128 @@ export const GET = async (req) => {
             }
         });
 
-        // Fetch orders where this vendor has products (ignore orders.vendor_id)
-        const order_list = await prisma.orders.findMany({
-            where: {
-                order_items: {
-                    some: {
-                        vendor_products: {
-                            vendor_id: vendors.id
-                        }
-                    }
-                }
-            },
-            select: {
-                id: true,
-                order_code: true,
-                delivery_address: true,
-                total_amount: true, 
-                order_status: true,
-                payment_method: true,
-                payment_status: true,
-                created_at: true,
-                updated_at: true,
-                users: {
-                    select: {
-                        id: true,
-                        user_name: true,
-                        email: true,
-                        phone: true
-                    }
-                },
-                order_items: {
-                    where: {
-                        vendor_products: {
-                            vendor_id: vendors.id
+        let order_list = [];
+
+        if (userRole == 0) {
+            order_list = await prisma.orders.findMany({
+                select: {
+                    id: true,
+                    order_code: true,
+                    delivery_address: true,
+                    total_amount: true,
+                    order_status: true,
+                    payment_method: true,
+                    payment_status: true,
+                    created_at: true,
+                    updated_at: true,
+                    users: {
+                        select: {
+                            id: true,
+                            user_name: true,
+                            email: true,
+                            phone: true
                         }
                     },
-                    select: {
-                        id: true,
-                        quantity: true,
-                        unit_price: true,
-                        vendor_products: {
-                            select: {
-                                id: true,
-                                price: true,
-                                stock_qty: true,
-                                is_active: true,
-                                vendor_id: true,
-                                products: {
-                                    select: {
-                                        id: true,
-                                        prod_name: true,
-                                        slug: true,
-                                        description: true,
-                                        mrp: true
+                    order_items: {
+                        where: {
+                            vendor_products: {
+                                vendor_id: vendors.id
+                            }
+                        },
+                        select: {
+                            id: true,
+                            quantity: true,
+                            unit_price: true,
+                            vendor_products: {
+                                select: {
+                                    id: true,
+                                    price: true,
+                                    stock_qty: true,
+                                    is_active: true,
+                                    vendor_id: true,
+                                    products: {
+                                        select: {
+                                            id: true,
+                                            prod_name: true,
+                                            slug: true,
+                                            description: true,
+                                            mrp: true
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                },
+                orderBy: {
+                    id: 'desc'
                 }
-            },
-            orderBy: {
-                id: 'desc'
-            }
-        });
+            });
+        } else {
+            order_list = await prisma.orders.findMany({
+                where: {
+                    order_items: {
+                        some: {
+                            vendor_products: {
+                                vendor_id: vendors.id
+                            }
+                        }
+                    }
+                },
+                select: {
+                    id: true,
+                    order_code: true,
+                    delivery_address: true,
+                    total_amount: true,
+                    order_status: true,
+                    payment_method: true,
+                    payment_status: true,
+                    created_at: true,
+                    updated_at: true,
+                    users: {
+                        select: {
+                            id: true,
+                            user_name: true,
+                            email: true,
+                            phone: true
+                        }
+                    },
+                    order_items: {
+                        where: {
+                            vendor_products: {
+                                vendor_id: vendors.id
+                            }
+                        },
+                        select: {
+                            id: true,
+                            quantity: true,
+                            unit_price: true,
+                            vendor_products: {
+                                select: {
+                                    id: true,
+                                    price: true,
+                                    stock_qty: true,
+                                    is_active: true,
+                                    vendor_id: true,
+                                    products: {
+                                        select: {
+                                            id: true,
+                                            prod_name: true,
+                                            slug: true,
+                                            description: true,
+                                            mrp: true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                orderBy: {
+                    id: 'desc'
+                }
+            });
+        }
 
         return NextResponse.json(
             {
@@ -100,7 +158,7 @@ export const PATCH = async (req) => {
         const userId = req.headers.get('user_id');
         const { id, action, type } = await req.json();
 
-        if (Number(userId) < 0 || userId == null || userId =='undefine') {
+        if (Number(userId) < 0 || userId == null || userId == 'undefine') {
             return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
         }
 

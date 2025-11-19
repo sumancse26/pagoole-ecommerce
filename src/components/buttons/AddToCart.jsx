@@ -7,7 +7,7 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { createAddToCart } from '@/services/addToCart';
 import { useAlert } from '@/context/AlertContext';
 
-const AddToCart = ({ vendorProdId, hideQty = false, cartListHandler = () => {} }) => {
+const AddToCart = ({ vendorProdId, hideQty = false, cartListHandler = () => { } }) => {
     const [qty, setQty] = useState(1);
     const [sidebar, setSidebar] = useState(false);
 
@@ -25,9 +25,10 @@ const AddToCart = ({ vendorProdId, hideQty = false, cartListHandler = () => {} }
             quantity: qty
         };
         if (status === 'authenticated') {
+
             const res = await createAddToCart(data);
             router.refresh();
-            cartListHandler(true);
+            await cartListHandler(true);
             showAlert(res.message, 'success');
         }
         if (status === 'unauthenticated') {

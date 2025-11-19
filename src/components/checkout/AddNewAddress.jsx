@@ -34,7 +34,7 @@ const AddNewAddress = ({ onClose }) => {
             'region'
         );
 
-        return () => {};
+        return () => { };
     }, []);
 
     const locationListHandler = async (data, type) => {
@@ -133,14 +133,12 @@ const AddNewAddress = ({ onClose }) => {
 
     return (
         <div
-            className={`fixed inset-0 bg-black/50 bg-opacity-40 z-1000 transition-opacity duration-300 ${
-                isOpen ? 'opacity-100' : 'opacity-0'
-            }`}>
+            className={`fixed inset-0 bg-black/50 bg-opacity-40 z-1000 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'
+                }`}>
             {/* Modal content container */}
             <div
-                className={`fixed right-0 top-0 h-full bg-white shadow-xl p-6 w-full max-w-4xl max-h-full overflow-y-auto transform transition-transform duration-300 ease-out ${
-                    isOpen ? 'translate-x-0' : 'translate-x-full'
-                }`}>
+                className={`fixed right-0 top-0 h-full bg-white shadow-xl p-6 w-full max-w-4xl max-h-full overflow-y-auto transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
+                    }`}>
                 {/* Close button */}
                 <div className="flex justify-between items-center border-b border-gray-300 pb-4 mb-4 sticky top-0 bg-white z-10">
                     <h2 className="text-2xl font-semibold text-gray-600">Add New Delivery Address</h2>
@@ -189,6 +187,7 @@ const AddNewAddress = ({ onClose }) => {
                                 options={regionList}
                                 onSelect={handleRegionChange}
                                 labelKey={'name'}
+                                valueKey="id"
                                 placeholder={'Search or select region .....'}
                             />
                         </div>
@@ -283,22 +282,20 @@ const AddNewAddress = ({ onClose }) => {
                         <div className="flex flex-wrap gap-4">
                             <button
                                 type="button"
-                                className={`flex items-center space-x-2 px-4 py-2 rounded-md border ${
-                                    values.address_type === 'OFFICE'
+                                className={`flex items-center space-x-2 px-4 py-2 rounded-md border ${values.address_type === 'OFFICE'
                                         ? 'border-green-500 text-green-700 bg-green-50'
                                         : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                                }`}
+                                    }`}
                                 onClick={() => handleLabel('OFFICE')}>
                                 {/* SVG ICON HERE */}
                                 <span>OFFICE</span>
                             </button>
                             <button
                                 type="button"
-                                className={`flex items-center space-x-2 px-4 py-2 rounded-md border ${
-                                    values.address_type === 'HOME'
+                                className={`flex items-center space-x-2 px-4 py-2 rounded-md border ${values.address_type === 'HOME'
                                         ? 'border-green-500 text-green-700 bg-green-50'
                                         : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                                }`}
+                                    }`}
                                 onClick={() => handleLabel('HOME')}>
                                 {/* SVG ICON HERE */}
                                 <span>HOME</span>

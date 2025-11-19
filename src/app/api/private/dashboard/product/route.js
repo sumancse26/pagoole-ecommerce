@@ -346,6 +346,9 @@ export const GET = async (req) => {
             whereClause.vendor_id = vendor.id;
             whereClause.is_active = 1;
         }
+        if (userRole == 0) {
+            whereClause.is_active = 1;
+        }
         const products = await prisma.vendor_Products.findMany({
             where: whereClause,
             select: {

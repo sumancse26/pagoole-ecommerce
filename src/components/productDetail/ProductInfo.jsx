@@ -16,6 +16,7 @@ const ProductInfo = ({ prodInfo }) => {
 
     const sidebarHandler = async (val) => {
         if (session?.user) {
+
             const res = await getAddToCartList();
             const cartListData = res?.cart_items || 0;
             const list = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
@@ -76,14 +77,14 @@ const ProductInfo = ({ prodInfo }) => {
                         </span>
                         . There is currently <span className='text-red-600'>{prodInfo?.length || 0}</span> sellers.
                     </p>
-                       {
-                        prodInfo.filter(fl=>fl.activeProd == true)?.length > 0 && (
+                    {
+                        prodInfo.filter(fl => fl.activeProd == true)?.length > 0 && (
                             <h5 className="text-normal text-emerald-600 bg-emerald-200 py-1 ps-2">This Product</h5>
                         )
-                       } 
-                    
-                     {prodInfo?.length &&
-                        prodInfo.filter(fl=>fl.activeProd == true)?.map((prodItem, prodIndex) => (
+                    }
+
+                    {prodInfo?.length &&
+                        prodInfo.filter(fl => fl.activeProd == true)?.map((prodItem, prodIndex) => (
                             <div
                                 key={prodIndex}
                                 className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 mb-5 flex items-start justify-between">
@@ -99,7 +100,7 @@ const ProductInfo = ({ prodInfo }) => {
                                         <h3 className="font-semibold text-gray-800">
                                             {prodItem.vendors?.store_name || ''}
                                         </h3>
-                                        
+
                                         <p className="text-sm text-gray-500"> {prodItem.vendors?.address || ''}</p>
                                         <span className='text-bold text-blue-600'>{prodItem.vendors?.users?.phone || ''}</span>
                                         <div className="flex text-yellow-400 mt-1">
@@ -135,13 +136,13 @@ const ProductInfo = ({ prodInfo }) => {
                             </div>
                         ))}
 
-                        {
-                        prodInfo.filter(fl=>fl.activeProd == false)?.length > 0 && (
+                    {
+                        prodInfo.filter(fl => fl.activeProd == false)?.length > 0 && (
                             <h5 className="text-normal text-orange-400 bg-orange-200 py-1 ps-2">Other Products</h5>
                         )
-                       } 
+                    }
                     {prodInfo?.length &&
-                        prodInfo.filter(fl=>fl.activeProd == false)?.map((prodItem, prodIndex) => (
+                        prodInfo.filter(fl => fl.activeProd == false)?.map((prodItem, prodIndex) => (
                             <div
                                 key={prodIndex}
                                 className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 mb-5 flex items-start justify-between">
@@ -157,7 +158,7 @@ const ProductInfo = ({ prodInfo }) => {
                                         <h3 className="font-semibold text-gray-800">
                                             {prodItem.vendors?.store_name || ''}
                                         </h3>
-                                        
+
                                         <p className="text-sm text-gray-500"> {prodItem.vendors?.address || ''}</p>
                                         <span className='text-bold text-blue-600'>{prodItem.vendors?.users?.phone || ''}</span>
                                         <div className="flex text-yellow-400 mt-1">

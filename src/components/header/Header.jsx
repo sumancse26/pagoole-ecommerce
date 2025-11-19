@@ -1,165 +1,50 @@
-'use client';
-
+// SERVER COMPONENT
 import Link from 'next/link';
+import Logo from '@components/Logo';
+import HeaderIcons from './HeaderIcon';
+import HeaderClient from './HeaderClient';
+
+import { auth } from '@/auth';
 import { getAddToCartList } from '@/services/addToCart';
 import { getWishList } from '@/services/wishList';
-import HeaderIcons from './HeaderIcon';
-// import { auth } from '@/auth';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { setSharedData } from '@/hooks/useSharedData';
-import { getSearchedProducts } from '@/services/product.js';
-import { useEffect, useState } from 'react'; 
-import Logo from '@components/Logo'
 
-const HeaderComp = () => {
-    const [searchStringData, setSearchStringData] = useState('');
-    // const session = await auth();
-    const router = useRouter();
-    const { data: session, status } = useSession();
+export default async function HeaderComp() {
+    const session = await auth();
 
     let cartList = [];
     let wishList = [];
 
-    useEffect(()=> {
-        if (session?.user) {
-        fetchData();
+    if (session?.user) {
+        const res = await getAddToCartList();
+        const cartListData = res?.cart_items || 0;
+        cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
+
+        const wish = await getWishList();
+        wishList = wish.wish_lists || [];
     }
-    }, [])
-
-    const fetchData = async () => {
-        try {
-            const res = await getAddToCartList();
-            const cartListData = res?.cart_items || 0;
-            cartList = (cartListData?.length && cartListData?.map((item) => ({ ...item, isRemoving: false }))) || [];
-
-            const wish = await getWishList();
-            wishList = wish.wish_lists || [];
-        } catch (err) {
-            console.error(err.message);
-        }
-    };
-
-    const fetchSearchProductHandler = async () => {
-        try {
-            const res = await getSearchedProducts(searchStringData);
-
-            setSharedData({ isSearch: true, list: res.product_list });
-
-            router.push('/');
-        } catch (err) {
-            console.error(err.message);
-        }
-    };
-
-    const homeBtnHandler = () => {
-        setSharedData({ isSearch: false, list: [] });
-        setSearchStringData(' ');
-        router.push('/');
-    };
-
-    const searchProduct = (e) => {
-        e.preventDefault();
-        fetchSearchProductHandler();
-    };
 
     return (
         <header className="bg-white shadow sticky top-0 z-45">
-            {/* Green Top Bar */}
             <div className="bg-green-600">
                 <div className="mx-auto px-4 py-1 flex flex-wrap md:flex-nowrap items-center justify-between md:gap-[85px]">
-                    
-                    <div onClick={homeBtnHandler} className="flex items-center gap-3 justify-center cursor-pointer text-2xl font-extrabold bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
+
+                    <div className="flex items-center gap-3 cursor-pointer text-2xl font-extrabold
+                        bg-gradient-to-r from-white via-lime-300 to-green-100 bg-clip-text text-transparent drop-shadow-md">
+
                         <Logo />
                     </div>
 
-                    <div className="hidden md:flex flex-1 justify-center">
-                        <form className="w-full relative flex items-center gap-3" onSubmit={searchProduct}>
-                            {/* Search Input */}
-                            <div className="relative flex-1 px-2">
-                                <input
-                                    type="search"
-                                    placeholder="Search for products..."
-                                    className="w-full h-10 pl-5 pr-12 rounded-full text-gray-800 placeholder-gray-500 bg-white border border-green-500 shadow focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                                    aria-label="Search products"
-                                    required
-                                    onChange={(e) => setSearchStringData(e.target.value)}
-                                />
-                                <button
-                                    type="submit"
-                                    className="absolute right-[35px] top-1/2 transform -translate-y-1/2 text-green-600 hover:text-green-800"
-                                    aria-label="Search">
-                                    <svg
-                                        className="w-5 h-5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth={2}
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                            <Link href="/shop">
-                                <button
-                                    type="button"
-                                    className="cursor-pointer px-3 bg-[#ff686e] text-white py-[5px] rounded-lg font-medium tracking-[2px] whitespace-nowrap"
-                                    aria-label="Go to Shop Order homepage">
-                                    Shop Order
-                                </button>
-                            </Link>
-                        </form>
-                    </div> 
-                    <HeaderIcons cartItemList={cartList} wishItemList={wishList} /> 
+                    {/* Search section stays in client */}
+                    <HeaderClient />
+
+                    <HeaderIcons cartItemList={cartList} wishItemList={wishList} />
                 </div>
             </div>
+
+            {/* Mobile Search */}
             <div className="md:hidden flex flex-1 justify-center mx-2 mt-2 pb-3">
-                <form className="w-full relative flex items-center gap-3" onSubmit={searchProduct}>
-                    {/* Search Input */}
-                    <div className="relative flex-1 px-2">
-                        <input
-                            type="search"
-                            placeholder="Search for products..."
-                            className="w-full h-10 pl-5 pr-12 rounded-full text-gray-800 placeholder-gray-500 bg-white border border-green-500 shadow focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                            aria-label="Search products"
-                            required
-                            onChange={(e) => setSearchStringData(e.target.value)}
-                        />
-                        <button
-                            type="submit"
-                            className="absolute right-[35px] top-1/2 transform -translate-y-1/2 text-green-600 hover:text-green-800"
-                            aria-label="Search">
-                            <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                    <Link href="/shop">
-                        <button
-                            type="button"
-                            className="cursor-pointer px-3 bg-[#ff686e] text-white py-[5px] rounded-lg font-medium tracking-[2px] whitespace-nowrap"
-                            aria-label="Go to Shop Order homepage">
-                            Shop Order
-                        </button>
-                    </Link>
-                </form>
-            </div> 
+                <HeaderClient isMobile />
+            </div>
         </header>
     );
-};
-
-export default HeaderComp;
+}

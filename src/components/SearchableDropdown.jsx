@@ -88,7 +88,7 @@ const SearchableDropdown = ({
                 className="w-full px-2 py-1 border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-green-500"
             /> */}
 
-            <input
+            {/* <input
                 type="text"
                 placeholder={placeholder}
                 name="searchable-dropdown"
@@ -101,6 +101,28 @@ const SearchableDropdown = ({
                     if (isOpen) setIsOpen(true);
                 }}
                 autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                className="w-full px-3 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
+            /> */}
+
+            <input
+                type="text"
+                placeholder={placeholder}
+                name="searchable-dropdown"
+                id="searchable-dropdown"
+                value={query}
+                onClick={() => setIsOpen(!isOpen)}
+                onChange={(e) => {
+                    setQuery(e.target.value);
+                    setHadUserTyped(true);
+                    if (isOpen) setIsOpen(true);
+                }}
+                autoComplete="new-password"    // prevents autofill
+                autoCorrect="off"              // disables autocorrect on mobile
+                autoCapitalize="off"           // disables auto-capitalization
+                spellCheck="false"             // disables spellcheck
                 className="w-full px-3 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-green-500 outline-none dark:bg-neutral-700 dark:text-white"
             />
 
