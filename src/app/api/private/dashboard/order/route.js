@@ -146,7 +146,7 @@ export const GET = async (req) => {
             order_list;
         }
 
-        console.log('order_list', order_list);
+      
 
         return NextResponse.json(
             {
