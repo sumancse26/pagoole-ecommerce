@@ -12,6 +12,7 @@ import AddNewAddress from './AddNewAddress';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '@/context/AlertContext';
 import CheckoutSkeleton from '@components/checkout/CheckoutSkeleton';
+import { DELIVERY_COST } from '@/constants/info';
 
 const CheckoutPage = () => {
     const [checkoutData, setCheckoutData] = useState([]);
@@ -21,7 +22,7 @@ const CheckoutPage = () => {
     const [itemTotal, setItemTotal] = useState(0);
     const [total, setTotal] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
-    const [deliveryFee, setDeliveryFee] = useState(60);
+    const [deliveryFee, setDeliveryFee] = useState(0);
     const [totalVendors, setTotalVendors] = useState(0);
     const [openModal, setOpenModal] = useState(false);
     const [openNewAddrModal, setOpenNewAddrModal] = useState(false);
@@ -30,6 +31,7 @@ const CheckoutPage = () => {
     const { showAlert } = useAlert();
 
     useEffect(() => {
+        setDeliveryFee(DELIVERY_COST);
         const getProduct = () => {
             const itemStr = localStorage.getItem('checkout_data');
             if (!itemStr) {
