@@ -1,4 +1,4 @@
-INSERT INTO "Weights" (value, unit, description, created_at, updated_at)
+INSERT INTO discountshop."Weights" (value, unit, description, created_at, updated_at)
 VALUES
     (250, 'g', 'Small pack', NOW(), NOW()),
     (500, 'g', 'Medium pack', NOW(), NOW()),

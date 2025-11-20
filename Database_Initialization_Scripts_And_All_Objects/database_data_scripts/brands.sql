@@ -1,4 +1,4 @@
-INSERT INTO "Brands" (name, description, created_at, updated_at, brand_logo)
+INSERT INTO discountshop."Brands" (name, description, created_at, updated_at, brand_logo)
 VALUES
     ('Nestlé', 'Global food and beverage brand with dairy, coffee, and snacks', NOW(), NOW(), '/uploads/logos/nestle.png'),
     ('Unilever', 'Consumer goods brand with household and grocery items', NOW(), NOW(), '/uploads/logos/unilever.png'),

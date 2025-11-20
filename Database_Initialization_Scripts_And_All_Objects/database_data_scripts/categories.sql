@@ -1,11 +1,11 @@
-DELETE FROM "Categories";
+DELETE FROM discountshop."Categories";
 
 -- Insert default 'No' category with ID 0 and PARENT_ID NULL
-INSERT INTO "Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
+INSERT INTO discountshop."Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
 VALUES (0, 'No', 0, NULL, 1, NOW(), NOW());
 
 -- Insert top-level categories with PARENT_ID = 0
-INSERT INTO "Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
+INSERT INTO discountshop."Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
 SELECT id, category_name, order_by, 0, 1, NOW(), NOW()
 FROM (VALUES 
     (1, 'Fresh Produce', 1),
@@ -21,7 +21,7 @@ FROM (VALUES
 ) AS t (id, category_name, order_by);
 
 -- Insert Fresh Produce children with PARENT_ID = 1
-INSERT INTO "Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
+INSERT INTO discountshop."Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
 SELECT id, category_name, order_by, 1, 1, NOW(), NOW()
 FROM (VALUES 
     (11, 'Fruits', 1),
@@ -30,7 +30,7 @@ FROM (VALUES
 ) AS t (id, category_name, order_by);
 
 -- Insert Dairy & Eggs children with PARENT_ID = 2
-INSERT INTO "Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
+INSERT INTO discountshop."Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
 SELECT id, category_name, order_by, 2, 1, NOW(), NOW()
 FROM (VALUES 
     (14, 'Milk', 1),
@@ -40,7 +40,7 @@ FROM (VALUES
 ) AS t (id, category_name, order_by);
 
 -- Insert Bakery children with PARENT_ID = 3
-INSERT INTO "Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
+INSERT INTO discountshop."Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
 SELECT id, category_name, order_by, 3, 1, NOW(), NOW()
 FROM (VALUES 
     (18, 'Breads & Rolls', 1),
@@ -49,7 +49,7 @@ FROM (VALUES
 ) AS t (id, category_name, order_by);
 
 -- Insert Beverages children with PARENT_ID = 4
-INSERT INTO "Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
+INSERT INTO discountshop."Categories" (id, category_name, order_by, parent_id, is_active, created_at, updated_at)
 SELECT id, category_name, order_by, 4, 1, NOW(), NOW()
 FROM (VALUES 
     (21, 'Water & Sparkling Water', 1),
@@ -67,7 +67,7 @@ WITH RECURSIVE category_tree AS (
         parent_id,
         1 AS level
     FROM
-        "Categories"
+        discountshop."Categories"
     WHERE
         parent_id IS NULL -- Start with the 'No' category (ID 0)
     UNION ALL
@@ -77,7 +77,7 @@ WITH RECURSIVE category_tree AS (
         c.parent_id,
         ct.level + 1
     FROM
-        "Categories" c
+        discountshop."Categories" c
     JOIN
         category_tree ct ON c.parent_id = ct.id
 )
