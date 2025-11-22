@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { signIn, getSession, useSession } from 'next-auth/react';
-import { authLogIn } from '@/services/auth.js';
+// import { authLogIn } from '@/services/auth.js';
 import { doSocialLogin } from '@/app/actions/authAction';
 import Logo from '@components/Logo';
 

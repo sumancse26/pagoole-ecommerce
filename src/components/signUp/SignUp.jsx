@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import SearchableDropdown from '../SearchableDropdown';
 import { getLocationList } from '@/services/vendor';
 import { register } from '@/services/users';
-import { authRegister } from '@/services/auth.js';
+//import { authRegister } from '@/services/auth.js';
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
@@ -118,10 +118,10 @@ const SignUp = () => {
             //     dateOfBirth: formData.dateOfBirth
             // });
 
-            
-            
+
+
             // const response = await authResult.json() 
-             let result= {}; 
+            let result = {};
             // const parts = response.data?.accessToken?.split('.');
             // if (parts.length !== 3) throw new Error('Invalid JWT format');
 
@@ -133,7 +133,7 @@ const SignUp = () => {
             //     return Buffer.from(s + '='.repeat((4 - s.length % 4) % 4), 'base64').toString('utf8');
             // };
 
-            
+
             // const payloadJson = JSON.parse(buf(payloadB64));
 
             // if(authResult.status == 201 && payloadJson.id){
@@ -142,7 +142,7 @@ const SignUp = () => {
             // }
 
             result = await register(data);
-             
+
 
             if (result?.success) {
                 showAlert(result.message, 'success');
