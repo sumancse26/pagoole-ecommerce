@@ -1,4 +1,24 @@
 @import 'tailwindcss';
+
+:root {
+    --font-sans:
+        'Hind Siliguri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-mono:
+        'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace;
+}
+
+html,
+body {
+    font-family: var(--font-sans);
+}
+
+code,
+pre,
+kbd,
+samp {
+    font-family: var(--font-mono);
+}
+
 body.sidebar-open .with-sidebar-transition {
     margin-left: 16rem; /* 64 = 16rem */
     transition: all 0.3s ease;

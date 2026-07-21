@@ -4,6 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { SignJWT, jwtVerify } from 'jose';
 import { getUserByEmail, registerUser } from '@/lib/actions/userActions';
 import bcrypt from 'bcryptjs';
+import authConfig from '@/auth.config';
 
 const signingSecret = new TextEncoder().encode(process.env.JWT_SIGNING_SECRET);
 
@@ -13,6 +14,7 @@ export const {
     signIn,
     signOut
 } = NextAuth({
+    ...authConfig,
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
@@ -59,22 +61,6 @@ export const {
         })
     ],
 
-    session: { strategy: 'jwt' },
-
-    pages: { signIn: '/login', error: '/error' },
-
-    cookies: {
-        sessionToken: {
-            name: 'token',
-            options: {
-                httpOnly: true,
-                sameSite: 'lax',
-                path: '/',
-                secure: process.env.NODE_ENV === 'production'
-            }
-        }
-    },
-
     jwt: {
         encode: async ({ token, maxAge }) => {
             return await new SignJWT(token)
@@ -96,24 +82,7 @@ export const {
     },
 
     callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = user.id;
-                token.role = user.role;
-                token.is_active = user.is_active;
-            }
-            return token;
-        },
-
-        async session({ session, token }) {
-            if (token && session.user) {
-                session.user.id = token.id;
-                session.user.role = token.role;
-                session.user.is_active = token.is_active;
-            }
-            return session;
-        },
-
+        ...authConfig.callbacks,
         async signIn({ user, account, profile }) {
             if (account?.provider === 'google' && profile?.email) {
                 try {

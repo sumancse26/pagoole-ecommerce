@@ -5,27 +5,9 @@ import Alert from '@components/Alert';
 import Header from '@components/header/Header';
 import SidebarSlider from '@components/slider/SidebarSlider';
 import Footer from '@components/footer/Footer';
-import { Hind_Siliguri, Geist, Geist_Mono } from 'next/font/google';
-
 import LayoutManager from '@components/LayoutClient';
 
 import './globals.css';
-
-const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin']
-});
-
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
-    subsets: ['latin']
-});
-
-const hindSiliguri = Hind_Siliguri({
-    variable: '--font-hind-siliguri',
-    subsets: ['latin'],
-    weight: ['300', '400', '500', '600', '700']
-});
 
 export const metadata = {
     title: 'Discount Shop',
@@ -38,7 +20,7 @@ export default async function RootLayout({ children }) {
             <head>
                 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
             </head>
-            <body className={`${hindSiliguri.variable} antialiased`}>
+            <body className="antialiased">
                 <Providers>
                     <DialogProvider>
                         <AlertProvider>

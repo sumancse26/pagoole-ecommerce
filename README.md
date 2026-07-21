@@ -1,101 +1,153 @@
 # Pagoole Ecommerce
 
-Pagoole Ecommerce is a modern Next.js-based storefront and multi-vendor commerce platform with authentication, product browsing, cart management, checkout, order handling, wishlist support, and vendor-related flows.
+Pagoole Ecommerce is a full-stack multi-vendor ecommerce platform built with Next.js, Prisma, PostgreSQL, and Auth.js. It includes a customer storefront, vendor-facing product and order workflows, authentication, checkout, wishlist management, and dashboard APIs in a single codebase.
 
-## Overview
+## Short Description
 
-This project includes:
-- Customer-facing shopping experience
-- User registration and login
-- Google and credentials-based authentication
-- Product and category browsing
-- Cart, wishlist, and checkout flow
-- Vendor and product management APIs
-- Prisma ORM with PostgreSQL
-- Email-based OTP and password reset support
+A modern multi-vendor ecommerce application with customer shopping flows, vendor management, secure authentication, and a PostgreSQL-backed API built on Next.js.
+
+## Highlights
+
+- Multi-vendor storefront with category, vendor, and product browsing
+- Customer cart, wishlist, checkout, and order tracking flows
+- Vendor dashboard for products, vendors, orders, and profile-related operations
+- Auth.js authentication with Google OAuth and credentials login
+- Prisma ORM with PostgreSQL for application data
+- OTP and password reset support through email delivery
+- File upload handling for product and vendor-related assets
+- App Router-based API routes and server-rendered pages
 
 ## Tech Stack
 
 - Next.js 15
 - React 19
+- Auth.js / NextAuth v5
 - Prisma ORM
 - PostgreSQL
-- NextAuth
-- Tailwind CSS
+- Tailwind CSS 4
 - Nodemailer
 - bcryptjs
 
-## Prerequisites
+## Project Structure
 
-Before running the project, make sure you have:
-- Node.js 18+ installed
-- npm or yarn installed
-- PostgreSQL database running
-- A mail provider configuration for OTP/email delivery
+```text
+src/
+  app/                App Router pages, layouts, API routes, and server actions
+  components/         UI components for storefront, dashboard, auth, and checkout
+  config/             Prisma and mail configuration
+  context/            React context providers
+  hooks/              Custom hooks
+  lib/                Shared helpers and server-side actions
+  services/           Client-facing service layer for internal API calls
+  utils/              Utility functions
+prisma/               Prisma schema and migrations
+public/               Static assets
+documents/            Project documents and references
+Database_Initialization_Scripts_And_All_Objects/
+                      SQL initialization and reference data scripts
+```
 
-## Installation
+## Core Features
 
-1. Clone the repository
-   ```bash
-   git clone <repository-url>
-   cd pagoole-ecommerce
-   ```
+### Customer Experience
 
-2. Install dependencies
-   ```bash
-   npm install
-   ```
+- Browse featured, related, category-wise, and vendor-wise products
+- View product details, pricing, stock, and images
+- Add products to cart and wishlist
+- Manage checkout, delivery address, and order placement
+- View order history and order details
 
-3. Create an environment file
-   ```bash
-   cp .env.example .env.local
-   ```
-   If there is no .env.example file, create .env.local manually with the variables listed below.
+### Vendor and Admin Workflows
+
+- Dashboard summary and order overview
+- Vendor product creation, update, and listing flows
+- Vendor management APIs
+- Category and inventory-related dashboard operations
+
+### Authentication
+
+- Email/password login
+- Google sign-in
+- Session-based protected routes via middleware
+- OTP/password reset flow backed by email
+
+## Getting Started
+
+### Prerequisites
+
+Make sure you have the following installed and available locally:
+
+- Node.js 18 or newer
+- npm
+- PostgreSQL
+
+### Installation
+
+```bash
+git clone <repository-url>
+cd pagoole-ecommerce
+npm install
+```
 
 ## Environment Variables
 
-Create a .env.local file with the following values:
+Create a `.env.local` file in the project root and configure the required values:
 
 ```env
-DATABASE_URL=postgresql://<user>:<password>@<host>:<port>/<database>
-JWT_SECRET=your-jwt-secret
-JWT_SIGNING_SECRET=your-signing-secret
-NEXT_PUBLIC_API_URL=http://localhost:3000/api
-NEXT_PUBLIC_PRODUCT_IMAGE_API_URL=http://localhost:3000/uploads/products
-NEXT_PUBLIC_VENDOR_IMAGE_API_URL=http://localhost:3000/uploads/vendor
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-EMAIL=your-email@example.com
-EMAIL_PASSWORD=your-email-password
-NODE_ENV=development
+DATABASE_URL="postgresql://<user>:<password>@localhost:5432/<database>?schema=discountshop"
+
+NEXT_PUBLIC_API_URL="http://localhost:3000"
+AUTH_URL="http://localhost:3000"
+AUTH_SECRET="<strong-random-secret>"
+JWT_SIGNING_SECRET="<jwt-signing-secret>"
+
+GOOGLE_CLIENT_ID="<google-client-id>"
+GOOGLE_CLIENT_SECRET="<google-client-secret>"
+
+EMAIL="<smtp-email-address>"
+EMAIL_PASSWORD="<smtp-app-password>"
 ```
 
-> Replace the placeholder values with your actual database and authentication credentials.
+### Notes
+
+- `DATABASE_URL` must point to an existing PostgreSQL database.
+- `AUTH_URL` should match the app URL used in your local or deployed environment.
+- `AUTH_SECRET` and `JWT_SIGNING_SECRET` should be replaced with strong private values.
+- Google OAuth credentials are required only if you want Google sign-in enabled.
 
 ## Database Setup
 
-This project uses Prisma. To initialize the database schema:
+Apply the Prisma schema and migrations:
 
 ```bash
-npx prisma generate
-npx prisma migrate dev
+npx dotenv -e .env.local -- prisma migrate deploy
 ```
 
-If you want to reset the database during development:
+For local development, if the target database does not already exist, create it first in PostgreSQL and then run the migration command above.
+
+Optional development commands:
 
 ```bash
+npm run prisma:dev
 npm run prisma:reset
 ```
 
-## Running the Application
+## Run the Project
 
-Start the development server:
+### Development
 
 ```bash
 npm run dev
 ```
 
-Then open:
+### Production Build
+
+```bash
+npm run build
+npm start
+```
+
+Open the app at:
 
 ```text
 http://localhost:3000
@@ -104,41 +156,50 @@ http://localhost:3000
 ## Available Scripts
 
 ```bash
-npm run dev        # Start development server
-npm run build      # Build for production
-npm run start      # Start production server
-npm run lint       # Run lint checks
-npm run prisma:dev # Run Prisma migrations in dev mode
-npm run prisma:reset # Reset Prisma database state
+npm run dev
+npm run build
+npm run start
+npm run lint
+npm run prisma:dev
+npm run prisma:reset
 ```
 
-## Project Structure
+## Authentication and Access Control
+
+- Auth.js is used for session management and provider integration.
+- Middleware protects dashboard and private API routes.
+- Credentials login depends on user records stored in PostgreSQL.
+
+## Database and Seed Resources
+
+The repository contains SQL reference materials under:
 
 ```text
-src/
-  app/            # App router pages and API routes
-  components/     # Reusable UI components
-  config/         # Configuration files such as Prisma and mailer setup
-  context/        # React context providers
-  hooks/          # Custom hooks
-  lib/            # Shared libraries and actions
-  services/       # API/service layer
-  utils/          # Utility helpers
-prisma/           # Prisma schema and migrations
-public/           # Static assets
-Database_Initialization_Scripts_And_All_Objects/ # SQL seed/import scripts
+Database_Initialization_Scripts_And_All_Objects/
 ```
 
-## Notes
+These files can be used as reference data sources for initializing or extending the catalog, locations, and related entities.
 
-- The app uses authentication and session handling through NextAuth.
-- Product and vendor images are served from configured upload paths.
-- The database initialization scripts under Database_Initialization_Scripts_And_All_Objects can be used as reference or seed material depending on your setup.
+## Deployment Notes
 
-## Deployment
+Before deploying:
 
-For production deployment, make sure to:
-- Set all environment variables in your hosting platform
-- Configure a PostgreSQL instance
-- Run Prisma migrations before starting the app
-- Set secure values for JWT and OAuth credentials
+- Provision a PostgreSQL database
+- Set all required environment variables
+- Run Prisma migrations against the target database
+- Configure Google OAuth callback URLs if Google sign-in is enabled
+- Configure SMTP credentials for OTP and password reset flows
+
+## Current Status
+
+As of July 21, 2026, the project builds successfully with:
+
+```bash
+npm run build
+```
+
+and runs against a properly provisioned PostgreSQL database.
+
+## License
+
+This repository does not currently declare a license. Add one before public distribution if needed.
